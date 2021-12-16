@@ -2,9 +2,10 @@ import DOMParser from "dom-parser";
 import { PersonStart } from "../Interfaces/PersonStart";
 import { HtmlNodeParser } from "../HtmlNodeParser";
 import { WebsiteFetcher } from "../WebsiteFetcher";
-import { absPath, DateOffset } from "../utils";
+import { DateOffset } from "../utils";
 import { isPersonStart } from "../InterfaceGuards/PersonStart.guard";
 import {
+  getImageId,
   getTeamInfoParameters,
   PersonInfoParameters,
 } from "../Interfaces/Parameters";
@@ -24,10 +25,9 @@ export class PersonStartParser
 
   public interfaceGuard: (obj: any) => obj is PersonStart = isPersonStart;
 
-  public parseWebsite(dom: DOMParser.Dom, dirUrl: string): PersonStart {
+  public parseWebsite(dom: DOMParser.Dom): PersonStart {
     const parser = new HtmlNodeParser(dom);
-    const imageUrl = absPath(
-      dirUrl,
+    const imageId = getImageId(
       parser.byId("ctl00_cphO__ctrl_1_imgPerson").attribute("src")
     );
     const name = parser.byId("ctl00_cphO__ctrl_1_lblName").stringValue;
@@ -41,8 +41,7 @@ export class PersonStartParser
             properties.age = node.childAt(1).numberValue;
             break;
           case "Nation":
-            properties.nationFlagUrl = absPath(
-              dirUrl,
+            properties.nationFlagId = getImageId(
               node.childAt(1).childAt(0).childAt(0).attribute("src")
             );
             properties.nation = node.childAt(1).childAt(1).stringValue;
@@ -119,10 +118,7 @@ export class PersonStartParser
       .children.map((node) => {
         return {
           season: node.childAt(0).stringValue,
-          teamIconUrl: absPath(
-            dirUrl,
-            node.childAt(1).childAt(0).attribute("src")
-          ),
+          teamIconId: getImageId(node.childAt(1).childAt(0).attribute("src")),
           teamName: node.childAt(2).textContent,
           teamParameters: getTeamInfoParameters(
             node.childAt(2).childAt(0).attribute("href")
@@ -137,13 +133,11 @@ export class PersonStartParser
       .children.map((node) => {
         return {
           date: node.childAt(0).stringValue,
-          fromIconUrl: absPath(
-            dirUrl,
+          fromIconId: getImageId(
             node.childAt(1).childAt(0).childAt(1).childAt(0).attribute("src")
           ),
           fromName: node.childAt(1).childAt(0).childAt(2).stringValue,
-          toIconUrl: absPath(
-            dirUrl,
+          toIconId: getImageId(
             node.childAt(1).childAt(1).childAt(1).childAt(0).attribute("src")
           ),
           toName: node.childAt(1).childAt(1).childAt(2).stringValue,
@@ -176,10 +170,7 @@ export class PersonStartParser
       .children.map((node) => {
         return {
           season: node.childAt(0).stringValue,
-          teamIconUrl: absPath(
-            dirUrl,
-            node.childAt(1).childAt(0).attribute("src")
-          ),
+          teamIconId: getImageId(node.childAt(1).childAt(0).attribute("src")),
           teamName: node.childAt(2).textContent,
           teamParameters: getTeamInfoParameters(
             node.childAt(2).childAt(0).attribute("href")
@@ -188,7 +179,7 @@ export class PersonStartParser
         };
       });
     return {
-      imageUrl: imageUrl,
+      imageId: imageId,
       name: name,
       properties: properties,
       carrier: carrier,

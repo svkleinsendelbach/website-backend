@@ -29,10 +29,7 @@ export class PersonArtikelParser
 
   public interfaceGuard: (obj: any) => obj is PersonArtikel = isPersonArtikel;
 
-  public parseWebservice(
-    dom: XmlDocument,
-    _dirUrl: string
-  ): PersonArtikel[] | undefined {
+  public parseWebservice(dom: XmlDocument): PersonArtikel[] | undefined {
     const parser = new XmlNodeParser(dom.root);
     return parser.children.map((node) => {
       return {

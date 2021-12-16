@@ -2,11 +2,11 @@ import { TeamInfoParameters } from "./Parameters";
 
 /** @see {isPersonStart} ts-auto-guard:type-guard */
 export interface PersonStart {
-  imageUrl?: string;
+  imageId?: number;
   name?: string;
   properties: {
     age?: number;
-    nationFlagUrl?: string;
+    nationFlagId?: number;
     nation?: string;
     strongFoot?: string;
     favoritePosition?: string;
@@ -23,7 +23,7 @@ export interface PersonStart {
   };
   playerStations?: {
     season?: string;
-    teamIconUrl?: string;
+    teamIconId?: number;
     teamName?: string;
     teamParameters?: TeamInfoParameters;
     league?: string;
@@ -31,9 +31,9 @@ export interface PersonStart {
   }[];
   transfers?: {
     date?: string;
-    fromIconUrl?: string;
+    fromIconId?: number;
     fromName?: string;
-    toIconUrl?: string;
+    toIconId?: number;
     toName?: string;
   }[];
   seasonResults?: {
@@ -50,7 +50,7 @@ export interface PersonStart {
   }[];
   coachStations?: {
     season?: string;
-    teamIconUrl?: string;
+    teamIconId?: number;
     teamName?: string;
     teamParameters?: TeamInfoParameters;
     league?: string;

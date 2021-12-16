@@ -142,8 +142,16 @@ export class HtmlNodeParserWithNode {
   }
 }
 
-export class HtmlNodeParserWithNodeList {
+export class HtmlNodeParserWithNodeList
+  implements Iterable<HtmlNodeParserWithNode>
+{
   public constructor(public readonly nodeList: DOMParser.Node[] | undefined) {}
+
+  [Symbol.iterator](): Iterator<HtmlNodeParserWithNode, any, undefined> {
+    return (this.nodeList?.map((n) => new HtmlNodeParserWithNode(n)) ?? [])[
+      Symbol.iterator
+    ]();
+  }
 
   public map<U>(
     callbackfn: (

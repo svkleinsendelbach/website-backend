@@ -3,7 +3,6 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import fetch from "cross-fetch";
 import DOMParser from "dom-parser";
-import path from "path";
 import { DebugProperties } from "./DebugProperties";
 
 export class WebsiteFetcher<Params, T> {
@@ -84,7 +83,7 @@ export class WebsiteFetcher<Params, T> {
   private async fetchAndParseWebsite(): Promise<T> {
     const html = await (await fetch(this.url)).text();
     const dom = new DOMParser().parseFromString(html);
-    return this.parser.parseWebsite(dom, path.dirname(this.url));
+    return this.parser.parseWebsite(dom);
   }
 
   private async setCache(value: T): Promise<void> {
@@ -104,6 +103,6 @@ export namespace WebsiteFetcher {
     getUrl: (parameters: Params) => string;
     dateOffset: DateOffset;
     interfaceGuard: (obj: any) => obj is T;
-    parseWebsite: (dom: DOMParser.Dom, dirUrl: string) => T;
+    parseWebsite: (dom: DOMParser.Dom) => T;
   }
 }

@@ -2,7 +2,6 @@ import { normalizeRefPathComponent, isDateRecent, DateOffset } from "./utils";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import fetch from "cross-fetch";
-import path from "path";
 import { parse, XmlDocument } from "fsp-xml-parser";
 import { DebugProperties } from "./DebugProperties";
 
@@ -100,7 +99,7 @@ export class WebserviceFetcher<Params, T> {
   }> {
     const xml = await (await fetch(this.url)).text();
     const dom = parse(xml);
-    const list = this.parser.parseWebservice(dom, path.dirname(this.url)) ?? [];
+    const list = this.parser.parseWebservice(dom) ?? [];
     const hasMoreData = list.length > this.expectedLength;
     return {
       hasMoreData: hasMoreData,
@@ -128,6 +127,6 @@ export namespace WebserviceFetcher {
     getUrl: (parameters: Params & { rowVon: number; rowBis: number }) => string;
     dateOffset: DateOffset;
     interfaceGuard: (obj: any) => obj is T;
-    parseWebservice: (dom: XmlDocument, dirUrl: string) => T[] | undefined;
+    parseWebservice: (dom: XmlDocument) => T[] | undefined;
   }
 }

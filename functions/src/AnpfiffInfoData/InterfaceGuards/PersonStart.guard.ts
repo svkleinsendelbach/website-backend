@@ -10,14 +10,14 @@ export function isPersonStart(
 ): obj is PersonStart {
   return (
     ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
-    (typeof obj.imageUrl === "undefined" || typeof obj.imageUrl === "string") &&
+    (typeof obj.imageId === "undefined" || typeof obj.imageId === "number") &&
     (typeof obj.name === "undefined" || typeof obj.name === "string") &&
     ((obj.properties !== null && typeof obj.properties === "object") ||
       typeof obj.properties === "function") &&
     (typeof obj.properties.age === "undefined" ||
       typeof obj.properties.age === "number") &&
-    (typeof obj.properties.nationFlagUrl === "undefined" ||
-      typeof obj.properties.nationFlagUrl === "string") &&
+    (typeof obj.properties.nationFlagId === "undefined" ||
+      typeof obj.properties.nationFlagId === "number") &&
     (typeof obj.properties.nation === "undefined" ||
       typeof obj.properties.nation === "string") &&
     (typeof obj.properties.strongFoot === "undefined" ||
@@ -49,8 +49,8 @@ export function isPersonStart(
             ((e !== null && typeof e === "object") ||
               typeof e === "function") &&
             (typeof e.season === "undefined" || typeof e.season === "string") &&
-            (typeof e.teamIconUrl === "undefined" ||
-              typeof e.teamIconUrl === "string") &&
+            (typeof e.teamIconId === "undefined" ||
+              typeof e.teamIconId === "number") &&
             (typeof e.teamName === "undefined" ||
               typeof e.teamName === "string") &&
             (typeof e.teamParameters === "undefined" ||
@@ -74,12 +74,12 @@ export function isPersonStart(
             ((e !== null && typeof e === "object") ||
               typeof e === "function") &&
             (typeof e.date === "undefined" || typeof e.date === "string") &&
-            (typeof e.fromIconUrl === "undefined" ||
-              typeof e.fromIconUrl === "string") &&
+            (typeof e.fromIconId === "undefined" ||
+              typeof e.fromIconId === "number") &&
             (typeof e.fromName === "undefined" ||
               typeof e.fromName === "string") &&
-            (typeof e.toIconUrl === "undefined" ||
-              typeof e.toIconUrl === "string") &&
+            (typeof e.toIconId === "undefined" ||
+              typeof e.toIconId === "number") &&
             (typeof e.toName === "undefined" || typeof e.toName === "string")
         ))) &&
     (typeof obj.seasonResults === "undefined" ||
@@ -122,8 +122,8 @@ export function isPersonStart(
             ((e !== null && typeof e === "object") ||
               typeof e === "function") &&
             (typeof e.season === "undefined" || typeof e.season === "string") &&
-            (typeof e.teamIconUrl === "undefined" ||
-              typeof e.teamIconUrl === "string") &&
+            (typeof e.teamIconId === "undefined" ||
+              typeof e.teamIconId === "number") &&
             (typeof e.teamName === "undefined" ||
               typeof e.teamName === "string") &&
             (typeof e.teamParameters === "undefined" ||

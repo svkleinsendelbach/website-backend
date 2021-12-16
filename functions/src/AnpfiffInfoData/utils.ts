@@ -1,9 +1,4 @@
 import path from "path";
-import { PersonStartParser } from "./WebsiteParser/PersonStartParser";
-import { WebsiteFetcher } from "./WebsiteFetcher";
-import { PersonArtikelParser } from "./WebsiteParser/PersonArtikelParser";
-import { WebserviceFetcher } from "./WebserviceFetcher";
-import * as functions from "firebase-functions";
 
 export interface DateOffset {
   day?: number;
@@ -63,51 +58,4 @@ export function toInt(rawValue: string | undefined): number | undefined {
   }
   const value = Number.parseInt(rawValue);
   return Number.isNaN(value) ? undefined : value;
-}
-
-export async function getAnpfiffInfoAllWebsites(data: any): Promise<any> {
-  const websiteParser = getWebsiteParser(data.website);
-  if (websiteParser != undefined) {
-    const fetcher = new WebsiteFetcher(
-      websiteParser,
-      data.parameters,
-      data.debug ?? false
-    );
-    return await fetcher.fetch();
-  }
-  const webserviceParser = getWebserviceFetcher(data.website);
-  if (webserviceParser != undefined) {
-    const fetcher = new WebserviceFetcher(
-      webserviceParser,
-      data.parameters,
-      data.debug ?? false
-    );
-    return await fetcher.fetch();
-  }
-  throw new functions.https.HttpsError(
-    "invalid-argument",
-    `Invalid anpfiff.info website: ${data.website}`
-  );
-}
-
-function getWebsiteParser(
-  website: string
-): WebsiteFetcher.Parser<any, any> | undefined {
-  switch (website) {
-    case "person/start":
-      return new PersonStartParser();
-    default:
-      return undefined;
-  }
-}
-
-function getWebserviceFetcher(
-  website: string
-): WebserviceFetcher.Parser<any, any> | undefined {
-  switch (website) {
-    case "person/artikel":
-      return new PersonArtikelParser();
-    default:
-      return undefined;
-  }
 }

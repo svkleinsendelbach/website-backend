@@ -26,8 +26,14 @@ export class XmlNodeParser {
   }
 }
 
-export class XmlNodeParserWithNodeList {
+export class XmlNodeParserWithNodeList implements Iterable<XmlNodeParser> {
   public constructor(public readonly nodeList: XmlNode[] | undefined) {}
+
+  [Symbol.iterator](): Iterator<XmlNodeParser, any, undefined> {
+    return (this.nodeList?.map((n) => new XmlNodeParser(n)) ?? [])[
+      Symbol.iterator
+    ]();
+  }
 
   public map<U>(
     callbackfn: (

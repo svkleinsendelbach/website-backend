@@ -65,6 +65,17 @@ export function getArtikelInfoParameters(
   }
 }
 
+export function getImageId(url: string | undefined): number | undefined {
+  if (url == undefined) {
+    return undefined;
+  }
+  const groupList = /^\S+\/(?<id>\d+)\.(?:png|jpg)$/g.exec(url)?.groups;
+  if (groupList == undefined) {
+    return undefined;
+  }
+  return toInt(groupList.id);
+}
+
 function getParameter(url: string | undefined, key: string): string {
   if (url == undefined) {
     throw new Error();

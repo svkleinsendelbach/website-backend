@@ -4,6 +4,10 @@ import { toNumber, toInt } from "./utils";
 export class HtmlNodeParser {
   public constructor(public readonly dom: DOMParser.Dom) {}
 
+  public map<U>(callbackfn: (value: HtmlNodeParser) => U): U {
+    return callbackfn(this);
+  }
+
   public byId(id: string): HtmlNodeParserWithNode {
     return new HtmlNodeParserWithNode(this.dom.getElementById(id) ?? undefined);
   }
@@ -28,6 +32,10 @@ export class HtmlNodeParser {
 
 export class HtmlNodeParserWithNode {
   public constructor(public readonly node: DOMParser.Node | undefined) {}
+
+  public map<U>(callbackfn: (value: HtmlNodeParserWithNode) => U): U {
+    return callbackfn(this);
+  }
 
   public byId(id: string): HtmlNodeParserWithNode {
     return new HtmlNodeParserWithNode(

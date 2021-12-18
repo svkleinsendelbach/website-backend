@@ -6,106 +6,74 @@ import {
   PersonInfoParameters,
   TeamInfoParameters,
   ArtikelInfoParameters,
+  LigaInfoParameters,
+  ResultInfoParameters,
 } from "../Interfaces/Parameters";
-
-function evaluate(
-  isCorrect: boolean,
-  varName: string,
-  expected: string,
-  actual: any
-): boolean {
-  if (!isCorrect) {
-    console.error(
-      `${varName} type mismatch, expected: ${expected}, found:`,
-      actual
-    );
-  }
-  return isCorrect;
-}
 
 export function isPersonInfoParameters(
   obj: any,
-  argumentName: string = "personInfoParameters"
+  _argumentName?: string
 ): obj is PersonInfoParameters {
   return (
     ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
-    evaluate(
-      typeof obj.spielkreis === "number",
-      `${argumentName}.spielkreis`,
-      "number",
-      obj.spielkreis
-    ) &&
-    evaluate(
-      typeof obj.personId === "number",
-      `${argumentName}.personId`,
-      "number",
-      obj.personId
-    )
+    typeof obj.spielkreis === "number" &&
+    typeof obj.personId === "number"
   );
 }
 
 export function isTeamInfoParameters(
   obj: any,
-  argumentName: string = "teamInfoParameters"
+  _argumentName?: string
 ): obj is TeamInfoParameters {
   return (
     ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
-    evaluate(
-      typeof obj.spielkreis === "number",
-      `${argumentName}.spielkreis`,
-      "number",
-      obj.spielkreis
-    ) &&
-    evaluate(
-      typeof obj.ligaId === "number",
-      `${argumentName}.ligaId`,
-      "number",
-      obj.ligaId
-    ) &&
-    evaluate(
-      typeof obj.teamId === "number",
-      `${argumentName}.teamId`,
-      "number",
-      obj.teamId
-    ) &&
-    evaluate(
-      typeof obj.vereinId === "number",
-      `${argumentName}.vereinId`,
-      "number",
-      obj.vereinId
-    ) &&
-    evaluate(
-      typeof obj.saisonId === "number",
-      `${argumentName}.saisonId`,
-      "number",
-      obj.saisonId
-    ) &&
-    evaluate(
-      typeof obj.men === "number",
-      `${argumentName}.men`,
-      "number",
-      obj.men
-    )
+    typeof obj.spielkreis === "number" &&
+    typeof obj.ligaId === "number" &&
+    typeof obj.teamId === "number" &&
+    typeof obj.vereinId === "number" &&
+    typeof obj.saisonId === "number" &&
+    typeof obj.men === "number"
   );
 }
 
 export function isArtikelInfoParameters(
   obj: any,
-  argumentName: string = "artikelInfoParameters"
+  _argumentName?: string
 ): obj is ArtikelInfoParameters {
   return (
     ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
-    evaluate(
-      typeof obj.spielkreis === "number",
-      `${argumentName}.spielkreis`,
-      "number",
-      obj.spielkreis
-    ) &&
-    evaluate(
-      typeof obj.btr === "number",
-      `${argumentName}.btr`,
-      "number",
-      obj.btr
-    )
+    typeof obj.spielkreis === "number" &&
+    typeof obj.btr === "number"
+  );
+}
+
+export function isLigaInfoParameters(
+  obj: any,
+  _argumentName?: string
+): obj is LigaInfoParameters {
+  return (
+    ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
+    typeof obj.spielkreis === "number" &&
+    typeof obj.rubrik === "number" &&
+    typeof obj.liga === "number" &&
+    typeof obj.saison === "number"
+  );
+}
+
+export function isResultInfoParameters(
+  obj: any,
+  _argumentName?: string
+): obj is ResultInfoParameters {
+  return (
+    ((obj !== null && typeof obj === "object") || typeof obj === "function") &&
+    typeof obj.spielkreis === "number" &&
+    typeof obj.liga === "number" &&
+    typeof obj.spiel === "number" &&
+    typeof obj.verein === "number" &&
+    typeof obj.teamHeim === "number" &&
+    typeof obj.teamAway === "number" &&
+    typeof obj.top === "number" &&
+    typeof obj.ticker === "number" &&
+    typeof obj.men === "number"
   );
 }

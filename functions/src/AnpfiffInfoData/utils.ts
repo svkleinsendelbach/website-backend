@@ -1,4 +1,4 @@
-import path from "path";
+import path from 'path';
 
 export interface DateOffset {
   day?: number;
@@ -17,26 +17,23 @@ export function isDateRecent(date: Date, offset: DateOffset): boolean {
 }
 
 export function normalizeRefPathComponent(path: string): string {
-  const regexStringsToReplace = ["\\/", "\\.", "#", "\\$", "\\[", "\\]"];
+  const regexStringsToReplace = ['\\/', '\\.', '#', '\\$', '\\[', '\\]'];
   for (const regexString of regexStringsToReplace) {
-    path = path.replace(new RegExp(regexString, "g"), "_");
+    path = path.replace(new RegExp(regexString, 'g'), '_');
   }
   return path;
 }
 
-export function absPath(
-  dirUrl: string,
-  url: string | undefined
-): string | undefined {
+export function absPath(dirUrl: string, url: string | undefined): string | undefined {
   if (url == undefined) {
     return undefined;
   }
   if (path.isAbsolute(url)) {
     const dirPathComponents = dirUrl.split(path.sep);
-    let rawPath = "";
+    let rawPath = '';
     for (const component of dirPathComponents) {
       rawPath = path.join(rawPath, component);
-      if (component != "http:" && component != "https:" && component != "") {
+      if (component != 'http:' && component != 'https:' && component != '') {
         return path.join(rawPath, url);
       }
     }
@@ -58,4 +55,15 @@ export function toInt(rawValue: string | undefined): number | undefined {
   }
   const value = Number.parseInt(rawValue);
   return Number.isNaN(value) ? undefined : value;
+}
+
+export function regexGroup(value: string | undefined, regex: RegExp, groupName: string): string | undefined {
+  if (value == undefined) {
+    return undefined;
+  }
+  const groupList = regex.exec(value)?.groups;
+  if (groupList == undefined) {
+    return undefined;
+  }
+  return groupList[groupName];
 }

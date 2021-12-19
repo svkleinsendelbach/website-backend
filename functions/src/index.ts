@@ -5,8 +5,8 @@ import * as getData from './AnpfiffInfoData/getAnpfiffInfoData';
 admin.initializeApp();
 
 export const getAnpfiffInfoData = functions
-    .region('europe-west1')
-    .https.onCall(async (data, _context) => await getData.getAnpfiffInfoData(data));
+  .region('europe-west1')
+  .https.onCall(async (data, _context) => await getData.getAnpfiffInfoData(data));
 
 export const deleteAllCaches = functions.region('europe-west1').https.onCall(async (_data, _context) => {
   const cachesRef = admin.database().ref('caches');

@@ -2,8 +2,8 @@
  * Generated type guards for "DebugProperties.ts".
  * WARNING: Do not manually change this file.
  */
-import { RawValue } from './DebugProperties';
 import { isDateOffset } from './utils.guard';
+import { RawValue } from './DebugProperties';
 
 function evaluate(isCorrect: boolean, varName: string, expected: string, actual: any): boolean {
   if (!isCorrect) {

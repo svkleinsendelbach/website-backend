@@ -11,4 +11,3 @@ node_modules/
 test/firebaseConfig.ts
 
 .prettierrc
-.vscode/

@@ -16,7 +16,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamParameters, Te
   public parametersGuard: (obj: any) => obj is TeamParameters = isTeamParameters;
 
   public getUrl(parameters: TeamParameters): string {
-    return `http://www.anpfiff.info/sites/team/start.aspx?SK=${parameters.spielkreis}&Lg=${parameters.ligaId}&Tm=${parameters.teamId}&Ver=${parameters.teamId}&Sais=${parameters.saisonId}&Men=${parameters.men}`;
+    return `http://www.anpfiff.info/sites/team/start.aspx?SK=${parameters.spielkreis}&Lg=${parameters.ligaId}&Tm=${parameters.teamId}&Ver=${parameters.vereinId}&Sais=${parameters.saisonId}&Men=${parameters.men}`;
   }
 
   public readonly dateOffset: DateOffset = { day: 1 };

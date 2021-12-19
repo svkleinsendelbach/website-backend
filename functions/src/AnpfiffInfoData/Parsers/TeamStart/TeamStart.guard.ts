@@ -2,6 +2,10 @@
  * Generated type guards for "TeamStart.ts".
  * WARNING: Do not manually change this file.
  */
+import { isLigaParameters } from '../../Parameters/LigaParameters.guard';
+import { isTeamParameters } from '../../Parameters/TeamParameters.guard';
+import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
+import { isResultParameters } from '../../Parameters/ResultParameters.guard';
 import { TeamStart } from './TeamStart';
 
 function evaluate(isCorrect: boolean, varName: string, expected: string, actual: any): boolean {
@@ -33,6 +37,12 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
       obj.ligaName,
     ) &&
     evaluate(
+      typeof obj.ligaParameters === 'undefined' || (isLigaParameters(obj.ligaParameters) as boolean),
+      `${argumentName}.ligaParameters`,
+      'import("./src/AnpfiffInfoData/Parameters/LigaParameters").LigaParameters | undefined',
+      obj.ligaParameters,
+    ) &&
+    evaluate(
       typeof obj.currentPlacement === 'undefined' ||
         (Array.isArray(obj.currentPlacement) &&
           obj.currentPlacement.every(
@@ -55,6 +65,12 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
                 `${argumentName}.currentPlacement[${i0}].teamName`,
                 'string | undefined',
                 e.teamName,
+              ) &&
+              evaluate(
+                typeof e.teamParameters === 'undefined' || (isTeamParameters(e.teamParameters) as boolean),
+                `${argumentName}.currentPlacement[${i0}].teamParameters`,
+                'import("./src/AnpfiffInfoData/Parameters/TeamParameters").TeamParameters | undefined',
+                e.teamParameters,
               ) &&
               evaluate(
                 typeof e.totalGames === 'undefined' || typeof e.totalGames === 'number',
@@ -82,7 +98,7 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
               ),
           )),
       `${argumentName}.currentPlacement`,
-      '{ placement?: number | undefined; logoId?: number | undefined; teamName?: string | undefined; teamParameters?: any; totalGames?: number | undefined; goalsScored?: number | undefined; goalsGot?: number | undefined; points?: number | undefined; }[] | undefined',
+      '{ placement?: number | undefined; logoId?: number | undefined; teamName?: string | undefined; teamParameters?: import("./src/AnpfiffInfoData/Parameters/TeamParameters").TeamParameters | undefined; totalGames?: number | undefined; goalsScored?: number | undefined; goalsGot?: number | undefined; points?: number | undefined; }[] | undefined',
       obj.currentPlacement,
     ) &&
     evaluate(
@@ -104,6 +120,12 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
                 e.name,
               ) &&
               evaluate(
+                typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
+                `${argumentName}.topGoalsPlayers[${i0}].personParameters`,
+                'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
+                e.personParameters,
+              ) &&
+              evaluate(
                 typeof e.totalGoals === 'undefined' || typeof e.totalGoals === 'number',
                 `${argumentName}.topGoalsPlayers[${i0}].totalGoals`,
                 'number | undefined',
@@ -111,7 +133,7 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
               ),
           )),
       `${argumentName}.topGoalsPlayers`,
-      '{ imageId?: number | undefined; name?: string | undefined; personParameters?: any; totalGoals?: number | undefined; }[] | undefined',
+      '{ imageId?: number | undefined; name?: string | undefined; personParameters?: import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined; totalGoals?: number | undefined; }[] | undefined',
       obj.topGoalsPlayers,
     ) &&
     evaluate(
@@ -133,6 +155,12 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
                 e.name,
               ) &&
               evaluate(
+                typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
+                `${argumentName}.topAssistsPlayers[${i0}].personParameters`,
+                'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
+                e.personParameters,
+              ) &&
+              evaluate(
                 typeof e.totalAssists === 'undefined' || typeof e.totalAssists === 'number',
                 `${argumentName}.topAssistsPlayers[${i0}].totalAssists`,
                 'number | undefined',
@@ -140,7 +168,7 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
               ),
           )),
       `${argumentName}.topAssistsPlayers`,
-      '{ imageId?: number | undefined; name?: string | undefined; personParameters?: any; totalAssists?: number | undefined; }[] | undefined',
+      '{ imageId?: number | undefined; name?: string | undefined; personParameters?: import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined; totalAssists?: number | undefined; }[] | undefined',
       obj.topAssistsPlayers,
     ) &&
     evaluate(
@@ -178,10 +206,16 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
                 `${argumentName}.lastGames[${i0}].goalsAwayTeam`,
                 'number | undefined',
                 e.goalsAwayTeam,
+              ) &&
+              evaluate(
+                typeof e.resultParameters === 'undefined' || (isResultParameters(e.resultParameters) as boolean),
+                `${argumentName}.lastGames[${i0}].resultParameters`,
+                'import("./src/AnpfiffInfoData/Parameters/ResultParameters").ResultParameters | undefined',
+                e.resultParameters,
               ),
           )),
       `${argumentName}.lastGames`,
-      '{ date?: string | undefined; homeTeam?: string | undefined; awayTeam?: string | undefined; goalsHomeTeam?: number | undefined; goalsAwayTeam?: number | undefined; resultParameters?: any; }[] | undefined',
+      '{ date?: string | undefined; homeTeam?: string | undefined; awayTeam?: string | undefined; goalsHomeTeam?: number | undefined; goalsAwayTeam?: number | undefined; resultParameters?: import("./src/AnpfiffInfoData/Parameters/ResultParameters").ResultParameters | undefined; }[] | undefined',
       obj.lastGames,
     ) &&
     evaluate(
@@ -209,6 +243,12 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
                 e.opponentName,
               ) &&
               evaluate(
+                typeof e.opponentParameters === 'undefined' || (isTeamParameters(e.opponentParameters) as boolean),
+                `${argumentName}.nextGames[${i0}].opponentParameters`,
+                'import("./src/AnpfiffInfoData/Parameters/TeamParameters").TeamParameters | undefined',
+                e.opponentParameters,
+              ) &&
+              evaluate(
                 typeof e.homeAway === 'undefined' || e.homeAway === 'H' || e.homeAway === 'A',
                 `${argumentName}.nextGames[${i0}].homeAway`,
                 '"H" | "A" | undefined',
@@ -222,7 +262,7 @@ export function isTeamStart(obj: any, argumentName: string = 'teamStart'): obj i
               ),
           )),
       `${argumentName}.nextGames`,
-      '{ logoId?: number | undefined; date?: string | undefined; opponentName?: string | undefined; opponentParameters?: any; homeAway?: "H" | "A" | undefined; currentPlacement?: number | undefined; }[] | undefined',
+      '{ logoId?: number | undefined; date?: string | undefined; opponentName?: string | undefined; opponentParameters?: import("./src/AnpfiffInfoData/Parameters/TeamParameters").TeamParameters | undefined; homeAway?: "H" | "A" | undefined; currentPlacement?: number | undefined; }[] | undefined',
       obj.nextGames,
     ) &&
     evaluate(

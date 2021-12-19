@@ -5,6 +5,7 @@ import { WebsiteFetcher } from './Fetchers/WebsiteFetcher';
 import { PersonArtikelParser } from './Parsers/PersonArtikel/PersonArtikelParser';
 import { PersonBilderParser } from './Parsers/PersonBilder/PersonBilderParser';
 import { PersonStartParser } from './Parsers/PersonStart/PersonStartParser';
+import { TeamArtikelParser } from './Parsers/TeamArtikel/TeamArtikelParser';
 import { TeamStartParser } from './Parsers/TeamStart/TeamStartParser';
 
 export async function getAnpfiffInfoData(data: any): Promise<any> {
@@ -38,6 +39,8 @@ function getWebserviceFetcher(website: string): WebserviceFetcher.Parser<any, an
       return new PersonArtikelParser();
     case 'person/bilder':
       return new PersonBilderParser();
+    case 'team/artikel':
+      return new TeamArtikelParser();
     default:
       return undefined;
   }

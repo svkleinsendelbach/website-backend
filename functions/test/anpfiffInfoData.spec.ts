@@ -1,13 +1,14 @@
-import { initializeApp } from 'firebase/app';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import fetch from 'cross-fetch';
-import { parse } from 'fsp-xml-parser';
-import DOMParser from 'dom-parser';
-import { getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
-import { firebaseConfig, testUser } from './firebaseConfig';
 import { expect } from 'chai';
+import fetch from 'cross-fetch';
+import DOMParser from 'dom-parser';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { parse } from 'fsp-xml-parser';
+
+import { PersonArtikelParser } from '../src/AnpfiffInfoData/Parsers/PersonArtikel/PersonArtikelParser';
 import { TeamStartParser } from '../src/AnpfiffInfoData/Parsers/TeamStart/TeamStartParser';
-import { PersonBilderParser } from '../src/AnpfiffInfoData/Parsers/PersonBilder/PersonBilderParser';
+import { firebaseConfig, testUser } from './firebaseConfig';
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, 'europe-west1');
@@ -29,8 +30,8 @@ export async function wait(milliseconds: number): Promise<void> {
   });
 }
 
-describe('test 1', () => {
-  it('sub test 1', async () => {
+describe('anpfiffInfoData', () => {
+  it('sub test', async () => {
     const o = {
       test: [],
     };
@@ -39,12 +40,12 @@ describe('test 1', () => {
 
   it('fetch webservice', async () => {
     const url =
-      'http://www.anpfiff.info/Webservices/WS_Archiv.asmx/GetBilder?intSKID=2&intSaisID=0&intMonat=0&intRubID=0&intPersID=257472&intTmID=0&intVerID=0&intRowVon=1&intRowBis=16';
+      'http://www.anpfiff.info/Webservices/WS_Archiv.asmx/GetCMSArchivArtikel?intSKID=2&intSaisID=123&intMonat=0&intRubID=0&intPersID=0&intTmID=30675&intVerID=294&intRowVon=1&intRowBis=6';
     const xml = await (await fetch(url)).text();
     const dom = parse(xml);
-    const parser = new PersonBilderParser();
+    const parser = new PersonArtikelParser();
     const data = parser.parseWebservice(dom);
-    console.log(JSON.stringify(data));
+    console.log(data);
   });
 
   it('fetch website', async () => {
@@ -151,5 +152,26 @@ describe('test 1', () => {
       saisonId: 123,
       men: 19,
     });
+  });
+
+  it('team/artikel', async () => {
+    await testAnpfiffInfoFetcher(
+      'team/artikel',
+      {
+        spielkreis: 2,
+        ligaId: 28,
+        teamId: 30675,
+        vereinId: 294,
+        saisonId: 123,
+        men: 19,
+        rowVon: 1,
+        rowBis: 5,
+      },
+      result => {
+        expect(result.hasMoreData).to.be.false;
+        expect(result.value).to.satisfy(Array.isArray);
+        expect(result.value.length).to.be.equal(2);
+      },
+    );
   });
 });

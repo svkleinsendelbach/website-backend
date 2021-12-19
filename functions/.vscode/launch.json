@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Mocha Tests",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-      "args": ["${workspaceFolder}/lib/test/test1.spec.js"],
+      "args": ["${workspaceFolder}/test/test1.spec.ts"],
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": []
     }

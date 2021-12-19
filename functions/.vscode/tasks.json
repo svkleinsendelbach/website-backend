@@ -1,0 +1,48 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "auto guard",
+      "type": "shell",
+      "command": "node_modules/ts-auto-guard/lib/cli.js --debug --export-all",
+      "problemMatcher": []
+    },
+    {
+      "label": "prettier",
+      "type": "shell",
+      "command": "prettier --write \"**/*.ts\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "anpfiffInfoData test",
+      "type": "shell",
+      "command": "mocha -r ts-node/register --exit --timeout 90000 test/**/*.spec.ts -f \"${input:anpfiffInfoData-subTest}\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "firebase deploy",
+      "type": "shell",
+      "command": "cd .. && firebase deploy",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "anpfiffInfoData-subTest",
+      "type": "pickString",
+      "description": "Name of sub test for anpfiffInfoData.spec.ts test",
+      "options": [
+        "sub test",
+        "fetch webservice",
+        "fetch website",
+        "person/start",
+        "person/artikel",
+        "person/bilder",
+        "team/start",
+        "team/artikel"
+      ]
+    }
+  ]
+}

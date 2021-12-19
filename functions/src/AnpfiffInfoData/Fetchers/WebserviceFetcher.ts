@@ -1,9 +1,10 @@
-import { normalizeRefPathComponent, isDateRecent, DateOffset } from './utils';
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import fetch from 'cross-fetch';
+import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 import { parse, XmlDocument } from 'fsp-xml-parser';
-import { DebugProperties } from './DebugProperties';
+
+import { DebugProperties } from '../DebugProperties';
+import { DateOffset, isDateRecent, normalizeRefPathComponent } from '../utils';
 
 export class WebserviceFetcher<Params, T> {
   private readonly url: string;

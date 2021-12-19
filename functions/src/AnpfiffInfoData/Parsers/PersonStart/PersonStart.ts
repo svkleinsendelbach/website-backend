@@ -1,4 +1,4 @@
-import { TeamInfoParameters } from "./Parameters";
+import { TeamParameters } from '../../Parameters/TeamParameters';
 
 /** @see {isPersonStart} ts-auto-guard:type-guard */
 export interface PersonStart {
@@ -25,7 +25,7 @@ export interface PersonStart {
     season?: string;
     teamIconId?: number;
     teamName?: string;
-    teamParameters?: TeamInfoParameters;
+    teamParameters?: TeamParameters;
     league?: string;
     ascentDescent?: string;
   }[];
@@ -39,12 +39,12 @@ export interface PersonStart {
   seasonResults?: {
     season?: string;
     teamName?: string;
-    teamParameters?: TeamInfoParameters;
+    teamParameters?: TeamParameters;
     games?: number;
     goals?: number;
     assists?: number;
     substitutionsIn?: number;
-    substitutionsOut?: number | "R";
+    substitutionsOut?: number | 'R';
     yellowRedCards?: number;
     redCards?: number;
   }[];
@@ -52,7 +52,7 @@ export interface PersonStart {
     season?: string;
     teamIconId?: number;
     teamName?: string;
-    teamParameters?: TeamInfoParameters;
+    teamParameters?: TeamParameters;
     league?: string;
   }[];
 }

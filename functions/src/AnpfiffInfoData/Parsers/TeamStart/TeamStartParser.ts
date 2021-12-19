@@ -1,23 +1,21 @@
 import DOMParser from 'dom-parser';
-import { TeamStart } from '../Interfaces/TeamStart';
-import { HtmlNodeParser } from '../HtmlNodeParser';
-import { WebsiteFetcher } from '../WebsiteFetcher';
-import { DateOffset, regexGroup, toInt } from '../utils';
-import { isTeamStart } from '../InterfaceGuards/TeamStart.guard';
-import {
-  TeamInfoParameters,
-  getImageId,
-  getLigaInfoParameters,
-  getTeamInfoParameters,
-  getPersonInfoParameters,
-  getResultInfoParameters,
-} from '../Interfaces/Parameters';
-import { isTeamInfoParameters } from '../InterfaceGuards/Parameters.guard';
 
-export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters, TeamStart> {
-  public parametersGuard: (obj: any) => obj is TeamInfoParameters = isTeamInfoParameters;
+import { WebsiteFetcher } from '../../Fetchers/WebsiteFetcher';
+import { HtmlNodeParser } from '../../NodeParser/HtmlNodeParser';
+import { getLigaParameters } from '../../Parameters/LigaParameters';
+import { getImageId } from '../../Parameters/Parameters';
+import { getPersonParameters } from '../../Parameters/PersonParameters';
+import { getResultParameters } from '../../Parameters/ResultParameters';
+import { getTeamParameters, TeamParameters } from '../../Parameters/TeamParameters';
+import { isTeamParameters } from '../../Parameters/TeamParameters.guard';
+import { DateOffset, regexGroup, toInt } from '../../utils';
+import { TeamStart } from './TeamStart';
+import { isTeamStart } from './TeamStart.guard';
 
-  public getUrl(parameters: TeamInfoParameters): string {
+export class TeamStartParser implements WebsiteFetcher.Parser<TeamParameters, TeamStart> {
+  public parametersGuard: (obj: any) => obj is TeamParameters = isTeamParameters;
+
+  public getUrl(parameters: TeamParameters): string {
     return `http://www.anpfiff.info/sites/team/start.aspx?SK=${parameters.spielkreis}&Lg=${parameters.ligaId}&Tm=${parameters.teamId}&Ver=${parameters.teamId}&Sais=${parameters.saisonId}&Men=${parameters.men}`;
   }
 
@@ -30,9 +28,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
     const logoId = getImageId(parser.byId('ctl00_cph_modTeamseiteHeader_imgEmblem').attribute('src'));
     const name = parser.byId('ctl00_cph_modTeamseiteHeader_lblTeamName').stringValue;
     const ligaName = parser.byId('ctl00_cph_modTeamseiteHeader_hypLnkLiga').stringValue;
-    const ligaParameters = getLigaInfoParameters(
-      parser.byId('ctl00_cph_modTeamseiteHeader_hypLnkLiga').attribute('href'),
-    );
+    const ligaParameters = getLigaParameters(parser.byId('ctl00_cph_modTeamseiteHeader_hypLnkLiga').attribute('href'));
     const currentPlacement = parser
       .byId('ctl00_cph__ctrl_0_divTabelle')
       .byClassAt('div-snp', 0)
@@ -42,7 +38,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
           placement: node.byClassAt('f1_Platz', 0).intValue,
           logoId: getImageId(node.byClassAt('f1_Emblem', 0).childAt(0).attribute('src')),
           teamName: node.byClassAt('f1_Team', 0).childAt(0).stringValue,
-          teamParameters: getTeamInfoParameters(node.byClassAt('f1_Team', 0).childAt(0).attribute('href')),
+          teamParameters: getTeamParameters(node.byClassAt('f1_Team', 0).childAt(0).attribute('href')),
           totalGoals: node.byClassAt('f1_Sp', 0).intValue,
           goalsScored: toInt(node.byClassAt('f1_Tore', 0).regexGroup(/^(?<goalsScored>\d+):\d+$/, 'goalsScored')),
           goalsGot: toInt(node.byClassAt('f1_Tore', 0).regexGroup(/^\d+:(?<goalsGot>\d+)$/, 'goalsGot')),
@@ -54,7 +50,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
         return {
           imageId: getImageId(node.childAt(0).childAt(0).attribute('src')),
           name: node.childAt(1).childAt(0).childAt(0).stringValue,
-          personParameters: getPersonInfoParameters(node.childAt(1).childAt(0).childAt(0).attribute('href')),
+          personParameters: getPersonParameters(node.childAt(1).childAt(0).childAt(0).attribute('href')),
           totalGoals: node.childAt(2).childAt(1).intValue,
         };
       }),
@@ -66,7 +62,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
         return {
           imageId: getImageId(node.childAt(0).childAt(0).attribute('src')),
           name: node.childAt(1).childAt(0).stringValue,
-          personParameters: getPersonInfoParameters(node.childAt(1).childAt(0).attribute('href')),
+          personParameters: getPersonParameters(node.childAt(1).childAt(0).attribute('href')),
           totalAssists: node.childAt(2).childAt(1).intValue,
         };
       });
@@ -90,7 +86,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
               .childAt(0)
               .regexGroup(/^\d+:(?<goalsGot>\d+)$/, 'goalsGot'),
           ),
-          resultParamters: getResultInfoParameters(node.childAt(2).childAt(0).attribute('href')),
+          resultParamters: getResultParameters(node.childAt(2).childAt(0).attribute('href')),
         };
       });
     const nextGames = parser
@@ -103,7 +99,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamInfoParameters
             logoId: getImageId(node.childAt(0).childAt(0).attribute('src')),
             date: node.childAt(1).childAt(0).stringValue,
             opponentName: node.childAt(1).childAt(1).childAt(1).stringValue,
-            oppenentParameters: getTeamInfoParameters(node.childAt(1).childAt(1).childAt(1).attribute('href')),
+            oppenentParameters: getTeamParameters(node.childAt(1).childAt(1).childAt(1).attribute('href')),
             homeAway: (rawHomeAway == 'H' || rawHomeAway == 'A' ? rawHomeAway : undefined) as 'H' | 'A' | undefined,
             currentPlacement: toInt(
               regexGroup(

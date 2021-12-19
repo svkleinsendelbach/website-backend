@@ -1,16 +1,18 @@
 import DOMParser from 'dom-parser';
-import { PersonStart } from '../Interfaces/PersonStart';
-import { HtmlNodeParser } from '../HtmlNodeParser';
-import { WebsiteFetcher } from '../WebsiteFetcher';
-import { DateOffset } from '../utils';
-import { isPersonStart } from '../InterfaceGuards/PersonStart.guard';
-import { getImageId, getTeamInfoParameters, PersonInfoParameters } from '../Interfaces/Parameters';
-import { isPersonInfoParameters } from '../InterfaceGuards/Parameters.guard';
 
-export class PersonStartParser implements WebsiteFetcher.Parser<PersonInfoParameters, PersonStart> {
-  public parametersGuard: (obj: any) => obj is PersonInfoParameters = isPersonInfoParameters;
+import { WebsiteFetcher } from '../../Fetchers/WebsiteFetcher';
+import { HtmlNodeParser } from '../../NodeParser/HtmlNodeParser';
+import { getImageId } from '../../Parameters/Parameters';
+import { PersonParameters } from '../../Parameters/PersonParameters';
+import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
+import { DateOffset } from '../../utils';
+import { PersonStart } from './PersonStart';
+import { isPersonStart } from './PersonStart.guard';
 
-  public getUrl(parameters: PersonInfoParameters): string {
+export class PersonStartParser implements WebsiteFetcher.Parser<PersonParameters, PersonStart> {
+  public parametersGuard: (obj: any) => obj is PersonParameters = isPersonParameters;
+
+  public getUrl(parameters: PersonParameters): string {
     return `http://www.anpfiff.info/sites/person/start.aspx?SK=${parameters.spielkreis}&Pers=${parameters.personId}`;
   }
 
@@ -109,7 +111,7 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonInfoParame
           season: node.childAt(0).stringValue,
           teamIconId: getImageId(node.childAt(1).childAt(0).attribute('src')),
           teamName: node.childAt(2).textContent,
-          teamParameters: getTeamInfoParameters(node.childAt(2).childAt(0).attribute('href')),
+          teamParameters: getTeamParameters(node.childAt(2).childAt(0).attribute('href')),
           league: node.childAt(3).stringValue,
           ascentDescent: node.childAt(4).childAt(0).attribute('title'),
         };
@@ -134,7 +136,7 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonInfoParame
         return {
           season: node.childAt(0).stringValue,
           teamName: node.childAt(2).childAt(1).stringValue,
-          teamParameters: getTeamInfoParameters(node.childAt(2).childAt(1).attribute('href')),
+          teamParameters: getTeamParameters(node.childAt(2).childAt(1).attribute('href')),
           games: node.childAt(3).intValue,
           goals: node.childAt(4).intValue,
           assists: node.childAt(5).intValue,
@@ -152,7 +154,7 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonInfoParame
           season: node.childAt(0).stringValue,
           teamIconId: getImageId(node.childAt(1).childAt(0).attribute('src')),
           teamName: node.childAt(2).textContent,
-          teamParameters: getTeamInfoParameters(node.childAt(2).childAt(0).attribute('href')),
+          teamParameters: getTeamParameters(node.childAt(2).childAt(0).attribute('href')),
           league: node.childAt(3).stringValue,
         };
       });
@@ -167,4 +169,7 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonInfoParame
       coachStations: coachStations,
     };
   }
+}
+function getTeamParameters(arg0: string | undefined): any {
+  throw new Error('Function not implemented.');
 }

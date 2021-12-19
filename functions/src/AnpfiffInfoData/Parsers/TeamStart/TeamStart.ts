@@ -1,16 +1,19 @@
-import { LigaInfoParameters, TeamInfoParameters, PersonInfoParameters, ResultInfoParameters } from './Parameters';
+import { LigaParameters } from '../../Parameters/LigaParameters';
+import { PersonParameters } from '../../Parameters/PersonParameters';
+import { ResultParameters } from '../../Parameters/ResultParameters';
+import { TeamParameters } from '../../Parameters/TeamParameters';
 
 /** @see {isTeamStart} ts-auto-guard:type-guard */
 export interface TeamStart {
   logoId?: number;
   name?: string;
   ligaName?: string;
-  ligaParameters?: LigaInfoParameters;
+  ligaParameters?: LigaParameters;
   currentPlacement?: {
     placement?: number;
     logoId?: number;
     teamName?: string;
-    teamParameters?: TeamInfoParameters;
+    teamParameters?: TeamParameters;
     totalGames?: number;
     goalsScored?: number;
     goalsGot?: number;
@@ -19,13 +22,13 @@ export interface TeamStart {
   topGoalsPlayers?: {
     imageId?: number;
     name?: string;
-    personParameters?: PersonInfoParameters;
+    personParameters?: PersonParameters;
     totalGoals?: number;
   }[];
   topAssistsPlayers?: {
     imageId?: number;
     name?: string;
-    personParameters?: PersonInfoParameters;
+    personParameters?: PersonParameters;
     totalAssists?: number;
   }[];
   lastGames?: {
@@ -34,13 +37,13 @@ export interface TeamStart {
     awayTeam?: string;
     goalsHomeTeam?: number;
     goalsAwayTeam?: number;
-    resultParameters?: ResultInfoParameters;
+    resultParameters?: ResultParameters;
   }[];
   nextGames?: {
     logoId?: number;
     date?: string;
     opponentName?: string;
-    opponentParameters?: TeamInfoParameters;
+    opponentParameters?: TeamParameters;
     homeAway?: 'H' | 'A';
     currentPlacement?: number;
   }[];

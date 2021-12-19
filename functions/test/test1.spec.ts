@@ -6,8 +6,8 @@ import DOMParser from 'dom-parser';
 import { getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { firebaseConfig, testUser } from './firebaseConfig';
 import { expect } from 'chai';
-import { TeamStartParser } from '../src/AnpfiffInfoData/WebsiteParser/TeamStartParser';
-import { PersonBilderParser } from '../src/AnpfiffInfoData/WebsiteParser/PersonBilderParser';
+import { TeamStartParser } from '../src/AnpfiffInfoData/Parsers/TeamStart/TeamStartParser';
+import { PersonBilderParser } from '../src/AnpfiffInfoData/Parsers/PersonBilder/PersonBilderParser';
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, 'europe-west1');

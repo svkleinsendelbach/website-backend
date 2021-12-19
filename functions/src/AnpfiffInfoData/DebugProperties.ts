@@ -1,5 +1,5 @@
-import { isDebugPropertiesRawValue } from "./InterfaceGuards/DebugProperties.guard";
-import { DateOffset } from "./utils";
+import { isDebugPropertiesRawValue } from './DebugProperties.guard';
+import { DateOffset } from './utils';
 
 export class DebugProperties {
   private static DEFAULT_RAW_VALUES = {
@@ -16,8 +16,8 @@ export class DebugProperties {
     }
   }
 
-  public get ["dateOffset"](): DateOffset | undefined {
-    if (typeof this.rawValue == "boolean") {
+  public get ['dateOffset'](): DateOffset | undefined {
+    if (typeof this.rawValue == 'boolean') {
       if (this.rawValue) {
         return DebugProperties.DEFAULT_RAW_VALUES.dateOffset;
       }

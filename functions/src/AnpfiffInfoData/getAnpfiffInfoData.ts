@@ -1,10 +1,11 @@
-import { PersonStartParser } from './WebsiteParser/PersonStartParser';
-import { WebsiteFetcher } from './WebsiteFetcher';
-import { PersonArtikelParser } from './WebsiteParser/PersonArtikelParser';
-import { PersonBilderParser } from './WebsiteParser/PersonBilderParser';
-import { WebserviceFetcher } from './WebserviceFetcher';
 import * as functions from 'firebase-functions';
-import { TeamStartParser } from './WebsiteParser/TeamStartParser';
+
+import { WebserviceFetcher } from './Fetchers/WebserviceFetcher';
+import { WebsiteFetcher } from './Fetchers/WebsiteFetcher';
+import { PersonArtikelParser } from './Parsers/PersonArtikel/PersonArtikelParser';
+import { PersonBilderParser } from './Parsers/PersonBilder/PersonBilderParser';
+import { PersonStartParser } from './Parsers/PersonStart/PersonStartParser';
+import { TeamStartParser } from './Parsers/TeamStart/TeamStartParser';
 
 export async function getAnpfiffInfoData(data: any): Promise<any> {
   const websiteParser = getWebsiteParser(data.website);

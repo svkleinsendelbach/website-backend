@@ -1,5 +1,6 @@
-import DOMParser from "dom-parser";
-import { toNumber, toInt } from "./utils";
+import DOMParser from 'dom-parser';
+
+import { toInt, toNumber } from '../utils';
 
 export class HtmlNodeParser {
   public constructor(public readonly dom: DOMParser.Dom) {}
@@ -13,9 +14,7 @@ export class HtmlNodeParser {
   }
 
   public byClass(className: string): HtmlNodeParserWithNodeList {
-    return new HtmlNodeParserWithNodeList(
-      this.dom.getElementsByClassName(className) ?? undefined
-    );
+    return new HtmlNodeParserWithNodeList(this.dom.getElementsByClassName(className) ?? undefined);
   }
 
   public byClassAt(className: string, index: number): HtmlNodeParserWithNode {
@@ -38,15 +37,11 @@ export class HtmlNodeParserWithNode {
   }
 
   public byId(id: string): HtmlNodeParserWithNode {
-    return new HtmlNodeParserWithNode(
-      this.node?.getElementById(id) ?? undefined
-    );
+    return new HtmlNodeParserWithNode(this.node?.getElementById(id) ?? undefined);
   }
 
   public byClass(className: string): HtmlNodeParserWithNodeList {
-    return new HtmlNodeParserWithNodeList(
-      this.node?.getElementsByClassName(className) ?? undefined
-    );
+    return new HtmlNodeParserWithNodeList(this.node?.getElementsByClassName(className) ?? undefined);
   }
 
   public byClassAt(className: string, index: number): HtmlNodeParserWithNode {
@@ -60,7 +55,7 @@ export class HtmlNodeParserWithNode {
     return new HtmlNodeParserWithNode(nodeList[index]);
   }
 
-  public get ["children"](): HtmlNodeParserWithNodeList {
+  public get ['children'](): HtmlNodeParserWithNodeList {
     return new HtmlNodeParserWithNodeList(this.node?.childNodes);
   }
 
@@ -79,19 +74,19 @@ export class HtmlNodeParserWithNode {
     return this.node?.getAttribute(name) ?? undefined;
   }
 
-  public get ["stringValue"](): string | undefined {
+  public get ['stringValue'](): string | undefined {
     return this.node?.innerHTML;
   }
 
-  public get ["textContent"](): string | undefined {
+  public get ['textContent'](): string | undefined {
     return this.node?.textContent;
   }
 
-  public get ["numberValue"](): number | undefined {
+  public get ['numberValue'](): number | undefined {
     return toNumber(this.node?.innerHTML);
   }
 
-  public get ["intValue"](): number | undefined {
+  public get ['intValue'](): number | undefined {
     return toInt(this.node?.innerHTML);
   }
 
@@ -106,10 +101,7 @@ export class HtmlNodeParserWithNode {
     return groupList[groupName];
   }
 
-  public regexGroupToNumber(
-    regex: RegExp,
-    groupName: string
-  ): number | undefined {
+  public regexGroupToNumber(regex: RegExp, groupName: string): number | undefined {
     return toNumber(this.regexGroup(regex, groupName));
   }
 
@@ -117,11 +109,7 @@ export class HtmlNodeParserWithNode {
     return toInt(this.regexGroup(regex, groupName));
   }
 
-  public regexGroupOnAttribute(
-    name: string,
-    regex: RegExp,
-    groupName: string
-  ): string | undefined {
+  public regexGroupOnAttribute(name: string, regex: RegExp, groupName: string): string | undefined {
     const attribute = this.node?.getAttribute(name) ?? undefined;
     if (attribute == undefined) {
       return undefined;
@@ -133,44 +121,26 @@ export class HtmlNodeParserWithNode {
     return groupList[groupName];
   }
 
-  public regexGroupOnAttributeToNumber(
-    name: string,
-    regex: RegExp,
-    groupName: string
-  ): number | undefined {
+  public regexGroupOnAttributeToNumber(name: string, regex: RegExp, groupName: string): number | undefined {
     return toNumber(this.regexGroupOnAttribute(name, regex, groupName));
   }
 
-  public regexGroupOnAttributeToInt(
-    name: string,
-    regex: RegExp,
-    groupName: string
-  ): number | undefined {
+  public regexGroupOnAttributeToInt(name: string, regex: RegExp, groupName: string): number | undefined {
     return toInt(this.regexGroupOnAttribute(name, regex, groupName));
   }
 }
 
-export class HtmlNodeParserWithNodeList
-  implements Iterable<HtmlNodeParserWithNode>
-{
+export class HtmlNodeParserWithNodeList implements Iterable<HtmlNodeParserWithNode> {
   public constructor(public readonly nodeList: DOMParser.Node[] | undefined) {}
 
   [Symbol.iterator](): Iterator<HtmlNodeParserWithNode, any, undefined> {
-    return (this.nodeList?.map((n) => new HtmlNodeParserWithNode(n)) ?? [])[
-      Symbol.iterator
-    ]();
+    return (this.nodeList?.map(n => new HtmlNodeParserWithNode(n)) ?? [])[Symbol.iterator]();
   }
 
   public map<U>(
-    callbackfn: (
-      value: HtmlNodeParserWithNode,
-      index: number,
-      array: HtmlNodeParserWithNode[]
-    ) => U
+    callbackfn: (value: HtmlNodeParserWithNode, index: number, array: HtmlNodeParserWithNode[]) => U,
   ): U[] | undefined {
-    return this.nodeList
-      ?.map((n) => new HtmlNodeParserWithNode(n))
-      .map(callbackfn);
+    return this.nodeList?.map(n => new HtmlNodeParserWithNode(n)).map(callbackfn);
   }
 
   public flatMap<U, This = undefined>(
@@ -178,12 +148,10 @@ export class HtmlNodeParserWithNodeList
       this: This,
       value: HtmlNodeParserWithNode,
       index: number,
-      array: HtmlNodeParserWithNode[]
-    ) => U | ReadonlyArray<U>
+      array: HtmlNodeParserWithNode[],
+    ) => U | ReadonlyArray<U>,
   ): U[] | undefined {
-    return this.nodeList
-      ?.map((n) => new HtmlNodeParserWithNode(n))
-      .flatMap(callback);
+    return this.nodeList?.map(n => new HtmlNodeParserWithNode(n)).flatMap(callback);
   }
 
   public slice(start?: number, end?: number): HtmlNodeParserWithNodeList {
@@ -191,14 +159,8 @@ export class HtmlNodeParserWithNodeList
   }
 
   public forEach(
-    callbackfn: (
-      value: HtmlNodeParserWithNode,
-      index: number,
-      array: HtmlNodeParserWithNode[]
-    ) => void
+    callbackfn: (value: HtmlNodeParserWithNode, index: number, array: HtmlNodeParserWithNode[]) => void,
   ): void {
-    this.nodeList
-      ?.map((n) => new HtmlNodeParserWithNode(n))
-      .forEach(callbackfn);
+    this.nodeList?.map(n => new HtmlNodeParserWithNode(n)).forEach(callbackfn);
   }
 }

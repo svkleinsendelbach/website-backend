@@ -1,10 +1,11 @@
-import { toNumber, toInt } from "./utils";
-import { XmlNode } from "fsp-xml-parser";
+import { XmlNode } from 'fsp-xml-parser';
+
+import { toInt, toNumber } from '../utils';
 
 export class XmlNodeParser {
   public constructor(public readonly node: XmlNode | undefined) {}
 
-  public get ["children"](): XmlNodeParserWithNodeList {
+  public get ['children'](): XmlNodeParserWithNodeList {
     return new XmlNodeParserWithNodeList(this.node?.children);
   }
 
@@ -30,43 +31,24 @@ export class XmlNodeParserWithNodeList implements Iterable<XmlNodeParser> {
   public constructor(public readonly nodeList: XmlNode[] | undefined) {}
 
   [Symbol.iterator](): Iterator<XmlNodeParser, any, undefined> {
-    return (this.nodeList?.map((n) => new XmlNodeParser(n)) ?? [])[
-      Symbol.iterator
-    ]();
+    return (this.nodeList?.map(n => new XmlNodeParser(n)) ?? [])[Symbol.iterator]();
   }
 
-  public map<U>(
-    callbackfn: (
-      value: XmlNodeParser,
-      index: number,
-      array: XmlNodeParser[]
-    ) => U
-  ): U[] | undefined {
-    return this.nodeList?.map((n) => new XmlNodeParser(n)).map(callbackfn);
+  public map<U>(callbackfn: (value: XmlNodeParser, index: number, array: XmlNodeParser[]) => U): U[] | undefined {
+    return this.nodeList?.map(n => new XmlNodeParser(n)).map(callbackfn);
   }
 
   public flatMap<U, This = undefined>(
-    callback: (
-      this: This,
-      value: XmlNodeParser,
-      index: number,
-      array: XmlNodeParser[]
-    ) => U | ReadonlyArray<U>
+    callback: (this: This, value: XmlNodeParser, index: number, array: XmlNodeParser[]) => U | ReadonlyArray<U>,
   ): U[] | undefined {
-    return this.nodeList?.map((n) => new XmlNodeParser(n)).flatMap(callback);
+    return this.nodeList?.map(n => new XmlNodeParser(n)).flatMap(callback);
   }
 
   public slice(start?: number, end?: number): XmlNodeParserWithNodeList {
     return new XmlNodeParserWithNodeList(this.nodeList?.slice(start, end));
   }
 
-  public forEach(
-    callbackfn: (
-      value: XmlNodeParser,
-      index: number,
-      array: XmlNodeParser[]
-    ) => void
-  ): void {
-    this.nodeList?.map((n) => new XmlNodeParser(n)).forEach(callbackfn);
+  public forEach(callbackfn: (value: XmlNodeParser, index: number, array: XmlNodeParser[]) => void): void {
+    this.nodeList?.map(n => new XmlNodeParser(n)).forEach(callbackfn);
   }
 }

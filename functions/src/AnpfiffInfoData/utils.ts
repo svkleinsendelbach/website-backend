@@ -7,6 +7,8 @@ export interface DateOffset {
   second?: number;
 }
 
+export const DEFAULT_DATE_OFFSET: DateOffset = { day: 1 };
+
 export function isDateRecent(date: Date, offset: DateOffset): boolean {
   const testDate = new Date();
   testDate.setDate(testDate.getDate() - (offset.day ?? 0));

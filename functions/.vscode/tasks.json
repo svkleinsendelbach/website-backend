@@ -31,18 +31,8 @@
   "inputs": [
     {
       "id": "anpfiffInfoData-subTest",
-      "type": "pickString",
-      "description": "Name of sub test for anpfiffInfoData.spec.ts test",
-      "options": [
-        "sub test",
-        "fetch webservice",
-        "fetch website",
-        "person/start",
-        "person/artikel",
-        "person/bilder",
-        "team/start",
-        "team/artikel"
-      ]
+      "type": "promptString",
+      "description": "Name of sub test for anpfiffInfoData.spec.ts test"
     }
   ]
 }

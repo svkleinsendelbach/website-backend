@@ -8,7 +8,7 @@ import { getPersonParameters } from '../../Parameters/PersonParameters';
 import { getResultParameters } from '../../Parameters/ResultParameters';
 import { getTeamParameters, TeamParameters } from '../../Parameters/TeamParameters';
 import { isTeamParameters } from '../../Parameters/TeamParameters.guard';
-import { DateOffset, regexGroup, toInt } from '../../utils';
+import { DateOffset, DEFAULT_DATE_OFFSET, regexGroup, toInt } from '../../utils';
 import { TeamStart } from './TeamStart';
 import { isTeamStart } from './TeamStart.guard';
 
@@ -19,7 +19,7 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamParameters, Te
     return `http://www.anpfiff.info/sites/team/start.aspx?SK=${parameters.spielkreis}&Lg=${parameters.ligaId}&Tm=${parameters.teamId}&Ver=${parameters.vereinId}&Sais=${parameters.saisonId}&Men=${parameters.men}`;
   }
 
-  public readonly dateOffset: DateOffset = { day: 1 };
+  public readonly dateOffset: DateOffset = DEFAULT_DATE_OFFSET;
 
   public interfaceGuard: (obj: any) => obj is TeamStart = isTeamStart;
 

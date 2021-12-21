@@ -5,7 +5,7 @@ import { HtmlNodeParser } from '../../NodeParser/HtmlNodeParser';
 import { getImageId } from '../../Parameters/Parameters';
 import { PersonParameters } from '../../Parameters/PersonParameters';
 import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
-import { DateOffset } from '../../utils';
+import { DateOffset, DEFAULT_DATE_OFFSET } from '../../utils';
 import { PersonStart } from './PersonStart';
 import { isPersonStart } from './PersonStart.guard';
 
@@ -16,7 +16,7 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonParameters
     return `http://www.anpfiff.info/sites/person/start.aspx?SK=${parameters.spielkreis}&Pers=${parameters.personId}`;
   }
 
-  public readonly dateOffset: DateOffset = { day: 1 };
+  public readonly dateOffset: DateOffset = DEFAULT_DATE_OFFSET;
 
   public interfaceGuard: (obj: any) => obj is PersonStart = isPersonStart;
 

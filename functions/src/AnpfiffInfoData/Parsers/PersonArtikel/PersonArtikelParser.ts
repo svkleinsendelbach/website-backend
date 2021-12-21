@@ -4,7 +4,7 @@ import { WebserviceFetcher } from '../../Fetchers/WebserviceFetcher';
 import { XmlNodeParser } from '../../NodeParser/XmlNodeParser';
 import { PersonParameters } from '../../Parameters/PersonParameters';
 import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
-import { DateOffset } from '../../utils';
+import { DateOffset, DEFAULT_DATE_OFFSET } from '../../utils';
 import { PersonArtikel } from './PersonArtikel';
 import { isPersonArtikel } from './PersonArtikel.guard';
 
@@ -19,7 +19,7 @@ export class PersonArtikelParser implements WebserviceFetcher.Parser<PersonParam
     }&intRowBis=${parameters.rowBis + 1}`;
   }
 
-  public readonly dateOffset: DateOffset = { day: 1 };
+  public readonly dateOffset: DateOffset = DEFAULT_DATE_OFFSET;
 
   public interfaceGuard: (obj: any) => obj is PersonArtikel = isPersonArtikel;
 

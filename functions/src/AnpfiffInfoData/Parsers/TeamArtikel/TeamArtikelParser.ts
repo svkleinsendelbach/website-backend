@@ -3,7 +3,7 @@ import { XmlDocument } from 'fsp-xml-parser';
 import { WebserviceFetcher } from '../../Fetchers/WebserviceFetcher';
 import { TeamParameters } from '../../Parameters/TeamParameters';
 import { isTeamParameters } from '../../Parameters/TeamParameters.guard';
-import { DateOffset } from '../../utils';
+import { DateOffset, DEFAULT_DATE_OFFSET } from '../../utils';
 import { PersonArtikelParser } from '../PersonArtikel/PersonArtikelParser';
 import { TeamArtikel } from './TeamArtikel';
 import { isTeamArtikel } from './TeamArtikel.guard';
@@ -19,7 +19,7 @@ export class TeamArtikelParser implements WebserviceFetcher.Parser<TeamParameter
     }&intRowVon=${parameters.rowVon}&intRowBis=${parameters.rowBis + 1}`;
   }
 
-  public readonly dateOffset: DateOffset = { day: 1 };
+  public readonly dateOffset: DateOffset = DEFAULT_DATE_OFFSET;
 
   public interfaceGuard: (obj: any) => obj is TeamArtikel = isTeamArtikel;
 

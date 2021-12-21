@@ -1,34 +1,10 @@
 import { expect } from 'chai';
-import fetch from 'cross-fetch';
 import DOMParser from 'dom-parser';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
-import { getFunctions, httpsCallable } from 'firebase/functions';
 import { parse } from 'fsp-xml-parser';
 
 import { PersonArtikelParser } from '../src/AnpfiffInfoData/Parsers/PersonArtikel/PersonArtikelParser';
 import { TeamStartParser } from '../src/AnpfiffInfoData/Parsers/TeamStart/TeamStartParser';
-import { firebaseConfig, testUser } from './firebaseConfig';
-
-const app = initializeApp(firebaseConfig);
-const functions = getFunctions(app, 'europe-west1');
-export const auth = getAuth();
-
-export async function signInTestUser(): Promise<UserCredential> {
-  return await signInWithEmailAndPassword(auth, testUser.email, testUser.password);
-}
-
-export async function callFunction(functionName: string, parameters: any | undefined = undefined): Promise<any> {
-  return (await httpsCallable(functions, functionName)(parameters)).data;
-}
-
-export async function wait(milliseconds: number): Promise<void> {
-  return new Promise((resolve, _reject) => {
-    setTimeout(() => {
-      resolve();
-    }, milliseconds);
-  });
-}
+import { callFunction, wait } from './utils';
 
 describe('anpfiffInfoData', () => {
   it('sub test', async () => {
@@ -75,7 +51,7 @@ describe('anpfiffInfoData', () => {
     expect(result1.origin).to.be.equal('fetch');
     additionalExpect?.(result1);
 
-    console.log(JSON.stringify(result1.value));
+    console.log(JSON.stringify(result1.value, undefined, 2));
 
     const result2 = await callFunction('getAnpfiffInfoData', {
       website: website,
@@ -171,6 +147,27 @@ describe('anpfiffInfoData', () => {
         expect(result.hasMoreData).to.be.false;
         expect(result.value).to.satisfy(Array.isArray);
         expect(result.value.length).to.be.equal(2);
+      },
+    );
+  });
+
+  it('team/bilder', async () => {
+    await testAnpfiffInfoFetcher(
+      'team/bilder',
+      {
+        spielkreis: 2,
+        ligaId: 28,
+        teamId: 30675,
+        vereinId: 294,
+        saisonId: 123,
+        men: 19,
+        rowVon: 1,
+        rowBis: 5,
+      },
+      result => {
+        expect(result.hasMoreData).to.be.false;
+        expect(result.value).to.satisfy(Array.isArray);
+        expect(result.value.length).to.be.equal(1);
       },
     );
   });

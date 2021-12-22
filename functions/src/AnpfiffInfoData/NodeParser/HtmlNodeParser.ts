@@ -75,7 +75,10 @@ export class HtmlNodeParserWithNode {
   }
 
   public get ['stringValue'](): string | undefined {
-    return this.node?.innerHTML;
+    if (this.node?.childNodes == undefined) {
+      return undefined;
+    }
+    return this.node.innerHTML;
   }
 
   public get ['textContent'](): string | undefined {
@@ -83,11 +86,11 @@ export class HtmlNodeParserWithNode {
   }
 
   public get ['numberValue'](): number | undefined {
-    return toNumber(this.node?.innerHTML);
+    return toNumber(this.stringValue);
   }
 
   public get ['intValue'](): number | undefined {
-    return toInt(this.node?.innerHTML);
+    return toInt(this.stringValue);
   }
 
   public regexGroup(regex: RegExp, groupName: string): string | undefined {
@@ -127,6 +130,33 @@ export class HtmlNodeParserWithNode {
 
   public regexGroupOnAttributeToInt(name: string, regex: RegExp, groupName: string): number | undefined {
     return toInt(this.regexGroupOnAttribute(name, regex, groupName));
+  }
+
+  public get ['description'](): string {
+    if (this.node === undefined) {
+      return 'undefined';
+    }
+    return JSON.stringify(this.nodeObject, undefined, 2);
+  }
+
+  private get ['nodeObject'](): any {
+    if (this.node === undefined) {
+      return undefined;
+    }
+    if (this.node.childNodes == undefined) {
+      return this.node.textContent;
+    }
+    return this.node.childNodes.flatMap((node, index) => {
+      return {
+        index: index,
+        id: node.getAttribute('id') ?? undefined,
+        class: node.getAttribute('class') ?? undefined,
+        src: node.getAttribute('src') ?? undefined,
+        href: node.getAttribute('href') ?? undefined,
+        content: node.childNodes != undefined ? undefined : node.textContent,
+        children: node.childNodes != undefined ? new HtmlNodeParserWithNode(node).nodeObject : undefined,
+      };
+    });
   }
 }
 

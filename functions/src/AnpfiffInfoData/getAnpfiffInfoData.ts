@@ -7,6 +7,7 @@ import { PersonBilderParser } from './Parsers/PersonBilder/PersonBilderParser';
 import { PersonStartParser } from './Parsers/PersonStart/PersonStartParser';
 import { TeamArtikelParser } from './Parsers/TeamArtikel/TeamArtikelParser';
 import { TeamBilderParser } from './Parsers/TeamBilder/TeamBilderParser';
+import { TeamKaderParser } from './Parsers/TeamKader/TeamKaderParser';
 import { TeamStartParser } from './Parsers/TeamStart/TeamStartParser';
 
 export async function getAnpfiffInfoData(data: any): Promise<any> {
@@ -29,6 +30,8 @@ function getWebsiteParser(website: string): WebsiteFetcher.Parser<any, any> | un
       return new PersonStartParser();
     case 'team/start':
       return new TeamStartParser();
+    case 'team/kader':
+      return new TeamKaderParser();
     default:
       return undefined;
   }

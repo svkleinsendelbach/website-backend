@@ -115,25 +115,23 @@ export class TeamStartParser implements WebsiteFetcher.Parser<TeamParameters, Te
       .byId('ctl00_cph__ctrl_0_divZahlen')
       .byClassAt('div-snp', 0)
       .byClassAt('row-snp', 0)
-      .map(node => {
-        return {
-          totalGames: node.childAt(0).childAt(0).childAt(2).childAt(0).intValue,
-          gamesWon: node.childAt(1).childAt(0).childAt(2).childAt(0).intValue,
-          gamesDraw: node.childAt(2).childAt(0).childAt(2).childAt(0).intValue,
-          gamesLost: node.childAt(3).childAt(0).childAt(2).childAt(0).intValue,
-          gamesToZero: node.childAt(4).childAt(0).childAt(2).childAt(0).intValue,
-          gamesWithoutGoalsShot: node.childAt(5).childAt(0).childAt(2).childAt(0).intValue,
-          totalGoals: node.childAt(6).childAt(0).childAt(2).childAt(0).intValue,
-          numberDiffernetScorer: node.childAt(7).childAt(0).childAt(2).childAt(0).intValue,
-          ownGoals: node.childAt(8).childAt(0).childAt(2).childAt(0).intValue,
-          penaltyGoals: node.childAt(9).childAt(0).childAt(2).childAt(0).intValue,
-          totalYellowCards: node.childAt(10).childAt(0).childAt(2).childAt(0).intValue,
-          totalYellowRedCards: node.childAt(11).childAt(0).childAt(2).childAt(0).intValue,
-          totalRedCards: node.childAt(12).childAt(0).childAt(2).childAt(0).intValue,
-          totalPlayers: node.childAt(13).childAt(0).childAt(2).childAt(0).intValue,
-          spectetors: node.childAt(14).childAt(0).childAt(2).childAt(0).intValue,
-          averageSpectators: node.childAt(15).childAt(0).childAt(2).childAt(0).intValue,
-        };
+      .getZahlenProperties({
+        totalGames: 'Spiele',
+        gamesWon: 'Spiele gewonnen',
+        gamesDraw: 'Spiele unentschieden',
+        gamesLost: 'Spiele verloren',
+        gamesToZero: 'Zu-Null-Spiele',
+        gamesWithoutGoalsShot: 'Spiele ohne eigenen Treffer',
+        totalGoals: 'Tore gesamt',
+        numberDiffernetScorer: 'Verschiedene Torschützen',
+        ownGoals: 'Eigentore',
+        penaltyGoals: 'Elfmetertore',
+        totalYellowCards: 'Gelbe Karten',
+        totalYellowRedCards: 'Gelb-rote Karten',
+        totalRedCards: 'Rote Karten',
+        totalPlayers: 'Eingesetzte Spieler',
+        spectetors: 'Zuschauer',
+        averageSpectators: 'Zuschauerschnitt',
       });
     return {
       logoId: logoId,

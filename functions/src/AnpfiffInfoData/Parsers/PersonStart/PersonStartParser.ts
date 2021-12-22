@@ -5,6 +5,7 @@ import { HtmlNodeParser } from '../../NodeParser/HtmlNodeParser';
 import { getImageId } from '../../Parameters/Parameters';
 import { PersonParameters } from '../../Parameters/PersonParameters';
 import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
+import { getTeamParameters } from '../../Parameters/TeamParameters';
 import { DateOffset, DEFAULT_DATE_OFFSET } from '../../utils';
 import { PersonStart } from './PersonStart';
 import { isPersonStart } from './PersonStart.guard';
@@ -45,64 +46,16 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonParameters
             break;
         }
       });
-    const carrier = {
-      totalGames: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(0)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      gamesWon: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(1)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      gamesDraw: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(2)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      gamesLost: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(3)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      totalGoals: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(4)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      totalTeams: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(5)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      totalAscents: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(6)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-      totalDescents: parser
-        .byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH')
-        .byClassAt('row-snp', 0)
-        .childAt(7)
-        .childAt(0)
-        .childAt(2)
-        .childAt(0).intValue,
-    };
+    const carrier = parser.byId('ctl00_cphR__ctrl_3_divSpielerKarriereIH').byClassAt('row-snp', 0).getZahlenProperties({
+      totalGames: 'Spiele',
+      gamesWon: 'Spiele gewonnen',
+      gamesDraw: 'Spiele unentschieden',
+      gamesLost: 'Spiele verloren',
+      totalGoals: 'Tore gesamt',
+      totalTeams: 'Vereine',
+      totalAscents: 'Aufstiege',
+      totalDescents: 'Abstiege',
+    });
     const playerStations = parser
       .byId('ctl00_cphR__ctrl_3_divSpielerStationenIH')
       .byClassAt('div-snp', 0)
@@ -169,7 +122,4 @@ export class PersonStartParser implements WebsiteFetcher.Parser<PersonParameters
       coachStations: coachStations,
     };
   }
-}
-function getTeamParameters(arg0: string | undefined): any {
-  throw new Error('Function not implemented.');
 }

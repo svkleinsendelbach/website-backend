@@ -4,7 +4,7 @@ import DOMParser from 'dom-parser';
 import { parse } from 'fsp-xml-parser';
 
 import { PersonArtikelParser } from '../src/AnpfiffInfoData/Parsers/PersonArtikel/PersonArtikelParser';
-import { TeamKaderParser } from '../src/AnpfiffInfoData/Parsers/TeamKader/TeamKaderParser';
+import { PersonStartParser } from '../src/AnpfiffInfoData/Parsers/PersonStart/PersonStartParser';
 import { callFunction, wait } from './utils';
 
 describe('anpfiffInfoData', () => {
@@ -26,10 +26,10 @@ describe('anpfiffInfoData', () => {
   });
 
   it('fetch website', async () => {
-    const url = 'http://www.anpfiff.info/sites/team/kader.aspx?SK=2&Lg=202&Tm=25458&Ver=329&Sais=123&Men=19';
+    const url = 'http://www.anpfiff.info/sites/person/start.aspx?SK=2&Pers=257472';
     const html = await (await fetch(url)).text();
     const dom = new DOMParser().parseFromString(html);
-    const parser = new TeamKaderParser();
+    const parser = new PersonStartParser();
     const data = parser.parseWebsite(dom);
     console.log(data);
   });
@@ -175,6 +175,17 @@ describe('anpfiffInfoData', () => {
 
   it('team/kader', async () => {
     await testAnpfiffInfoFetcher('team/kader', {
+      spielkreis: 2,
+      ligaId: 28,
+      teamId: 30675,
+      vereinId: 294,
+      saisonId: 123,
+      men: 19,
+    });
+  });
+
+  it('team/spiele', async () => {
+    await testAnpfiffInfoFetcher('team/spiele', {
       spielkreis: 2,
       ligaId: 28,
       teamId: 30675,

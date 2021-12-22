@@ -3,7 +3,7 @@
  * WARNING: Do not manually change this file.
  */
 import { isPersonParameters } from '../../Parameters/PersonParameters.guard';
-import { TeamKader } from './TeamKader';
+import { TeamKader, TeamKaderPerson } from './TeamKader';
 
 function evaluate(isCorrect: boolean, varName: string, expected: string, actual: any): boolean {
   if (!isCorrect) {
@@ -21,300 +21,43 @@ export function isTeamKader(obj: any, argumentName: string = 'teamKader'): obj i
           evaluate(
             typeof obj.kader.torwart === 'undefined' ||
               (Array.isArray(obj.kader.torwart) &&
-                obj.kader.torwart.every(
-                  (e: any, i0: number) =>
-                    ((e !== null && typeof e === 'object') || typeof e === 'function') &&
-                    evaluate(
-                      typeof e.imageId === 'undefined' || typeof e.imageId === 'number',
-                      `${argumentName}.kader.torwart[${i0}].imageId`,
-                      'number | undefined',
-                      e.imageId,
-                    ) &&
-                    evaluate(
-                      typeof e.firstName === 'undefined' || typeof e.firstName === 'string',
-                      `${argumentName}.kader.torwart[${i0}].firstName`,
-                      'string | undefined',
-                      e.firstName,
-                    ) &&
-                    evaluate(
-                      typeof e.lastName === 'undefined' || typeof e.lastName === 'string',
-                      `${argumentName}.kader.torwart[${i0}].lastName`,
-                      'string | undefined',
-                      e.lastName,
-                    ) &&
-                    evaluate(
-                      typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
-                      `${argumentName}.kader.torwart[${i0}].personParameters`,
-                      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
-                      e.personParameters,
-                    ) &&
-                    evaluate(
-                      typeof e.age === 'undefined' || typeof e.age === 'number',
-                      `${argumentName}.kader.torwart[${i0}].age`,
-                      'number | undefined',
-                      e.age,
-                    ) &&
-                    evaluate(
-                      typeof e.inSquad === 'undefined' || typeof e.inSquad === 'number',
-                      `${argumentName}.kader.torwart[${i0}].inSquad`,
-                      'number | undefined',
-                      e.inSquad,
-                    ) &&
-                    evaluate(
-                      typeof e.goals === 'undefined' || typeof e.goals === 'number',
-                      `${argumentName}.kader.torwart[${i0}].goals`,
-                      'number | undefined',
-                      e.goals,
-                    ) &&
-                    evaluate(
-                      typeof e.assists === 'undefined' || typeof e.assists === 'number',
-                      `${argumentName}.kader.torwart[${i0}].assists`,
-                      'number | undefined',
-                      e.assists,
-                    ),
-                )),
+                obj.kader.torwart.every((e: any) => isTeamKaderPerson(e) as boolean)),
             `${argumentName}.kader.torwart`,
-            'TeamKaderPerson[] | undefined',
+            'import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined',
             obj.kader.torwart,
           ) &&
           evaluate(
             typeof obj.kader.abwehr === 'undefined' ||
-              (Array.isArray(obj.kader.abwehr) &&
-                obj.kader.abwehr.every(
-                  (e: any, i0: number) =>
-                    ((e !== null && typeof e === 'object') || typeof e === 'function') &&
-                    evaluate(
-                      typeof e.imageId === 'undefined' || typeof e.imageId === 'number',
-                      `${argumentName}.kader.abwehr[${i0}].imageId`,
-                      'number | undefined',
-                      e.imageId,
-                    ) &&
-                    evaluate(
-                      typeof e.firstName === 'undefined' || typeof e.firstName === 'string',
-                      `${argumentName}.kader.abwehr[${i0}].firstName`,
-                      'string | undefined',
-                      e.firstName,
-                    ) &&
-                    evaluate(
-                      typeof e.lastName === 'undefined' || typeof e.lastName === 'string',
-                      `${argumentName}.kader.abwehr[${i0}].lastName`,
-                      'string | undefined',
-                      e.lastName,
-                    ) &&
-                    evaluate(
-                      typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
-                      `${argumentName}.kader.abwehr[${i0}].personParameters`,
-                      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
-                      e.personParameters,
-                    ) &&
-                    evaluate(
-                      typeof e.age === 'undefined' || typeof e.age === 'number',
-                      `${argumentName}.kader.abwehr[${i0}].age`,
-                      'number | undefined',
-                      e.age,
-                    ) &&
-                    evaluate(
-                      typeof e.inSquad === 'undefined' || typeof e.inSquad === 'number',
-                      `${argumentName}.kader.abwehr[${i0}].inSquad`,
-                      'number | undefined',
-                      e.inSquad,
-                    ) &&
-                    evaluate(
-                      typeof e.goals === 'undefined' || typeof e.goals === 'number',
-                      `${argumentName}.kader.abwehr[${i0}].goals`,
-                      'number | undefined',
-                      e.goals,
-                    ) &&
-                    evaluate(
-                      typeof e.assists === 'undefined' || typeof e.assists === 'number',
-                      `${argumentName}.kader.abwehr[${i0}].assists`,
-                      'number | undefined',
-                      e.assists,
-                    ),
-                )),
+              (Array.isArray(obj.kader.abwehr) && obj.kader.abwehr.every((e: any) => isTeamKaderPerson(e) as boolean)),
             `${argumentName}.kader.abwehr`,
-            'TeamKaderPerson[] | undefined',
+            'import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined',
             obj.kader.abwehr,
           ) &&
           evaluate(
             typeof obj.kader.mittelfeld === 'undefined' ||
               (Array.isArray(obj.kader.mittelfeld) &&
-                obj.kader.mittelfeld.every(
-                  (e: any, i0: number) =>
-                    ((e !== null && typeof e === 'object') || typeof e === 'function') &&
-                    evaluate(
-                      typeof e.imageId === 'undefined' || typeof e.imageId === 'number',
-                      `${argumentName}.kader.mittelfeld[${i0}].imageId`,
-                      'number | undefined',
-                      e.imageId,
-                    ) &&
-                    evaluate(
-                      typeof e.firstName === 'undefined' || typeof e.firstName === 'string',
-                      `${argumentName}.kader.mittelfeld[${i0}].firstName`,
-                      'string | undefined',
-                      e.firstName,
-                    ) &&
-                    evaluate(
-                      typeof e.lastName === 'undefined' || typeof e.lastName === 'string',
-                      `${argumentName}.kader.mittelfeld[${i0}].lastName`,
-                      'string | undefined',
-                      e.lastName,
-                    ) &&
-                    evaluate(
-                      typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
-                      `${argumentName}.kader.mittelfeld[${i0}].personParameters`,
-                      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
-                      e.personParameters,
-                    ) &&
-                    evaluate(
-                      typeof e.age === 'undefined' || typeof e.age === 'number',
-                      `${argumentName}.kader.mittelfeld[${i0}].age`,
-                      'number | undefined',
-                      e.age,
-                    ) &&
-                    evaluate(
-                      typeof e.inSquad === 'undefined' || typeof e.inSquad === 'number',
-                      `${argumentName}.kader.mittelfeld[${i0}].inSquad`,
-                      'number | undefined',
-                      e.inSquad,
-                    ) &&
-                    evaluate(
-                      typeof e.goals === 'undefined' || typeof e.goals === 'number',
-                      `${argumentName}.kader.mittelfeld[${i0}].goals`,
-                      'number | undefined',
-                      e.goals,
-                    ) &&
-                    evaluate(
-                      typeof e.assists === 'undefined' || typeof e.assists === 'number',
-                      `${argumentName}.kader.mittelfeld[${i0}].assists`,
-                      'number | undefined',
-                      e.assists,
-                    ),
-                )),
+                obj.kader.mittelfeld.every((e: any) => isTeamKaderPerson(e) as boolean)),
             `${argumentName}.kader.mittelfeld`,
-            'TeamKaderPerson[] | undefined',
+            'import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined',
             obj.kader.mittelfeld,
           ) &&
           evaluate(
             typeof obj.kader.sturm === 'undefined' ||
-              (Array.isArray(obj.kader.sturm) &&
-                obj.kader.sturm.every(
-                  (e: any, i0: number) =>
-                    ((e !== null && typeof e === 'object') || typeof e === 'function') &&
-                    evaluate(
-                      typeof e.imageId === 'undefined' || typeof e.imageId === 'number',
-                      `${argumentName}.kader.sturm[${i0}].imageId`,
-                      'number | undefined',
-                      e.imageId,
-                    ) &&
-                    evaluate(
-                      typeof e.firstName === 'undefined' || typeof e.firstName === 'string',
-                      `${argumentName}.kader.sturm[${i0}].firstName`,
-                      'string | undefined',
-                      e.firstName,
-                    ) &&
-                    evaluate(
-                      typeof e.lastName === 'undefined' || typeof e.lastName === 'string',
-                      `${argumentName}.kader.sturm[${i0}].lastName`,
-                      'string | undefined',
-                      e.lastName,
-                    ) &&
-                    evaluate(
-                      typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
-                      `${argumentName}.kader.sturm[${i0}].personParameters`,
-                      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
-                      e.personParameters,
-                    ) &&
-                    evaluate(
-                      typeof e.age === 'undefined' || typeof e.age === 'number',
-                      `${argumentName}.kader.sturm[${i0}].age`,
-                      'number | undefined',
-                      e.age,
-                    ) &&
-                    evaluate(
-                      typeof e.inSquad === 'undefined' || typeof e.inSquad === 'number',
-                      `${argumentName}.kader.sturm[${i0}].inSquad`,
-                      'number | undefined',
-                      e.inSquad,
-                    ) &&
-                    evaluate(
-                      typeof e.goals === 'undefined' || typeof e.goals === 'number',
-                      `${argumentName}.kader.sturm[${i0}].goals`,
-                      'number | undefined',
-                      e.goals,
-                    ) &&
-                    evaluate(
-                      typeof e.assists === 'undefined' || typeof e.assists === 'number',
-                      `${argumentName}.kader.sturm[${i0}].assists`,
-                      'number | undefined',
-                      e.assists,
-                    ),
-                )),
+              (Array.isArray(obj.kader.sturm) && obj.kader.sturm.every((e: any) => isTeamKaderPerson(e) as boolean)),
             `${argumentName}.kader.sturm`,
-            'TeamKaderPerson[] | undefined',
+            'import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined',
             obj.kader.sturm,
           ) &&
           evaluate(
             typeof obj.kader.ohneAngabe === 'undefined' ||
               (Array.isArray(obj.kader.ohneAngabe) &&
-                obj.kader.ohneAngabe.every(
-                  (e: any, i0: number) =>
-                    ((e !== null && typeof e === 'object') || typeof e === 'function') &&
-                    evaluate(
-                      typeof e.imageId === 'undefined' || typeof e.imageId === 'number',
-                      `${argumentName}.kader.ohneAngabe[${i0}].imageId`,
-                      'number | undefined',
-                      e.imageId,
-                    ) &&
-                    evaluate(
-                      typeof e.firstName === 'undefined' || typeof e.firstName === 'string',
-                      `${argumentName}.kader.ohneAngabe[${i0}].firstName`,
-                      'string | undefined',
-                      e.firstName,
-                    ) &&
-                    evaluate(
-                      typeof e.lastName === 'undefined' || typeof e.lastName === 'string',
-                      `${argumentName}.kader.ohneAngabe[${i0}].lastName`,
-                      'string | undefined',
-                      e.lastName,
-                    ) &&
-                    evaluate(
-                      typeof e.personParameters === 'undefined' || (isPersonParameters(e.personParameters) as boolean),
-                      `${argumentName}.kader.ohneAngabe[${i0}].personParameters`,
-                      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
-                      e.personParameters,
-                    ) &&
-                    evaluate(
-                      typeof e.age === 'undefined' || typeof e.age === 'number',
-                      `${argumentName}.kader.ohneAngabe[${i0}].age`,
-                      'number | undefined',
-                      e.age,
-                    ) &&
-                    evaluate(
-                      typeof e.inSquad === 'undefined' || typeof e.inSquad === 'number',
-                      `${argumentName}.kader.ohneAngabe[${i0}].inSquad`,
-                      'number | undefined',
-                      e.inSquad,
-                    ) &&
-                    evaluate(
-                      typeof e.goals === 'undefined' || typeof e.goals === 'number',
-                      `${argumentName}.kader.ohneAngabe[${i0}].goals`,
-                      'number | undefined',
-                      e.goals,
-                    ) &&
-                    evaluate(
-                      typeof e.assists === 'undefined' || typeof e.assists === 'number',
-                      `${argumentName}.kader.ohneAngabe[${i0}].assists`,
-                      'number | undefined',
-                      e.assists,
-                    ),
-                )),
+                obj.kader.ohneAngabe.every((e: any) => isTeamKaderPerson(e) as boolean)),
             `${argumentName}.kader.ohneAngabe`,
-            'TeamKaderPerson[] | undefined',
+            'import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined',
             obj.kader.ohneAngabe,
           )),
       `${argumentName}.kader`,
-      '{ torwart?: TeamKaderPerson[] | undefined; abwehr?: TeamKaderPerson[] | undefined; mittelfeld?: TeamKaderPerson[] | undefined; sturm?: TeamKaderPerson[] | undefined; ohneAngabe?: TeamKaderPerson[] | undefined; } | undefined',
+      '{ torwart?: import("./src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined; abwehr?: import("/Users/steven/Documents/Programmierung/svkleinsendelbach-website-backend/functions/src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined; mittelfeld?: import("/Users/steven/Documents/Programmierung/svkleinsendelbach-website-backend/functions/src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined; sturm?: import("/Users/steven/Documents/Programmierung/svkleinsendelbach-website-backend/functions/src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined; ohneAngabe?: import("/Users/steven/Documents/Programmierung/svkleinsendelbach-website-backend/functions/src/AnpfiffInfoData/Parsers/TeamKader/TeamKader").TeamKaderPerson[] | undefined; } | undefined',
       obj.kader,
     ) &&
     evaluate(
@@ -383,6 +126,60 @@ export function isTeamKader(obj: any, argumentName: string = 'teamKader'): obj i
       `${argumentName}.stab`,
       '{ imageId?: number | undefined; function?: string | undefined; name?: string | undefined; personParameters?: import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined; }[] | undefined',
       obj.stab,
+    )
+  );
+}
+
+export function isTeamKaderPerson(obj: any, argumentName: string = 'teamKaderPerson'): obj is TeamKaderPerson {
+  return (
+    ((obj !== null && typeof obj === 'object') || typeof obj === 'function') &&
+    evaluate(
+      typeof obj.imageId === 'undefined' || typeof obj.imageId === 'number',
+      `${argumentName}.imageId`,
+      'number | undefined',
+      obj.imageId,
+    ) &&
+    evaluate(
+      typeof obj.firstName === 'undefined' || typeof obj.firstName === 'string',
+      `${argumentName}.firstName`,
+      'string | undefined',
+      obj.firstName,
+    ) &&
+    evaluate(
+      typeof obj.lastName === 'undefined' || typeof obj.lastName === 'string',
+      `${argumentName}.lastName`,
+      'string | undefined',
+      obj.lastName,
+    ) &&
+    evaluate(
+      typeof obj.personParameters === 'undefined' || (isPersonParameters(obj.personParameters) as boolean),
+      `${argumentName}.personParameters`,
+      'import("./src/AnpfiffInfoData/Parameters/PersonParameters").PersonParameters | undefined',
+      obj.personParameters,
+    ) &&
+    evaluate(
+      typeof obj.age === 'undefined' || typeof obj.age === 'number',
+      `${argumentName}.age`,
+      'number | undefined',
+      obj.age,
+    ) &&
+    evaluate(
+      typeof obj.inSquad === 'undefined' || typeof obj.inSquad === 'number',
+      `${argumentName}.inSquad`,
+      'number | undefined',
+      obj.inSquad,
+    ) &&
+    evaluate(
+      typeof obj.goals === 'undefined' || typeof obj.goals === 'number',
+      `${argumentName}.goals`,
+      'number | undefined',
+      obj.goals,
+    ) &&
+    evaluate(
+      typeof obj.assists === 'undefined' || typeof obj.assists === 'number',
+      `${argumentName}.assists`,
+      'number | undefined',
+      obj.assists,
     )
   );
 }

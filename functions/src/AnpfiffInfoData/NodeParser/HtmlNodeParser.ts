@@ -132,6 +132,12 @@ export class HtmlNodeParserWithNode {
     return toInt(this.regexGroupOnAttribute(name, regex, groupName));
   }
 
+  public getZahlenProperties<Map extends { [key: string]: string }>(
+    mapping: Map,
+  ): { [key in keyof Map]: number | undefined } {
+    return this.children.getZahlenProperties(mapping);
+  }
+
   public get ['description'](): string {
     if (this.node === undefined) {
       return 'undefined';
@@ -192,5 +198,20 @@ export class HtmlNodeParserWithNodeList implements Iterable<HtmlNodeParserWithNo
     callbackfn: (value: HtmlNodeParserWithNode, index: number, array: HtmlNodeParserWithNode[]) => void,
   ): void {
     this.nodeList?.map(n => new HtmlNodeParserWithNode(n)).forEach(callbackfn);
+  }
+
+  public getZahlenProperties<Map extends { [key: string]: string }>(
+    mapping: Map,
+  ): { [key in keyof Map]: number | undefined } {
+    const values: { [key: string]: number | undefined } = {};
+    for (const node of this) {
+      for (const entry of Object.entries(mapping)) {
+        if (node.childAt(0).childAt(1).stringValue == entry[1]) {
+          values[entry[0]] = node.childAt(0).childAt(2).childAt(0).intValue;
+          break;
+        }
+      }
+    }
+    return values as { [key in keyof Map]: number | undefined };
   }
 }

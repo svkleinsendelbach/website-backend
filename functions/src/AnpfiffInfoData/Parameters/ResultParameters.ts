@@ -24,7 +24,7 @@ export function getResultParameters(url: string | undefined): ResultParameters |
       teamAway: getIntParameter(url, 'TmGt'),
       top: getIntParameter(url, 'Top'),
       ticker: getIntParameter(url, 'Ticker'),
-      men: getIntParameter(url, 'Men'),
+      men: getIntParameter(url, '(?:m|M)en'),
     };
   } catch {
     return undefined;

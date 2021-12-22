@@ -18,7 +18,7 @@ export function getTeamParameters(url: string | undefined): TeamParameters | und
       teamId: getIntParameter(url, 'Tm'),
       vereinId: getIntParameter(url, 'Ver'),
       saisonId: getIntParameter(url, 'Sais'),
-      men: getIntParameter(url, 'men'),
+      men: getIntParameter(url, '(?:m|M)en'),
     };
   } catch {
     return undefined;

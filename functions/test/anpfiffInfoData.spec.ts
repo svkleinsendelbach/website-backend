@@ -3,8 +3,8 @@ import fetch from 'cross-fetch';
 import DOMParser from 'dom-parser';
 import { parse } from 'fsp-xml-parser';
 
+import { LigaStartParser } from '../src/AnpfiffInfoData/Parsers/LigaStart/LigaStartParser';
 import { PersonArtikelParser } from '../src/AnpfiffInfoData/Parsers/PersonArtikel/PersonArtikelParser';
-import { PersonStartParser } from '../src/AnpfiffInfoData/Parsers/PersonStart/PersonStartParser';
 import { callFunction, wait } from './utils';
 
 describe('anpfiffInfoData', () => {
@@ -26,10 +26,10 @@ describe('anpfiffInfoData', () => {
   });
 
   it('fetch website', async () => {
-    const url = 'http://www.anpfiff.info/sites/person/start.aspx?SK=2&Pers=257472';
+    const url = 'http://www.anpfiff.info/sites/liga/start.aspx?SK=2&Rub=41&Lg=28&Sais=123&Men=25';
     const html = await (await fetch(url)).text();
     const dom = new DOMParser().parseFromString(html);
-    const parser = new PersonStartParser();
+    const parser = new LigaStartParser();
     const data = parser.parseWebsite(dom);
     console.log(data);
   });
@@ -192,6 +192,16 @@ describe('anpfiffInfoData', () => {
       vereinId: 294,
       saisonId: 123,
       men: 19,
+    });
+  });
+
+  it('liga/start', async () => {
+    await testAnpfiffInfoFetcher('liga/start', {
+      spielkreis: 2,
+      rubrik: 41,
+      liga: 28,
+      saison: 123,
+      men: 25,
     });
   });
 });

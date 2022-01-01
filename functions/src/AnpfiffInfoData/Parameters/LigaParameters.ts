@@ -6,6 +6,7 @@ export interface LigaParameters {
   rubrik: number;
   liga: number;
   saison: number;
+  men: number;
 }
 
 export function getLigaParameters(url: string | undefined): LigaParameters | undefined {
@@ -15,6 +16,7 @@ export function getLigaParameters(url: string | undefined): LigaParameters | und
       rubrik: getIntParameter(url, 'Rub'),
       liga: getIntParameter(url, 'Lg'),
       saison: getIntParameter(url, 'Sais'),
+      men: getIntParameter(url, '(?:m|M)en'),
     };
   } catch {
     return undefined;

@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 
 import { WebserviceFetcher } from './Fetchers/WebserviceFetcher';
 import { WebsiteFetcher } from './Fetchers/WebsiteFetcher';
+import { LigaStartParser } from './Parsers/LigaStart/LigaStartParser';
 import { PersonArtikelParser } from './Parsers/PersonArtikel/PersonArtikelParser';
 import { PersonBilderParser } from './Parsers/PersonBilder/PersonBilderParser';
 import { PersonStartParser } from './Parsers/PersonStart/PersonStartParser';
@@ -35,6 +36,8 @@ function getWebsiteParser(website: string): WebsiteFetcher.Parser<any, any> | un
       return new TeamKaderParser();
     case 'team/spiele':
       return new TeamSpieleParser();
+    case 'liga/start':
+      return new LigaStartParser();
     default:
       return undefined;
   }

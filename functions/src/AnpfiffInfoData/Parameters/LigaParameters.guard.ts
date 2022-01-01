@@ -17,6 +17,7 @@ export function isLigaParameters(obj: any, argumentName: string = 'ligaParameter
     evaluate(typeof obj.spielkreis === 'number', `${argumentName}.spielkreis`, 'number', obj.spielkreis) &&
     evaluate(typeof obj.rubrik === 'number', `${argumentName}.rubrik`, 'number', obj.rubrik) &&
     evaluate(typeof obj.liga === 'number', `${argumentName}.liga`, 'number', obj.liga) &&
-    evaluate(typeof obj.saison === 'number', `${argumentName}.saison`, 'number', obj.saison)
+    evaluate(typeof obj.saison === 'number', `${argumentName}.saison`, 'number', obj.saison) &&
+    evaluate(typeof obj.men === 'number', `${argumentName}.men`, 'number', obj.men)
   );
 }

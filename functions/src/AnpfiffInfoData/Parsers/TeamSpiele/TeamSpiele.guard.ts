@@ -122,12 +122,6 @@ export function isTeamSpieleSpiele(obj: any, argumentName: string = 'teamSpieleS
       obj.homeAway,
     ) &&
     evaluate(
-      typeof obj.sonderwertung === 'undefined' || obj.sonderwertung === false || obj.sonderwertung === true,
-      `${argumentName}.sonderwertung`,
-      'boolean | undefined',
-      obj.sonderwertung,
-    ) &&
-    evaluate(
       typeof obj.opponent === 'undefined' || typeof obj.opponent === 'string',
       `${argumentName}.opponent`,
       'string | undefined',
@@ -144,6 +138,12 @@ export function isTeamSpieleSpiele(obj: any, argumentName: string = 'teamSpieleS
       `${argumentName}.resultParameters`,
       'import("./src/AnpfiffInfoData/Parameters/ResultParameters").ResultParameters | undefined',
       obj.resultParameters,
+    ) &&
+    evaluate(
+      typeof obj.sonderwertung === 'undefined' || obj.sonderwertung === false || obj.sonderwertung === true,
+      `${argumentName}.sonderwertung`,
+      'boolean | undefined',
+      obj.sonderwertung,
     )
   );
 }

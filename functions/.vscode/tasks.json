@@ -16,9 +16,9 @@
       "problemMatcher": []
     },
     {
-      "label": "anpfiffInfoData test",
+      "label": "run test",
       "type": "shell",
-      "command": "mocha -r ts-node/register --exit --timeout 90000 test/**/*.spec.ts -f \"${input:anpfiffInfoData-subTest}\"",
+      "command": "mocha -r ts-node/register --exit --timeout 90000 test/${input:testName}.spec.ts -f \"${input:subTestName}\"",
       "problemMatcher": []
     },
     {
@@ -30,9 +30,14 @@
   ],
   "inputs": [
     {
-      "id": "anpfiffInfoData-subTest",
+      "id": "testName",
       "type": "promptString",
-      "description": "Name of sub test for anpfiffInfoData.spec.ts test"
+      "description": "Name of test for testing"
+    },
+    {
+      "id": "subTestName",
+      "type": "promptString",
+      "description": "Name of sub test for testing"
     }
   ]
 }

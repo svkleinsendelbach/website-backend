@@ -9,10 +9,7 @@ import { callFunction, wait } from './utils';
 
 describe('anpfiffInfoData', () => {
   it('sub test', async () => {
-    const o = {
-      test: [],
-    };
-    console.log(JSON.parse(JSON.stringify(o)));
+    console.log(await callFunction('getAllDBPlayers'));
   });
 
   it('fetch webservice', async () => {

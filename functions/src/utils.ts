@@ -92,7 +92,7 @@ String.prototype.cyan = function () {
 };
 
 String.prototype.gray = function () {
-  return `\x1b[40m\x1b[2m${this}\x1b[0m`;
+  return `\x1b[90m${this}\x1b[0m`;
 };
 
 declare global {

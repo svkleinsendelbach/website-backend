@@ -3,15 +3,11 @@ import fetch from 'cross-fetch';
 import DOMParser from 'dom-parser';
 import { parse } from 'fsp-xml-parser';
 
-import { LigaStartParser } from '../src/AnpfiffInfoData/Parsers/LigaStart/LigaStartParser';
 import { PersonArtikelParser } from '../src/AnpfiffInfoData/Parsers/PersonArtikel/PersonArtikelParser';
+import { TeamSpieleParser } from '../src/AnpfiffInfoData/Parsers/TeamSpiele/TeamSpieleParser';
 import { callFunction, wait } from './utils';
 
 describe('anpfiffInfoData', () => {
-  it('sub test', async () => {
-    console.log(await callFunction('getAllDBPlayers'));
-  });
-
   it('fetch webservice', async () => {
     const url =
       'http://www.anpfiff.info/Webservices/WS_Archiv.asmx/GetCMSArchivArtikel?intSKID=2&intSaisID=123&intMonat=0&intRubID=0&intPersID=0&intTmID=30675&intVerID=294&intRowVon=1&intRowBis=6';
@@ -23,10 +19,10 @@ describe('anpfiffInfoData', () => {
   });
 
   it('fetch website', async () => {
-    const url = 'http://www.anpfiff.info/sites/liga/start.aspx?SK=2&Rub=41&Lg=28&Sais=123&Men=25';
+    const url = 'http://www.anpfiff.info/sites/team/spiele.aspx?SK=2&Lg=202&Tm=25458&Ver=329&Sais=123&Men=19';
     const html = await (await fetch(url)).text();
     const dom = new DOMParser().parseFromString(html);
-    const parser = new LigaStartParser();
+    const parser = new TeamSpieleParser();
     const data = parser.parseWebsite(dom);
     console.log(data);
   });

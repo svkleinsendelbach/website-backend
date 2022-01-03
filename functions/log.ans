@@ -1,0 +1,2908 @@
+| [34m[GetHomeTopFunction.constructor][0m
+| data: [90m{[0m
+|       [90m  "verbose": true[0m
+|       [90m}[0m
+| [31m[GetHomeTopFunction.executeFunction][0m
+| [33m[GetHomeTopFunction.getPersonWithLastDateOfBirth][0m
+| [33m[GetHomeTopFunction.getAllDBPlayers][0m
+  | [31m[GetAllDBPlayersFunction.executeFunction][0m
+| [33m[GetHomeTopFunction.getLastNextTeamSpiel][0m
+| team: [90m"ersteMannschaft"[0m
+| [33m[GetHomeTopFunction.getTeamSpiele][0m
+| team: [90m"ersteMannschaft"[0m
+| [33m[GetHomeTopFunction.getTeamParameters][0m
+| team: [90m"ersteMannschaft"[0m
+| [33m[GetHomeTopFunction.getLastNextTeamSpiel][0m
+| team: [90m"zweiteMannschaft"[0m
+| [33m[GetHomeTopFunction.getTeamSpiele][0m
+| team: [90m"zweiteMannschaft"[0m
+| [33m[GetHomeTopFunction.getTeamParameters][0m
+| team: [90m"zweiteMannschaft"[0m
+| [33m[GetHomeTopFunction.getAllDBPlayers][0m
+| allPlayers: [90m[[0m
+|             [90m  {[0m
+|             [90m    "id": 267400,[0m
+|             [90m    "name": "Michael Beck",[0m
+|             [90m    "dateOfBirth": {[0m
+|             [90m      "year": 2000,[0m
+|             [90m      "month": 7,[0m
+|             [90m      "day": 14[0m
+|             [90m    }[0m
+|             [90m  },[0m
+|             [90m  {[0m
+|             [90m    "id": 284461,[0m
+|             [90m    "name": "Steven Kellner",[0m
+|             [90m    "dateOfBirth": {[0m
+|             [90m      "year": 1999,[0m
+|             [90m      "month": 8,[0m
+|             [90m      "day": 3[0m
+|             [90m    }[0m
+|             [90m  }[0m
+|             [90m][0m
+| [33m[GetHomeTopFunction.getPersonWithLastDateOfBirth][0m
+| currentLastPlayer: undefined
+| lastInYearPlayer: [90m{[0m
+|                   [90m  "id": 284461,[0m
+|                   [90m  "name": "Steven Kellner",[0m
+|                   [90m  "dateOfBirth": {[0m
+|                   [90m    "year": 1999,[0m
+|                   [90m    "month": 8,[0m
+|                   [90m    "day": 3[0m
+|                   [90m  }[0m
+|                   [90m}[0m
+| [33m[GetHomeTopFunction.getTeamParameters][0m
+| parameters: [90m{[0m
+|             [90m  "ligaId": 28,[0m
+|             [90m  "men": 19,[0m
+|             [90m  "saisonId": 123,[0m
+|             [90m  "spielkreis": 2,[0m
+|             [90m  "teamId": 30675,[0m
+|             [90m  "vereinId": 294[0m
+|             [90m}[0m
+| [33m[GetHomeTopFunction.getTeamParameters][0m
+| parameters: [90m{[0m
+|             [90m  "ligaId": 202,[0m
+|             [90m  "men": 19,[0m
+|             [90m  "saisonId": 123,[0m
+|             [90m  "spielkreis": 2,[0m
+|             [90m  "teamId": 25458,[0m
+|             [90m  "vereinId": 329[0m
+|             [90m}[0m
+| [33m[GetHomeTopFunction.getTeamSpiele][0m
+| teamSpiele: [90m{[0m
+|             [90m  "spiele": [[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 24[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 110972,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SpVgg Weißenohe",[0m
+|             [90m      "result": "3:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728403,[0m
+|             [90m        "verein": 232,[0m
+|             [90m        "teamHeim": 392,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 1[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114992,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Forth",[0m
+|             [90m      "result": "1:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728410,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 558,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 417122,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Wichsenstein/Bieberbach",[0m
+|             [90m      "result": "1:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728414,[0m
+|             [90m        "verein": 324,[0m
+|             [90m        "teamHeim": 25274,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 15[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 144963,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SpVgg Hüttenbach 2",[0m
+|             [90m      "result": "1:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728422,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 646,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 21[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 16,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 140611,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "FC Thuisbrunn",[0m
+|             [90m      "result": "1:3",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728433,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 431,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 5[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 267502,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Michelfeld",[0m
+|             [90m      "result": "1:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728445,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 567,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 18,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 540218,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "TSV Neunhof 2",[0m
+|             [90m      "result": "1:6",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728440,[0m
+|             [90m        "verein": 482,[0m
+|             [90m        "teamHeim": 648,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 12[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 126220,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "FC Pegnitz",[0m
+|             [90m      "result": "7:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728452,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 1368,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 19[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60757,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SV Kirchenbirkig-Regenthal",[0m
+|             [90m      "result": "1:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728457,[0m
+|             [90m        "verein": 270,[0m
+|             [90m        "teamHeim": 430,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 26[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 140621,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "FC Troschenreuth",[0m
+|             [90m      "result": "0:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728465,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 1096,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 10[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60322,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "1. FC Eschenau",[0m
+|             [90m      "result": "0:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728476,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 442,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 17[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 245224,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Neuhaus-Rothenbruck/Plech",[0m
+|             [90m      "result": "3:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728484,[0m
+|             [90m        "verein": 832,[0m
+|             [90m        "teamHeim": 30469,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 31[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 110972,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SpVgg Weißenohe",[0m
+|             [90m      "result": "1:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728494,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 392,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 11,[0m
+|             [90m          "day": 3[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 19,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114340,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "Hiltpoltsteiner SV",[0m
+|             [90m      "result": "2:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728488,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 394,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 11,[0m
+|             [90m          "day": 7[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 14,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114992,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "ASV Forth",[0m
+|             [90m      "result": "3:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728501,[0m
+|             [90m        "verein": 224,[0m
+|             [90m        "teamHeim": 558,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 11,[0m
+|             [90m          "day": 14[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 14,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 417122,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Wichsenstein/Bieberbach",[0m
+|             [90m      "result": "2:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728505,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 25274,[0m
+|             [90m        "top": 2,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 3,[0m
+|             [90m          "day": 13[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 144963,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SpVgg Hüttenbach 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728513,[0m
+|             [90m        "verein": 480,[0m
+|             [90m        "teamHeim": 646,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 3,[0m
+|             [90m          "day": 27[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 140611,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "FC Thuisbrunn",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728524,[0m
+|             [90m        "verein": 271,[0m
+|             [90m        "teamHeim": 431,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 3[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 540218,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "TSV Neunhof 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728531,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 648,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 10[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 267502,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "ASV Michelfeld",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728536,[0m
+|             [90m        "verein": 220,[0m
+|             [90m        "teamHeim": 567,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 23[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 126220,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "FC Pegnitz",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728543,[0m
+|             [90m        "verein": 679,[0m
+|             [90m        "teamHeim": 1368,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 28[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 18,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60757,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SV Kirchenbirkig-Regenthal",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728548,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 430,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 1[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 140621,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "FC Troschenreuth",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728556,[0m
+|             [90m        "verein": 485,[0m
+|             [90m        "teamHeim": 1096,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 15[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60322,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "1. FC Eschenau",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728567,[0m
+|             [90m        "verein": 282,[0m
+|             [90m        "teamHeim": 442,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 22[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 245224,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Neuhaus-Rothenbruck/Plech",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728575,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 30469,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 29[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114340,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "Hiltpoltsteiner SV",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 28,[0m
+|             [90m        "spiel": 728579,[0m
+|             [90m        "verein": 234,[0m
+|             [90m        "teamHeim": 394,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    }[0m
+|             [90m  ],[0m
+|             [90m  "vorbereitungsSpiele": [[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 6,[0m
+|             [90m          "day": 20[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114870,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Möhrendorf",[0m
+|             [90m      "result": "1:4",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 709105,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 463,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 6,[0m
+|             [90m          "day": 27[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 113856,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SV Gößweinstein",[0m
+|             [90m      "result": "4:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 712824,[0m
+|             [90m        "verein": 268,[0m
+|             [90m        "teamHeim": 428,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 3[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 16,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 344771,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Weisendorf 2",[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 19,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114881,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Niederndorf",[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 19,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114377,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SV Langensendelbach",[0m
+|             [90m      "result": "9:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 724331,[0m
+|             [90m        "verein": 318,[0m
+|             [90m        "teamHeim": 478,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 11[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 112901,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SpVgg Dürrbrunn-Unterleinleiter",[0m
+|             [90m      "result": "5:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 709036,[0m
+|             [90m        "verein": 242,[0m
+|             [90m        "teamHeim": 402,[0m
+|             [90m        "teamAway": 30675,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 18[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60667,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "Siemens Erlangen",[0m
+|             [90m      "result": "0:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 709107,[0m
+|             [90m        "verein": 294,[0m
+|             [90m        "teamHeim": 30675,[0m
+|             [90m        "teamAway": 465,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    }[0m
+|             [90m  ],[0m
+|             [90m  "properties": {[0m
+|             [90m    "games": 16,[0m
+|             [90m    "wins": 3,[0m
+|             [90m    "winsHome": 2,[0m
+|             [90m    "winsAway": 1,[0m
+|             [90m    "draws": 5,[0m
+|             [90m    "losts": 8,[0m
+|             [90m    "lostsHome": 5,[0m
+|             [90m    "lostsAway": 3,[0m
+|             [90m    "gamesToZero": 2,[0m
+|             [90m    "gamesWithoutGoalsShot": 3[0m
+|             [90m  }[0m
+|             [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 24[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 1[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 15[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 21[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 16,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 5[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 18,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 12[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 19[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 26[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 10[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 17[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 31[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 11,[0m
+|        [90m    "day": 3[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 19,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 11,[0m
+|        [90m    "day": 7[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 14,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 11,[0m
+|        [90m    "day": 14[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 14,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 3,[0m
+|        [90m    "day": 13[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 3,[0m
+|        [90m    "day": 27[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 3[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 10[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 23[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 28[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 18,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 1[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 15[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 22[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 29[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 6,[0m
+|        [90m    "day": 20[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 6,[0m
+|        [90m    "day": 27[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 3[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 16,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 19,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 19,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 11[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 18[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[GetHomeTopFunction.getLastNextTeamSpiel][0m
+| lastSpiel: [90m{[0m
+|            [90m  "date": {[0m
+|            [90m    "datum": {[0m
+|            [90m      "year": 2021,[0m
+|            [90m      "month": 11,[0m
+|            [90m      "day": 14[0m
+|            [90m    },[0m
+|            [90m    "time": {[0m
+|            [90m      "hour": 14,[0m
+|            [90m      "minute": 30[0m
+|            [90m    }[0m
+|            [90m  },[0m
+|            [90m  "logoId": 417122,[0m
+|            [90m  "homeAway": "H",[0m
+|            [90m  "opponent": "(SG) Wichsenstein/Bieberbach",[0m
+|            [90m  "result": "2:1",[0m
+|            [90m  "resultParameters": {[0m
+|            [90m    "spielkreis": 2,[0m
+|            [90m    "liga": 28,[0m
+|            [90m    "spiel": 728505,[0m
+|            [90m    "verein": 294,[0m
+|            [90m    "teamHeim": 30675,[0m
+|            [90m    "teamAway": 25274,[0m
+|            [90m    "top": 2,[0m
+|            [90m    "ticker": 1,[0m
+|            [90m    "men": 19[0m
+|            [90m  },[0m
+|            [90m  "sonderwertung": false[0m
+|            [90m}[0m
+| nextSpiel: [90m{[0m
+|            [90m  "date": {[0m
+|            [90m    "datum": {[0m
+|            [90m      "year": 2022,[0m
+|            [90m      "month": 3,[0m
+|            [90m      "day": 13[0m
+|            [90m    },[0m
+|            [90m    "time": {[0m
+|            [90m      "hour": 15,[0m
+|            [90m      "minute": 0[0m
+|            [90m    }[0m
+|            [90m  },[0m
+|            [90m  "logoId": 144963,[0m
+|            [90m  "homeAway": "A",[0m
+|            [90m  "opponent": "SpVgg Hüttenbach 2",[0m
+|            [90m  "result": "_:_",[0m
+|            [90m  "resultParameters": {[0m
+|            [90m    "spielkreis": 2,[0m
+|            [90m    "liga": 28,[0m
+|            [90m    "spiel": 728513,[0m
+|            [90m    "verein": 480,[0m
+|            [90m    "teamHeim": 646,[0m
+|            [90m    "teamAway": 30675,[0m
+|            [90m    "top": 0,[0m
+|            [90m    "ticker": 0,[0m
+|            [90m    "men": 19[0m
+|            [90m  },[0m
+|            [90m  "sonderwertung": false[0m
+|            [90m}[0m
+| [33m[GetHomeTopFunction.getTeamSpiele][0m
+| teamSpiele: [90m{[0m
+|             [90m  "spiele": [[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 25[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 17,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 353089,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Pinzberg 2/Gosberg 2",[0m
+|             [90m      "result": "2:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 740984,[0m
+|             [90m        "verein": 241,[0m
+|             [90m        "teamHeim": 20122,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 1[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60322,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "1. FC Eschenau 3",[0m
+|             [90m      "result": "6:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 740992,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1579,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60619,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SC Uttenreuth 2",[0m
+|             [90m      "result": "2:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 740998,[0m
+|             [90m        "verein": 290,[0m
+|             [90m        "teamHeim": 542,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 15[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 543957,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Wimmelbach 2/Hausen 2",[0m
+|             [90m      "result": "2:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741008,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 30576,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": true[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 18[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 18,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 110768,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SV Pretzfeld 2",[0m
+|             [90m      "result": "1:5",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741019,[0m
+|             [90m        "verein": 272,[0m
+|             [90m        "teamHeim": 1141,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 22[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 419397,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Drügendorf-Tiefenst./Weigelshofen",[0m
+|             [90m      "result": "5:5",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741024,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 26576,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 8,[0m
+|             [90m          "day": 29[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 129918,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "ASV Pettensiedel",[0m
+|             [90m      "result": "3:4",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741033,[0m
+|             [90m        "verein": 222,[0m
+|             [90m        "teamHeim": 382,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 1,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 5[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 413543,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Leutenbach 2/Mittelehrenbach 2",[0m
+|             [90m      "result": "2:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741040,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 20094,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 12[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 539895,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "TSV Marloffstein",[0m
+|             [90m      "result": "0:4",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741048,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 414,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 19[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 12,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 113082,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "VdS Spardorf 2",[0m
+|             [90m      "result": "3:3",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741054,[0m
+|             [90m        "verein": 257,[0m
+|             [90m        "teamHeim": 1107,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 9,[0m
+|             [90m          "day": 26[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 126134,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "DJK-FC Schlaifhausen 2",[0m
+|             [90m      "result": "2:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741064,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1142,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": true[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 3[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 315827,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SpVgg Heroldsbach 2",[0m
+|             [90m      "result": "8:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741076,[0m
+|             [90m        "verein": 283,[0m
+|             [90m        "teamHeim": 668,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 10[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 112901,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SpVgg Dürrbrunn-Unterleinleiter 2",[0m
+|             [90m      "result": "4:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741080,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1136,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 17[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 134479,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "FC Dormitz 2",[0m
+|             [90m      "result": "0:0",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741090,[0m
+|             [90m        "verein": 258,[0m
+|             [90m        "teamHeim": 1128,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 24[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114473,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "TSV Kunreuth",[0m
+|             [90m      "result": "4:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741096,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 397,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 10,[0m
+|             [90m          "day": 31[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 353089,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "(SG) Pinzberg 2/Gosberg 2",[0m
+|             [90m      "result": "2:4",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741104,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 20122,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 11,[0m
+|             [90m          "day": 6[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 15[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60322,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "1. FC Eschenau 3",[0m
+|             [90m      "result": "1:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741112,[0m
+|             [90m        "verein": 282,[0m
+|             [90m        "teamHeim": 1579,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 11,[0m
+|             [90m          "day": 14[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 12,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 60619,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SC Uttenreuth 2",[0m
+|             [90m      "result": "0:1",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741118,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 542,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 3,[0m
+|             [90m          "day": 13[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 543957,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Wimmelbach 2/Hausen 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741128,[0m
+|             [90m        "verein": 313,[0m
+|             [90m        "teamHeim": 30576,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 3,[0m
+|             [90m          "day": 20[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 110768,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SV Pretzfeld 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741139,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1141,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 3,[0m
+|             [90m          "day": 26[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 419397,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Drügendorf-Tiefenst./Weigelshofen",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741144,[0m
+|             [90m        "verein": 236,[0m
+|             [90m        "teamHeim": 26576,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 3[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 129918,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Pettensiedel",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741153,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 382,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 9[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 413543,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "(SG) Leutenbach 2/Mittelehrenbach 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741160,[0m
+|             [90m        "verein": 278,[0m
+|             [90m        "teamHeim": 20094,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 23[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 539895,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "TSV Marloffstein",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741168,[0m
+|             [90m        "verein": 254,[0m
+|             [90m        "teamHeim": 414,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 4,[0m
+|             [90m          "day": 28[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 18,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 113082,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "VdS Spardorf 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741174,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1107,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 1[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 15[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 126134,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "DJK-FC Schlaifhausen 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741184,[0m
+|             [90m        "verein": 249,[0m
+|             [90m        "teamHeim": 1142,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 8[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 315827,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "SpVgg Heroldsbach 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741196,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 668,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 15[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 13,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 112901,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "SpVgg Dürrbrunn-Unterleinleiter 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741200,[0m
+|             [90m        "verein": 242,[0m
+|             [90m        "teamHeim": 1136,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 22[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 134479,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "FC Dormitz 2",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741210,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1128,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2022,[0m
+|             [90m          "month": 5,[0m
+|             [90m          "day": 29[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 15,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114473,[0m
+|             [90m      "homeAway": "A",[0m
+|             [90m      "opponent": "TSV Kunreuth",[0m
+|             [90m      "result": "_:_",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 202,[0m
+|             [90m        "spiel": 741216,[0m
+|             [90m        "verein": 237,[0m
+|             [90m        "teamHeim": 397,[0m
+|             [90m        "teamAway": 25458,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    }[0m
+|             [90m  ],[0m
+|             [90m  "vorbereitungsSpiele": [[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 6,[0m
+|             [90m          "day": 20[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 17,[0m
+|             [90m          "minute": 0[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 114870,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "ASV Möhrendorf 2",[0m
+|             [90m      "result": "4:6",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 711968,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 659,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 4[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 14,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 354008,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "Atletico Erlangen 2",[0m
+|             [90m      "result": "1:2",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 712811,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 21393,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    },[0m
+|             [90m    {[0m
+|             [90m      "date": {[0m
+|             [90m        "datum": {[0m
+|             [90m          "year": 2021,[0m
+|             [90m          "month": 7,[0m
+|             [90m          "day": 16[0m
+|             [90m        },[0m
+|             [90m        "time": {[0m
+|             [90m          "hour": 19,[0m
+|             [90m          "minute": 30[0m
+|             [90m        }[0m
+|             [90m      },[0m
+|             [90m      "logoId": 121835,[0m
+|             [90m      "homeAway": "H",[0m
+|             [90m      "opponent": "TSV Behringersdorf 2",[0m
+|             [90m      "result": "0:3",[0m
+|             [90m      "resultParameters": {[0m
+|             [90m        "spielkreis": 2,[0m
+|             [90m        "liga": 99,[0m
+|             [90m        "spiel": 737867,[0m
+|             [90m        "verein": 329,[0m
+|             [90m        "teamHeim": 25458,[0m
+|             [90m        "teamAway": 1377,[0m
+|             [90m        "top": 0,[0m
+|             [90m        "ticker": 0,[0m
+|             [90m        "men": 19[0m
+|             [90m      },[0m
+|             [90m      "sonderwertung": false[0m
+|             [90m    }[0m
+|             [90m  ],[0m
+|             [90m  "properties": {[0m
+|             [90m    "games": 18,[0m
+|             [90m    "wins": 9,[0m
+|             [90m    "winsHome": 6,[0m
+|             [90m    "winsAway": 3,[0m
+|             [90m    "draws": 3,[0m
+|             [90m    "losts": 6,[0m
+|             [90m    "lostsHome": 3,[0m
+|             [90m    "lostsAway": 3,[0m
+|             [90m    "gamesToZero": 4,[0m
+|             [90m    "gamesWithoutGoalsShot": 4[0m
+|             [90m  }[0m
+|             [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 25[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 17,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 1[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 15[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 18[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 18,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 22[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 8,[0m
+|        [90m    "day": 29[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 5[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 12[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 19[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 12,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 9,[0m
+|        [90m    "day": 26[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 3[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 10[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 17[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 24[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 10,[0m
+|        [90m    "day": 31[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 11,[0m
+|        [90m    "day": 6[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 15[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 11,[0m
+|        [90m    "day": 14[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 12,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 3,[0m
+|        [90m    "day": 13[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 3,[0m
+|        [90m    "day": 20[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 3,[0m
+|        [90m    "day": 26[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 3[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 9[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 23[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 4,[0m
+|        [90m    "day": 28[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 18,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 1[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 15[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 8[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 15[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 13,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 22[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2022,[0m
+|        [90m    "month": 5,[0m
+|        [90m    "day": 29[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 15,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 6,[0m
+|        [90m    "day": 20[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 17,[0m
+|        [90m    "minute": 0[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 4[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 14,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[--test--][0m
+| datum: [90m{[0m
+|        [90m  "datum": {[0m
+|        [90m    "year": 2021,[0m
+|        [90m    "month": 7,[0m
+|        [90m    "day": 16[0m
+|        [90m  },[0m
+|        [90m  "time": {[0m
+|        [90m    "hour": 19,[0m
+|        [90m    "minute": 30[0m
+|        [90m  }[0m
+|        [90m}[0m
+| [33m[GetHomeTopFunction.getLastNextTeamSpiel][0m
+| lastSpiel: [90m{[0m
+|            [90m  "date": {[0m
+|            [90m    "datum": {[0m
+|            [90m      "year": 2021,[0m
+|            [90m      "month": 11,[0m
+|            [90m      "day": 14[0m
+|            [90m    },[0m
+|            [90m    "time": {[0m
+|            [90m      "hour": 12,[0m
+|            [90m      "minute": 30[0m
+|            [90m    }[0m
+|            [90m  },[0m
+|            [90m  "logoId": 60619,[0m
+|            [90m  "homeAway": "H",[0m
+|            [90m  "opponent": "SC Uttenreuth 2",[0m
+|            [90m  "result": "0:1",[0m
+|            [90m  "resultParameters": {[0m
+|            [90m    "spielkreis": 2,[0m
+|            [90m    "liga": 202,[0m
+|            [90m    "spiel": 741118,[0m
+|            [90m    "verein": 329,[0m
+|            [90m    "teamHeim": 25458,[0m
+|            [90m    "teamAway": 542,[0m
+|            [90m    "top": 0,[0m
+|            [90m    "ticker": 0,[0m
+|            [90m    "men": 19[0m
+|            [90m  },[0m
+|            [90m  "sonderwertung": false[0m
+|            [90m}[0m
+| nextSpiel: [90m{[0m
+|            [90m  "date": {[0m
+|            [90m    "datum": {[0m
+|            [90m      "year": 2022,[0m
+|            [90m      "month": 3,[0m
+|            [90m      "day": 13[0m
+|            [90m    },[0m
+|            [90m    "time": {[0m
+|            [90m      "hour": 13,[0m
+|            [90m      "minute": 0[0m
+|            [90m    }[0m
+|            [90m  },[0m
+|            [90m  "logoId": 543957,[0m
+|            [90m  "homeAway": "A",[0m
+|            [90m  "opponent": "(SG) Wimmelbach 2/Hausen 2",[0m
+|            [90m  "result": "_:_",[0m
+|            [90m  "resultParameters": {[0m
+|            [90m    "spielkreis": 2,[0m
+|            [90m    "liga": 202,[0m
+|            [90m    "spiel": 741128,[0m
+|            [90m    "verein": 313,[0m
+|            [90m    "teamHeim": 30576,[0m
+|            [90m    "teamAway": 25458,[0m
+|            [90m    "top": 0,[0m
+|            [90m    "ticker": 0,[0m
+|            [90m    "men": 19[0m
+|            [90m  },[0m
+|            [90m  "sonderwertung": false[0m
+|            [90m}[0m

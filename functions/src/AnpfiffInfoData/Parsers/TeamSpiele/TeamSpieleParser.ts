@@ -1,5 +1,7 @@
 import DOMParser from 'dom-parser';
 
+import { throwsAsUndefined } from '../../../utils';
+import { FullDatum } from '../../../utils/FullDatum';
 import { WebsiteFetcher } from '../../Fetchers/WebsiteFetcher';
 import { HtmlNodeParser } from '../../NodeParser/HtmlNodeParser';
 import { getImageId } from '../../Parameters/Parameters';
@@ -53,7 +55,7 @@ export class TeamSpieleParser implements WebsiteFetcher.Parser<TeamParameters, T
         if (spiel?.includes('Vorbereitungsspiele')) {
           currentSpiel = 'vorbereitungsSpiele';
         }
-        const date = node.childAt(3).childAt(1).stringValue;
+        const date = throwsAsUndefined(() => FullDatum.fromValue(node.childAt(3).childAt(1).stringValue));
         const logoId = getImageId(node.childAt(5).childAt(1).attribute('src'));
         const homeAway = node.childAt(7).childAt(1).stringValue;
         const opponent = node.childAt(9).childAt(1).stringValue;

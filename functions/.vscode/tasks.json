@@ -6,7 +6,7 @@
     {
       "label": "auto guard",
       "type": "shell",
-      "command": "node_modules/ts-auto-guard/lib/cli.js --debug --export-all",
+      "command": "node_modules/ts-auto-guard/lib/cli.js --debug",
       "problemMatcher": []
     },
     {

@@ -7,20 +7,17 @@ import { ParameterContainer } from './ParameterContainer';
 import { FirebaseFunction, throwsAsUndefined } from './utils';
 
 export class GetAllDBPlayersFunction implements FirebaseFunction<DBPlayer[]> {
-  private logger: Logger;
+  constructor(private logger: Logger) {}
 
-  /**
-   * Initilizes function with given over data.
-   * @param {any} data Data to get parameters from.
-   */
-  constructor(data: any) {
+  public static fromData(data: any): GetAllDBPlayersFunction {
     const parameterContainer = new ParameterContainer(data);
-    this.logger = Logger.start(
+    const logger = Logger.start(
       parameterContainer,
       'GetAllDBPlayersFunction.constructor',
       { data: data },
       LogLevel.notice,
     );
+    return new GetAllDBPlayersFunction(logger);
   }
 
   /**

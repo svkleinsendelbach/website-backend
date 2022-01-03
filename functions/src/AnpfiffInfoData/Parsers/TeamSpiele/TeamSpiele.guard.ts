@@ -3,6 +3,7 @@
  * WARNING: Do not manually change this file.
  */
 import { TeamSpiele, TeamSpieleSpiele } from './TeamSpiele';
+import { FullDatum } from '../../../utils/FullDatum';
 import { isResultParameters } from '../../Parameters/ResultParameters.guard';
 
 function evaluate(isCorrect: boolean, varName: string, expected: string, actual: any): boolean {
@@ -104,9 +105,9 @@ export function isTeamSpieleSpiele(obj: any, argumentName: string = 'teamSpieleS
   return (
     ((obj !== null && typeof obj === 'object') || typeof obj === 'function') &&
     evaluate(
-      typeof obj.date === 'undefined' || typeof obj.date === 'string',
+      typeof obj.date === 'undefined' || obj.date instanceof FullDatum,
       `${argumentName}.date`,
-      'string | undefined',
+      'import("./src/utils/FullDatum").FullDatum | undefined',
       obj.date,
     ) &&
     evaluate(

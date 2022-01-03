@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 
 import * as getData from './AnpfiffInfoData/getAnpfiffInfoData';
 import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
+import { GetHomeTopFunction } from './GetHomeTopFunction';
 
 admin.initializeApp();
 
@@ -16,6 +17,11 @@ export const deleteAllCaches = functions.region('europe-west1').https.onCall(asy
 });
 
 export const getAllDBPlayers = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = new GetAllDBPlayersFunction(data);
+  const firebaseFunction = GetAllDBPlayersFunction.fromData(data);
+  return await firebaseFunction.executeFunction();
+});
+
+export const getHomeTop = functions.region('europe-west1').https.onCall(async (data, _context) => {
+  const firebaseFunction = GetHomeTopFunction.fromData(data);
   return await firebaseFunction.executeFunction();
 });

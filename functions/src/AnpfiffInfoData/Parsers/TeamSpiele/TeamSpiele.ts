@@ -1,3 +1,4 @@
+import { FullDatum } from '../../../utils/FullDatum';
 import { ResultParameters } from '../../Parameters/ResultParameters';
 
 /** @see {isTeamSpiele} ts-auto-guard:type-guard */
@@ -19,7 +20,7 @@ export interface TeamSpiele {
 }
 
 export interface TeamSpieleSpiele {
-  date?: string;
+  date?: FullDatum;
   logoId?: number;
   homeAway?: 'H' | 'A';
   opponent?: string;

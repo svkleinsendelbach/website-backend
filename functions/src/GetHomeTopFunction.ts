@@ -11,7 +11,7 @@ import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
 import { Logger } from './Logger/Logger';
 import { LogLevel } from './Logger/LogLevel';
 import { ParameterContainer } from './ParameterContainer';
-import { FirebaseFunction, httpsError } from './utils';
+import { DBPlayerImageSource, FirebaseFunction, getDBPlayerImageName, httpsError } from './utils';
 import { Datum } from './utils/Datum';
 import { FullDatum } from './utils/FullDatum';
 import { Time } from './utils/Time';
@@ -20,7 +20,10 @@ export class GetHomeTopFunction
   implements
     FirebaseFunction<
       [
-        DBPlayer | undefined,
+        {
+          player?: DBPlayer;
+          image?: string;
+        }[],
         {
           last?: TeamSpieleSpiele;
           next?: TeamSpieleSpiele;
@@ -45,7 +48,10 @@ export class GetHomeTopFunction
    */
   async executeFunction(): Promise<
     [
-      DBPlayer | undefined,
+      {
+        player?: DBPlayer;
+        image?: string;
+      }[],
       {
         last?: TeamSpieleSpiele;
         next?: TeamSpieleSpiele;
@@ -58,12 +64,11 @@ export class GetHomeTopFunction
   > {
     this.logger.append('GetHomeTopFunction.executeFunction', undefined, LogLevel.info);
 
-    const properties = await Promise.all([
+    return await Promise.all([
       this.getPersonWithLastDateOfBirth(),
       this.getLastNextTeamSpiel('ersteMannschaft'),
       this.getLastNextTeamSpiel('zweiteMannschaft'),
     ]);
-    return properties;
   }
 
   private async getAllDBPlayers(): Promise<DBPlayer[]> {
@@ -74,24 +79,58 @@ export class GetHomeTopFunction
     return allPlayers;
   }
 
-  private async getPersonWithLastDateOfBirth(): Promise<DBPlayer | undefined> {
+  private async getPersonWithLastDateOfBirth(): Promise<
+    {
+      player: DBPlayer;
+      image?: string;
+    }[]
+  > {
     this.logger.append('GetHomeTopFunction.getPersonWithLastDateOfBirth', undefined);
     const today = Datum.fromDate(new Date());
-    let lastInYearPlayer: DBPlayer | undefined = undefined;
-    let currentLastPlayer: DBPlayer | undefined = undefined;
+    let lastInYearPlayer: DBPlayer[] | undefined = undefined;
+    let currentLastPlayer: DBPlayer[] | undefined = undefined;
     for (const player of await this.getAllDBPlayers()) {
-      if ((lastInYearPlayer?.dateOfBirth.compareOnlyMonthDay(player.dateOfBirth) ?? -1) < 0) {
-        lastInYearPlayer = player;
+      const diff1 = lastInYearPlayer?.[0].dateOfBirth.compareOnlyMonthDay(player.dateOfBirth) ?? -1;
+      if (diff1 == 0) {
+        lastInYearPlayer?.push(player);
+      } else if (diff1 < 0) {
+        lastInYearPlayer = [player];
       }
-      if (
-        (currentLastPlayer?.dateOfBirth.compareOnlyMonthDay(player.dateOfBirth) ?? -1) < 0 &&
-        player.dateOfBirth.compareOnlyMonthDay(today) <= 0
-      ) {
-        currentLastPlayer = player;
+      if (player.dateOfBirth.compareOnlyMonthDay(today) <= 0) {
+        const diff2 = currentLastPlayer?.[0].dateOfBirth.compareOnlyMonthDay(player.dateOfBirth) ?? -1;
+        if (diff2 == 0) {
+          currentLastPlayer?.push(player);
+        } else if (diff2 < 0) {
+          currentLastPlayer = [player];
+        }
       }
     }
     this.logger.append('GetHomeTopFunction.getPersonWithLastDateOfBirth', { currentLastPlayer, lastInYearPlayer });
-    return currentLastPlayer ?? lastInYearPlayer;
+    const players = currentLastPlayer ?? lastInYearPlayer;
+    if (players === undefined) {
+      return [];
+    }
+    const allPlayers: Promise<{
+      player: DBPlayer;
+      image?: string;
+    }>[] = [];
+    for (const player of players) {
+      allPlayers.push(
+        (async () => {
+          if (player.id == undefined) {
+            return {
+              player: player,
+            };
+          }
+          const imageName = await getDBPlayerImageName(player.id, [DBPlayerImageSource.inAction]);
+          return {
+            player: player,
+            image: imageName,
+          };
+        })(),
+      );
+    }
+    return await Promise.all(allPlayers);
   }
 
   private async getTeamParameters(team: 'ersteMannschaft' | 'zweiteMannschaft'): Promise<TeamParameters> {

@@ -54,6 +54,41 @@ export function httpsError(
   return new functions.https.HttpsError(code, message, logger?.joined);
 }
 
+export enum DBPlayerImageSource {
+  inAction = 'inAction',
+}
+
+export async function getDBPlayerImageName(
+  playerId: number,
+  sourceOrder: [DBPlayerImageSource | undefined],
+): Promise<string | undefined> {
+  const path = `players/${playerId.toString()}/images`;
+  const ref = admin.database().ref(path);
+  const snapshot = await ref.once('value');
+  for (const source of sourceOrder) {
+    if (source == undefined) {
+      continue;
+    }
+    const images = snapshot.child(source);
+    if (!images.exists() || !images.hasChildren()) {
+      continue;
+    }
+    const imageNames: string[] = [];
+    images.forEach(snapshot => {
+      const imageName = snapshot.val();
+      if (typeof imageName === 'string') {
+        imageNames.push(imageName);
+      }
+    });
+    if (imageNames.length == 0) {
+      continue;
+    }
+    const index = Math.floor(Math.random() * imageNames.length);
+    return imageNames[index];
+  }
+  return undefined;
+}
+
 declare global {
   interface String {
     red(): string;

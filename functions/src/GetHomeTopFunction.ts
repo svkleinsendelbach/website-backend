@@ -49,7 +49,7 @@ export class GetHomeTopFunction
   async executeFunction(): Promise<
     [
       {
-        player?: DBPlayer;
+        player: DBPlayer;
         image?: string;
       }[],
       {
@@ -66,8 +66,8 @@ export class GetHomeTopFunction
 
     return await Promise.all([
       this.getPersonWithLastDateOfBirth(),
-      this.getLastNextTeamSpiel('ersteMannschaft'),
-      this.getLastNextTeamSpiel('zweiteMannschaft'),
+      this.getLastNextTeamSpiel('first-team'),
+      this.getLastNextTeamSpiel('second-team'),
     ]);
   }
 
@@ -133,9 +133,9 @@ export class GetHomeTopFunction
     return await Promise.all(allPlayers);
   }
 
-  private async getTeamParameters(team: 'ersteMannschaft' | 'zweiteMannschaft'): Promise<TeamParameters> {
+  private async getTeamParameters(team: 'first-team' | 'second-team'): Promise<TeamParameters> {
     this.logger.append('GetHomeTopFunction.getTeamParameters', { team });
-    const reference = admin.database().ref(`clubProperties/${team}/parameters`);
+    const reference = admin.database().ref(`anpfiffParameters/teamParameters/${team}`);
     const snapshot = await reference.once('value');
     if (!snapshot.exists()) {
       throw httpsError(
@@ -152,17 +152,18 @@ export class GetHomeTopFunction
     return parameters;
   }
 
-  private async getTeamSpiele(team: 'ersteMannschaft' | 'zweiteMannschaft'): Promise<TeamSpiele> {
+  private async getTeamSpiele(team: 'first-team' | 'second-team'): Promise<TeamSpiele> {
     this.logger.append('GetHomeTopFunction.getTeamSpiele', { team });
     const parser = new TeamSpieleParser();
-    const fetcher = new WebsiteFetcher(parser, await this.getTeamParameters(team), new DebugProperties(false));
+    const fetcher = new WebsiteFetcher(parser, new DebugProperties(false));
+    await fetcher.intitialize(await this.getTeamParameters(team));
     const teamSpiele = (await fetcher.fetch()).value;
     this.logger.append('GetHomeTopFunction.getTeamSpiele', { teamSpiele });
     return teamSpiele;
   }
 
   private async getLastNextTeamSpiel(
-    team: 'ersteMannschaft' | 'zweiteMannschaft',
+    team: 'first-team' | 'second-team',
   ): Promise<{ last?: TeamSpieleSpiele; next?: TeamSpieleSpiele }> {
     this.logger.append('GetHomeTopFunction.getLastNextTeamSpiel', { team });
     const teamSpiele = await this.getTeamSpiele(team);

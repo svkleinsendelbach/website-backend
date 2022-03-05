@@ -6,21 +6,42 @@ import * as functions from 'firebase-functions';
 import { DebugProperties } from '../DebugProperties';
 import { DateOffset, isDateRecent, normalizeRefPathComponent } from '../utils';
 
+type AnpfiffInfoParametersDBPath = 'teamParameters/first-team' | 'teamParameters/second-team';
+
 export class WebsiteFetcher<Params, T> {
-  private readonly url: string;
+  private url!: string;
 
   public constructor(
     private readonly parser: WebsiteFetcher.Parser<Params, T>,
-    params: Params,
     private readonly debugProperties: DebugProperties,
-  ) {
-    if (!parser.parametersGuard(params)) {
+  ) {}
+
+  public async intitialize(params: Params | AnpfiffInfoParametersDBPath) {
+    let parameters: Params;
+    if (this.parser.parametersGuard(params)) {
+      parameters = params;
+    } else if (typeof params === 'string') {
+      parameters = await this.getParameters(params);
+    } else {
       throw new functions.https.HttpsError(
         'invalid-argument',
         `Invalid anpfiff.info parameters: ${JSON.stringify(params)}`,
       );
     }
-    this.url = parser.getUrl(params);
+    this.url = this.parser.getUrl(parameters);
+  }
+
+  private async getParameters(path: AnpfiffInfoParametersDBPath): Promise<Params> {
+    const paramsRef = admin.database().ref(`anpfiffParameters/${path}`);
+    const snapshot = await paramsRef.once('value');
+    if (!snapshot.exists()) {
+      throw new functions.https.HttpsError('invalid-argument', `Couldn't get parameters from path: ${path}`);
+    }
+    const params = snapshot.val();
+    if (!this.parser.parametersGuard(params)) {
+      throw new functions.https.HttpsError('internal', `Couldn't get parameters from path: ${path}`);
+    }
+    return params;
   }
 
   public async fetch(): Promise<{

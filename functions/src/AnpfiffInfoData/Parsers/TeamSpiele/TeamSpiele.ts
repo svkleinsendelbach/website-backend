@@ -24,7 +24,10 @@ export interface TeamSpieleSpiele {
   logoId?: number;
   homeAway?: 'H' | 'A';
   opponent?: string;
-  result?: string;
+  result?: {
+    homeTeam: number;
+    awayTeam: number;
+  };
   resultParameters?: ResultParameters;
   sonderwertung?: boolean;
 }

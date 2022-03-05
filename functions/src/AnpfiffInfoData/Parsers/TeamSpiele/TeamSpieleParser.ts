@@ -8,7 +8,7 @@ import { getImageId } from '../../Parameters/Parameters';
 import { getResultParameters } from '../../Parameters/ResultParameters';
 import { TeamParameters } from '../../Parameters/TeamParameters';
 import { isTeamParameters } from '../../Parameters/TeamParameters.guard';
-import { DateOffset, DEFAULT_DATE_OFFSET } from '../../utils';
+import { DateOffset, DEFAULT_DATE_OFFSET, regexGroup, toInt } from '../../utils';
 import { TeamSpiele } from './TeamSpiele';
 import { isTeamSpiele } from './TeamSpiele.guard';
 
@@ -60,6 +60,8 @@ export class TeamSpieleParser implements WebsiteFetcher.Parser<TeamParameters, T
         const homeAway = node.childAt(7).childAt(1).stringValue;
         const opponent = node.childAt(9).childAt(1).stringValue;
         const result = node.childAt(11).childAt(1).stringValue;
+        const homeResult = toInt(regexGroup(result, /\s*(?<home>\d+):\d+\s*/, 'home'));
+        const awayResult = toInt(regexGroup(result, /\s*\d+:(?<away>\d+)\s*/, 'away'));
         const resultParameters = getResultParameters(node.childAt(11).childAt(1).attribute('href'));
         const sonderwertung = node.childAt(13).childAt(1).stringValue;
         if (opponent === undefined) {
@@ -70,7 +72,13 @@ export class TeamSpieleParser implements WebsiteFetcher.Parser<TeamParameters, T
           logoId,
           homeAway: (['A', 'H', undefined].includes(homeAway) ? homeAway : undefined) as 'A' | 'H' | undefined,
           opponent,
-          result,
+          result:
+            homeResult === undefined || awayResult == undefined
+              ? undefined
+              : {
+                  homeTeam: homeResult,
+                  awayTeam: awayResult,
+                },
           resultParameters,
           sonderwertung: /^\s*$/g.exec(sonderwertung ?? '') == null,
         });

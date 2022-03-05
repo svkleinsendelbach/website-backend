@@ -15,7 +15,8 @@ import { TeamStartParser } from './Parsers/TeamStart/TeamStartParser';
 export async function getAnpfiffInfoData(data: any): Promise<any> {
   const websiteParser = getWebsiteParser(data.website);
   if (websiteParser != undefined) {
-    const fetcher = new WebsiteFetcher(websiteParser, data.parameters, data.debug ?? false);
+    const fetcher = new WebsiteFetcher(websiteParser, data.debug ?? false);
+    await fetcher.intitialize(data.parameters);
     return await fetcher.fetch();
   }
   const webserviceParser = getWebserviceFetcher(data.website);

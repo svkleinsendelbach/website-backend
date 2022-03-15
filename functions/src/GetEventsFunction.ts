@@ -7,6 +7,7 @@ import { ParameterContainer } from './ParameterContainer';
 import { FirebaseFunction } from './utils';
 
 type ValidEventGroupId =
+  | 'general'
   | 'football-adults/general'
   | 'football-adults/first-team'
   | 'football-adults/second-team'
@@ -15,7 +16,9 @@ type ValidEventGroupId =
   | 'football-youth/c-youth'
   | 'football-youth/e-youth'
   | 'football-youth/f-youth'
-  | 'football-youth/g-youth';
+  | 'football-youth/g-youth'
+  | 'gymnastics'
+  | 'dancing';
 
 interface Event {
   id: string;

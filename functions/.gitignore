@@ -9,5 +9,8 @@ typings/
 node_modules/
 
 test/firebaseConfig.ts
+src/recaptchaSecretKey.ts
+src/sendContactMailAccount.ts
+src/websiteEditingFunctions/jwt_rsa_keys.ts
 
 .prettierrc

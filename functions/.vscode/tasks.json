@@ -22,6 +22,12 @@
       "problemMatcher": []
     },
     {
+      "label": "run test website editing users",
+      "type": "shell",
+      "command": "mocha -r ts-node/register --exit --timeout 90000 test/websiteEditingUsers.spec.ts -f \"${input:subTestName}\"",
+      "problemMatcher": []
+    },
+    {
       "label": "firebase deploy",
       "type": "shell",
       "command": "cd .. && firebase deploy",

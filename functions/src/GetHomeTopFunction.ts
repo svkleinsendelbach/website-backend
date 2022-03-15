@@ -7,11 +7,10 @@ import { isTeamParameters } from './AnpfiffInfoData/Parameters/TeamParameters.gu
 import { TeamSpiele, TeamSpieleSpiele } from './AnpfiffInfoData/Parsers/TeamSpiele/TeamSpiele';
 import { TeamSpieleParser } from './AnpfiffInfoData/Parsers/TeamSpiele/TeamSpieleParser';
 import { DBPlayer } from './DBPlayer/DBPlayer';
-import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
 import { Logger } from './Logger/Logger';
 import { LogLevel } from './Logger/LogLevel';
 import { ParameterContainer } from './ParameterContainer';
-import { DBPlayerImageSource, FirebaseFunction, getDBPlayerImageName, httpsError } from './utils';
+import { FirebaseFunction, httpsError } from './utils';
 import { Datum } from './utils/Datum';
 import { FullDatum } from './utils/FullDatum';
 import { Time } from './utils/Time';
@@ -71,6 +70,7 @@ export class GetHomeTopFunction
     ]);
   }
 
+  /*
   private async getAllDBPlayers(): Promise<DBPlayer[]> {
     this.logger.append('GetHomeTopFunction.getAllDBPlayers', undefined);
     const firebaseFunction = new GetAllDBPlayersFunction(this.logger.nextIndent);
@@ -78,6 +78,7 @@ export class GetHomeTopFunction
     this.logger.append('GetHomeTopFunction.getAllDBPlayers', { allPlayers });
     return allPlayers;
   }
+  */
 
   private async getPersonWithLastDateOfBirth(): Promise<
     {
@@ -85,6 +86,8 @@ export class GetHomeTopFunction
       image?: string;
     }[]
   > {
+    return [];
+    /*
     this.logger.append('GetHomeTopFunction.getPersonWithLastDateOfBirth', undefined);
     const today = Datum.fromDate(new Date());
     let lastInYearPlayer: DBPlayer[] | undefined = undefined;
@@ -130,7 +133,8 @@ export class GetHomeTopFunction
         })(),
       );
     }
-    return await Promise.all(allPlayers);
+      return await Promise.all(allPlayers);
+      */
   }
 
   private async getTeamParameters(team: 'first-team' | 'second-team'): Promise<TeamParameters> {

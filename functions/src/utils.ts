@@ -1,7 +1,12 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import { AuthData } from 'firebase-functions/lib/common/providers/https';
+import * as sha512 from 'js-sha512';
+import * as jwt from 'jsonwebtoken';
 
 import { Logger } from './Logger/Logger';
+import { ParameterContainer } from './ParameterContainer';
+import { jwtPublicRsaKey } from './websiteEditingFunctions/jwt_rsa_keys';
 
 /**
  * Checks if data exists at specified reference.
@@ -10,6 +15,35 @@ import { Logger } from './Logger/Logger';
  */
 export async function existsData(reference: admin.database.Reference): Promise<boolean> {
   return (await reference.once('value')).exists();
+}
+
+export function checkJWTForEditing(token: string, auth: AuthData | undefined, logger: Logger) {
+  logger.append('checkJWTForEditing', { token, auth });
+  const tokenPayload = jwt.verify(token, jwtPublicRsaKey) as { userId: string; expiresAt: number };
+  if (typeof tokenPayload.expiresAt !== 'number' || new Date(tokenPayload.expiresAt) < new Date())
+    throw httpsError('permission-denied', 'Jwt validation failed: Expired.', logger);
+  if (auth === undefined) throw httpsError('permission-denied', 'No user authentication for validation jwt.', logger);
+  const hashedUid = sha512.sha512(auth.uid);
+  if (typeof tokenPayload.userId !== 'string' || tokenPayload.userId !== hashedUid)
+    throw httpsError('permission-denied', 'Jwt validation failed: Invalid userId.', logger);
+}
+
+export function reference(
+  path: string,
+  parameterContainer: ParameterContainer,
+  logger: Logger,
+): admin.database.Reference {
+  logger.append('database', { parameterContainer });
+  const dbType = parameterContainer.optionalParameter('dbType', 'string', logger.nextIndent);
+  switch (dbType) {
+    case 'testing':
+      return admin
+        .app()
+        .database('https://svkleinsendelbach-website-tests.europe-west1.firebasedatabase.app/')
+        .ref(path);
+    default:
+      return admin.app().database().ref(path);
+  }
 }
 
 /**

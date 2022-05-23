@@ -6,12 +6,24 @@ import { jwtPublicRsaKey } from '../src/websiteEditingFunctions/jwt_rsa_keys';
 import { callFunction, getCurrentUser, signInTestUser, signOutUser } from './utils';
 
 describe('websiteEditingUsers', () => {
+  let testUserJsonWebToken!: string;
+
   beforeEach(async () => {
     await signInTestUser();
     await callFunction<void>('addTestUserToTesting');
+
+    // Get json web token for test user
+    const testUserJwtPayload = await callFunction<{ userId: string }, { token: string; expiresAt: number }>(
+      'checkUserForEditing',
+      {
+        userId: sha512.sha512(getCurrentUser()?.uid ?? ''),
+      },
+    );
+    testUserJsonWebToken = testUserJwtPayload.token;
   });
 
   afterEach(async () => {
+    testUserJsonWebToken = '';
     await callFunction<void>('deleteAllUsersInTestingDB');
     await signOutUser();
   });
@@ -42,9 +54,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting to be empty
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting).to.be.empty;
     }
 
@@ -62,20 +77,15 @@ describe('websiteEditingUsers', () => {
 
     // Check user to be waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(1);
       expect(userWaiting[0]).to.be.deep.equal(user);
     }
-
-    // Get json web token for test user
-    const testUserJwtPayload = await callFunction<{ userId: string }, { token: string; expiresAt: number }>(
-      'checkUserForEditing',
-      {
-        userId: sha512.sha512(getCurrentUser()?.uid ?? ''),
-      },
-    );
 
     // Accept user waiting
     {
@@ -84,7 +94,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user.id,
           acceptDecline: 'accept',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
     }
@@ -105,9 +115,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting to be empty
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting).to.be.empty;
     }
   });
@@ -138,9 +151,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting to be empty
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting).to.be.empty;
     }
 
@@ -158,20 +174,15 @@ describe('websiteEditingUsers', () => {
 
     // Check user to be waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(1);
       expect(userWaiting[0]).to.be.deep.equal(user);
     }
-
-    // Get json web token for test user
-    const testUserJwtPayload = await callFunction<{ userId: string }, { token: string; expiresAt: number }>(
-      'checkUserForEditing',
-      {
-        userId: sha512.sha512(getCurrentUser()?.uid ?? ''),
-      },
-    );
 
     // Decline user waiting
     {
@@ -180,7 +191,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user.id,
           acceptDecline: 'decline',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
     }
@@ -202,9 +213,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting to be empty
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting).to.be.empty;
     }
   });
@@ -232,14 +246,6 @@ describe('websiteEditingUsers', () => {
       },
     };
 
-    // Get json web token for test user
-    const testUserJwtPayload = await callFunction<{ userId: string }, { token: string; expiresAt: number }>(
-      'checkUserForEditing',
-      {
-        userId: sha512.sha512(getCurrentUser()?.uid ?? ''),
-      },
-    );
-
     // Add user 1 to waiting then accept user 1 and add user 2 to waiting
     {
       await callFunction<{ userId: string; firstName: string; lastName: string }, void>(
@@ -255,7 +261,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user1.id,
           acceptDecline: 'accept',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
       await callFunction<{ userId: string; firstName: string; lastName: string }, void>(
@@ -347,7 +353,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user2.id,
           acceptDecline: 'accept',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
     }
@@ -368,9 +374,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(1);
       expect(userWaiting[0]).to.be.deep.equal(user3);
     }
@@ -399,14 +408,6 @@ describe('websiteEditingUsers', () => {
       },
     };
 
-    // Get json web token for test user
-    const testUserJwtPayload = await callFunction<{ userId: string }, { token: string; expiresAt: number }>(
-      'checkUserForEditing',
-      {
-        userId: sha512.sha512(getCurrentUser()?.uid ?? ''),
-      },
-    );
-
     // Add user 1 to waiting then accept user 1 and add user 2 to waiting
     {
       await callFunction<{ userId: string; firstName: string; lastName: string }, void>(
@@ -422,7 +423,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user1.id,
           acceptDecline: 'accept',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
       await callFunction<{ userId: string; firstName: string; lastName: string }, void>(
@@ -477,9 +478,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user 2 to be waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(1);
       expect(userWaiting[0]).to.be.deep.equal(user2);
     }
@@ -498,9 +502,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user 3 to be waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(2);
       userWaiting.sort((a, b) => a.id.localeCompare(b.id));
       expect(userWaiting[0]).to.be.deep.equal(user3);
@@ -514,7 +521,7 @@ describe('websiteEditingUsers', () => {
         {
           userId: user2.id,
           acceptDecline: 'decline',
-          jsonWebToken: testUserJwtPayload.token,
+          jsonWebToken: testUserJsonWebToken,
         },
       );
     }
@@ -536,9 +543,12 @@ describe('websiteEditingUsers', () => {
 
     // Check user waiting
     {
-      const userWaiting = await callFunction<{ id: string; name: { first: string; last: string } }[]>(
-        'getUsersToWaitingForRegistrationForEditing',
-      );
+      const userWaiting = await callFunction<
+        { jsonWebToken: string },
+        { id: string; name: { first: string; last: string } }[]
+      >('getUsersToWaitingForRegistrationForEditing', {
+        jsonWebToken: testUserJsonWebToken,
+      });
       expect(userWaiting.length).to.be.equal(1);
       expect(userWaiting[0]).to.be.deep.equal(user3);
     }

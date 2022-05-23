@@ -1,12 +1,9 @@
-import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
-
 import { Logger } from './Logger/Logger';
 import { LogLevel } from './Logger/LogLevel';
 import { ParameterContainer } from './ParameterContainer';
-import { FirebaseFunction } from './utils';
+import { FirebaseFunction, reference } from './utils';
 
-type ValidEventGroupId =
+export type ValidEventGroupId =
   | 'general'
   | 'football-adults/general'
   | 'football-adults/first-team'
@@ -20,7 +17,7 @@ type ValidEventGroupId =
   | 'gymnastics'
   | 'dancing';
 
-interface Event {
+export interface Event {
   id: string;
   date: string;
   title: string;
@@ -39,36 +36,22 @@ export class GetEventsFunction implements FirebaseFunction<{ groupId: ValidEvent
 
   async executeFunction(): Promise<{ groupId: ValidEventGroupId; events: Event[] }[]> {
     this.logger.append('GetEventsFunction.executeFunction', undefined, LogLevel.info);
-    const groupIds = this.parameterContainer.parameter('groupIds', 'object', this.logger.nextIndent);
-    if (!Array.isArray(groupIds)) {
-      throw new functions.https.HttpsError('invalid-argument', "Couldn't get group ids.");
-    }
-    return (await Promise.all(groupIds.map(this.getEvents))).compactMap(e => e);
+    const groupIds = this.parameterContainer.parameter('groupIds', 'array', this.logger.nextIndent);
+    const events = await Promise.all(groupIds.map(id => this.getEvents(id)));
+    return events.compactMap(e => e);
   }
 
   async getEvents(groupId: ValidEventGroupId): Promise<{ groupId: ValidEventGroupId; events: Event[] } | undefined> {
-    const reference = admin.database().ref(`events/${groupId}`);
-    const snapshot = await reference.once('value');
-    if (!snapshot.exists() || !snapshot.hasChildren()) {
-      return undefined;
-    }
-    const events = Object.entries(snapshot.val()).compactMap(entry => {
-      const date: Date = new Date((entry[1] as any).date);
-      if (date < new Date()) {
-        return undefined;
-      }
-      return {
-        ...(entry[1] as any),
-        id: entry[0],
-      };
+    const eventsRef = reference(`events/${groupId}`, this.parameterContainer, this.logger.nextIndent);
+    const snapshot = await eventsRef.once('value');
+    if (!snapshot.exists() || !snapshot.hasChildren()) return undefined;
+    const events = Object.entries<Omit<Event, 'id'>>(snapshot.val()).compactMap<Event>(entry => {
+      const date: Date = new Date(entry[1].date);
+      if (date < new Date()) return undefined;
+      return { ...entry[1], id: entry[0] };
     });
-    if (events.length == 0) {
-      return undefined;
-    }
+    if (events.length === 0) return undefined;
     events.sort((a, b) => (new Date(a.date) < new Date(b.date) ? -1 : 1));
-    return {
-      groupId: groupId,
-      events: events,
-    };
+    return { groupId, events: events };
   }
 }

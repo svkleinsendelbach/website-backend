@@ -33,4 +33,25 @@ describe('general', () => {
     console.log(decodedToken);
     console.log(new Date((decodedToken as any).expiresAt) >= new Date());
   });
+
+  async function asyncFunc(): Promise<number> {
+    if (Math.random() <= 0.9) {
+      console.log('Error thrown');
+      throw new Error('test error');
+    }
+    return await Promise.resolve(1.5);
+  }
+
+  it('test 2', async () => {
+    try {
+      const _return = await asyncFunc()
+        .then(console.log)
+        .catch(error => {
+          throw new Error(`new error ${error}`);
+        });
+      console.log(_return);
+    } catch (error) {
+      console.log(2, 'error', error);
+    }
+  });
 });

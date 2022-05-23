@@ -2,6 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import * as getData from './AnpfiffInfoData/getAnpfiffInfoData';
+import { EditEventsFunction } from './EditEventsFunction';
+import { EditNewsFunction } from './EditNewsFunction';
 import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
 import { GetEventsFunction } from './GetEventsFunction';
 import { GetHomeTopFunction } from './GetHomeTopFunction';
@@ -41,6 +43,16 @@ export const getEvents = functions.region('europe-west1').https.onCall(async (da
   return await firebaseFunction.executeFunction();
 });
 
+export const editEvents = functions.region('europe-west1').https.onCall(async (data, context) => {
+  const firebaseFunction = EditEventsFunction.fromData(data, context);
+  return await firebaseFunction.executeFunction();
+});
+
+export const editNews = functions.region('europe-west1').https.onCall(async (data, context) => {
+  const firebaseFunction = EditNewsFunction.fromData(data, context);
+  return await firebaseFunction.executeFunction();
+});
+
 export const verifyRecaptcha = functions.region('europe-west1').https.onCall(async (data, _context) => {
   const firebaseFunction = VerifyRecaptchaFunction.fromData(data);
   return await firebaseFunction.executeFunction();
@@ -65,8 +77,8 @@ export const addUserToWaitingForRegistrationForEditing = functions
 
 export const getUsersToWaitingForRegistrationForEditing = functions
   .region('europe-west1')
-  .https.onCall(async (data, _context) => {
-    const firebaseFunction = GetUsersToWaitingForRegistrationForEditingFunction.fromData(data);
+  .https.onCall(async (data, context) => {
+    const firebaseFunction = GetUsersToWaitingForRegistrationForEditingFunction.fromData(data, context);
     return await firebaseFunction.executeFunction();
   });
 

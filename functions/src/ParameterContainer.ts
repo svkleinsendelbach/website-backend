@@ -4,7 +4,7 @@ import { httpsError } from './utils';
 /**
  * All valid parameter types: string, number, bigint, boolean or object.
  */
-export type ValidParameterTypes = 'string' | 'number' | 'bigint' | 'boolean' | 'object';
+export type ValidParameterTypes = 'string' | 'number' | 'bigint' | 'boolean' | 'object' | 'array';
 
 /**
  * Contains all parameters for firebase function.
@@ -31,7 +31,8 @@ export class ParameterContainer {
     parameterName: string,
     expectedType: 'object',
     logger?: Logger,
-  ): Record<string, unknown> | undefined;
+  ): Record<PropertyKey, any> | undefined;
+  public optionalParameter(parameterName: string, expectedType: 'array', logger?: Logger): any[] | undefined;
   public optionalParameter(parameterName: string, expectedType: ValidParameterTypes, logger?: Logger): any | undefined {
     // Log method execution with parameters
     logger?.append('ParameterContainer.optionalParameter', {
@@ -48,8 +49,10 @@ export class ParameterContainer {
     // Return undefined if parameter is undefined
     if (parameter === null || parameter === undefined) return undefined;
 
-    // Throw an error if type isn't expected type
-    if (typeof parameter !== expectedType)
+    if (
+      typeof parameter !== expectedType &&
+      (expectedType !== 'array' || typeof parameter !== 'object' || !Array.isArray(parameter))
+    )
       throw httpsError(
         'invalid-argument',
         `Couldn't parse '${parameterName}'. Expected type '${expectedType}', but got '${parameter}' from type '${typeof parameter}'.`,
@@ -70,7 +73,8 @@ export class ParameterContainer {
   public parameter(parameterName: string, expectedType: 'number', logger: Logger): number;
   public parameter(parameterName: string, expectedType: 'bigint', logger: Logger): bigint;
   public parameter(parameterName: string, expectedType: 'boolean', logger: Logger): boolean;
-  public parameter(parameterName: string, expectedType: 'object', logger: Logger): Record<string, unknown>;
+  public parameter(parameterName: string, expectedType: 'object', logger: Logger): Record<PropertyKey, any>;
+  public parameter(parameterName: string, expectedType: 'array', logger?: Logger): any[];
   public parameter(parameterName: string, expectedType: ValidParameterTypes, logger: Logger): any {
     // Log method execution with parameters
     logger.append('ParameterContainer.parameter', {

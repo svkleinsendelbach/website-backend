@@ -32,6 +32,12 @@
       "type": "shell",
       "command": "cd .. && firebase deploy",
       "problemMatcher": []
+    },
+    {
+      "label": "firebase deploy only",
+      "type": "shell",
+      "command": "cd .. && firebase deploy --only functions:${input:functionsDeployName}",
+      "problemMatcher": []
     }
   ],
   "inputs": [
@@ -44,6 +50,11 @@
       "id": "subTestName",
       "type": "promptString",
       "description": "Name of sub test for testing"
+    },
+    {
+      "id": "functionsDeployName",
+      "type": "promptString",
+      "description": "Name of function for deplyment"
     }
   ]
 }

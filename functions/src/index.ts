@@ -7,6 +7,7 @@ import { EditNewsFunction } from './EditNewsFunction';
 import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
 import { GetEventsFunction } from './GetEventsFunction';
 import { GetHomeTopFunction } from './GetHomeTopFunction';
+import { GetNewsFunction } from './GetNewsFunction';
 import { Logger } from './Logger/Logger';
 import { ParameterContainer } from './ParameterContainer';
 import { SendContactMailFunction } from './SendContactMailFunction';
@@ -50,6 +51,11 @@ export const editEvents = functions.region('europe-west1').https.onCall(async (d
 
 export const editNews = functions.region('europe-west1').https.onCall(async (data, context) => {
   const firebaseFunction = EditNewsFunction.fromData(data, context);
+  return await firebaseFunction.executeFunction();
+});
+
+export const getNews = functions.region('europe-west1').https.onCall(async (data, _context) => {
+  const firebaseFunction = GetNewsFunction.fromData(data);
   return await firebaseFunction.executeFunction();
 });
 

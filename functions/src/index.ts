@@ -4,6 +4,7 @@ import { createFunction } from './utils/createFunction';
 import { GetEventsFunction } from './regularFunctions/GetEventsFunction';
 import { GetNewsFunction } from './regularFunctions/GetNewsFunction';
 import { GetSingleNewsFunction } from './regularFunctions/GetSingleNewsFunction';
+import { VerifyRecaptchaFunction } from './regularFunctions/VerifyRecaptchaFunction';
 
 admin.initializeApp();
 
@@ -12,3 +13,5 @@ export const getEvents = createFunction((data, auth) => new GetEventsFunction(da
 export const getNews = createFunction((data, auth) => new GetNewsFunction(data, auth));
 
 export const getSingleNews = createFunction((data, auth) => new GetSingleNewsFunction(data, auth));
+
+export const verifyRecaptcha = createFunction((data, auth) => new VerifyRecaptchaFunction(data, auth));

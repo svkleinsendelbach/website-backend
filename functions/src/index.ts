@@ -8,6 +8,7 @@ import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
 import { GetEventsFunction } from './GetEventsFunction';
 import { GetHomeTopFunction } from './GetHomeTopFunction';
 import { GetNewsFunction } from './GetNewsFunction';
+import { GetSingleNewsByIdFunction } from './GetSingleNewsByIdFunction';
 import { Logger } from './Logger/Logger';
 import { ParameterContainer } from './ParameterContainer';
 import { SendContactMailFunction } from './SendContactMailFunction';
@@ -56,6 +57,11 @@ export const editNews = functions.region('europe-west1').https.onCall(async (dat
 
 export const getNews = functions.region('europe-west1').https.onCall(async (data, _context) => {
   const firebaseFunction = GetNewsFunction.fromData(data);
+  return await firebaseFunction.executeFunction();
+});
+
+export const getSingleNewsById = functions.region('europe-west1').https.onCall(async (data, _context) => {
+  const firebaseFunction = GetSingleNewsByIdFunction.fromData(data);
   return await firebaseFunction.executeFunction();
 });
 

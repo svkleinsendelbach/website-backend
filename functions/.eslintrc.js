@@ -39,6 +39,7 @@ module.exports = {
         'no-trailing-spaces': 'off',
         'arrow-parens': 'off',
         'no-extend-native': 'off',
-        'no-prototype-builtins': 'off'
+        'no-prototype-builtins': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off'
     }
 };

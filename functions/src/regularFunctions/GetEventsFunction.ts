@@ -1,4 +1,5 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
+import { EventGroupId, EventGroup, Event } from '../classes/Event';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
@@ -34,7 +35,7 @@ export class GetEventsFunction implements FirebaseFunction<
 
                     // Check if group ids are valid
                     return value.map(groupId => {
-                        if (!GetEventsFunction.EventGroupId.isValid(groupId))
+                        if (!EventGroupId.isValid(groupId))
                             throw httpsError('invalid-argument', `group id '${groupId}' is not a valid event group id.`, logger);
                         return groupId;
                     });
@@ -53,16 +54,16 @@ export class GetEventsFunction implements FirebaseFunction<
         return events.compactMap(event => event);     
     }
 
-    private async getEvents(groupId: GetEventsFunction.EventGroupId): Promise<GetEventsFunction.EventGroup | undefined> {
+    private async getEvents(groupId: EventGroupId): Promise<EventGroup | undefined> {
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const eventsRef = reference(`events/${groupId}`, this.parameters.databaseType, this.logger.nextIndent);
-        const snapshot = await eventsRef.once('value');
-        if (!snapshot.exists() || snapshot.hasChildren())
+        const eventsSnapshot = await eventsRef.once('value');
+        if (!eventsSnapshot.exists() || eventsSnapshot.hasChildren())
             return undefined;
         const events = Object
-            .entries<string>(snapshot.val())
-            .compactMap<GetEventsFunction.Event>(entry => {
-                const event: Omit<GetEventsFunction.Event, 'id'> = crypter.decryptDecode(entry[1]);
+            .entries<string>(eventsSnapshot.val())
+            .compactMap<Event>(entry => {
+                const event: Omit<Event, 'id'> = crypter.decryptDecode(entry[1]);
                 if (new Date(event.date) < new Date()) 
                     return undefined;
                 return { 
@@ -81,48 +82,11 @@ export class GetEventsFunction implements FirebaseFunction<
 }
 
 export namespace GetEventsFunction {
-    export type Parameters = {
+    export interface Parameters {
         privateKey: string
         databaseType: DatabaseType
         groupIds: EventGroupId[]
-    };
+    }
 
     export type ReturnType = EventGroup[];
-
-    export type EventGroupId = 
-        'general' | 
-        'football-adults/general' | 
-        'football-adults/first-team' |
-        'football-adults/second-team' | 
-        'football-adults/ah-team' | 
-        'football-youth/general' | 
-        'football-youth/c-youth' | 
-        'football-youth/e-youth' |
-        'football-youth/f-youth' | 
-        'football-youth/g-youth' | 
-        'gymnastics' | 
-        'dancing';
-
-    export namespace EventGroupId {
-        export function isValid(value: string): value is EventGroupId {
-            return [
-                'general', 'football-adults/general', 'football-adults/first-team', 'football-adults/second-team', 
-                'football-adults/ah-team', 'football-youth/general', 'football-youth/c-youth', 'football-youth/e-youth', 
-                'football-youth/f-youth', 'football-youth/g-youth', 'gymnastics', 'dancing'
-            ].includes(value);
-        }
-    }
-    
-    export interface Event {
-      id: string,
-      date: string,
-      title: string,
-      subtitle?: string,
-      link?: string
-    }
-  
-    export interface EventGroup {
-      groupId: EventGroupId,
-      events: Event[]
-    }
 }

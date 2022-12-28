@@ -1,8 +1,10 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/https';
 import { FirebaseFunction } from './FirebaseFunction';
 import { Logger } from './Logger';
 import { Result } from './Result';
+import { DatabaseType } from './DatabaseType';
 
 /**
  * Get the result of a promise:
@@ -69,6 +71,33 @@ export function httpsError(
     return new functions.https.HttpsError(code, message, logger?.joinedMessages);
 }
 
+/**
+ * Checks if data exists at specified reference.
+ * @param { admin.database.Reference } reference Reference to check if there is data.
+ * @return { Promise<boolean> } True if data exists at reference.
+ */
+export async function existsData(reference: admin.database.Reference): Promise<boolean> {
+    return (await reference.once('value')).exists();
+}
+
+/**
+ * Get the database reference of specified path.
+ * @param { string } path Path to get the database reference to.
+ * @param { DatabaseType } databaseType Database type.
+ * @param { Logger } logger Logger to log this method.
+ * @return { admin.database.Reference } Database reference of specified path.
+ */
+export function reference(
+    path: string,
+    databaseType: DatabaseType,
+    logger: Logger,
+): admin.database.Reference {
+    logger.append('reference', { path, databaseType });
+
+    // Return reference.
+    return admin.app().database(databaseType.databaseUrl).ref(path || undefined);
+}
+
 declare global {
     export interface String {
 
@@ -107,6 +136,13 @@ declare global {
          */
         gray(): string;
     }
+
+    export interface Array<T> {
+      compactMap<U, This = undefined>(
+        callback: (value: T, index: number, array: T[]) => U | undefined | null,
+        thisArg?: This,
+      ): U[];
+    }
 }
 
 String.prototype.red = function() {
@@ -135,4 +171,13 @@ String.prototype.cyan = function() {
 
 String.prototype.gray = function() {
     return `\x1b[40m\x1b[2m${this}\x1b[0m`;
+};
+
+Array.prototype.compactMap = function <U, This = undefined>(
+    callback: (value: any, index: number, array: any[]) => U | undefined | null,
+    thisArg?: This,
+): U[] {
+    return this.flatMap((value, index, array) => {
+        return callback(value, index, array) ?? [];
+    }, thisArg);
 };

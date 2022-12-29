@@ -1,4 +1,6 @@
 import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/https';
+import { DatabaseType } from './DatabaseType';
+import { FiatShamirParameters } from './fiatShamir';
 
 export interface FirebaseFunction<Parameters, ReturnType> {
 
@@ -15,6 +17,11 @@ export interface FirebaseFunction<Parameters, ReturnType> {
 }
 
 export namespace FirebaseFunction {
+    export interface DefaultParameters {
+        fiatShamirParameters: FiatShamirParameters
+        databaseType: DatabaseType
+    }
+
     export type Parameters<T> = T extends FirebaseFunction<infer Parameters, any> ? Parameters : never;
 
     export type ReturnType<T> = T extends FirebaseFunction<any, infer ReturnType> ? ReturnType : never;

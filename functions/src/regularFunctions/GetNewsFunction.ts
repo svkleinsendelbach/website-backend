@@ -71,9 +71,7 @@ export class GetNewsFunction implements FirebaseFunction<
 }
 
 export namespace GetNewsFunction {
-    export interface Parameters {
-        fiatShamirParameters: FiatShamirParameters
-        databaseType: DatabaseType
+    export type Parameters = FirebaseFunction.DefaultParameters & {
         numberNews: number
     }
 

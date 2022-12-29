@@ -87,9 +87,7 @@ export class SendContactMailFunction implements FirebaseFunction<
 }
 
 export namespace SendContactMailFunction {
-    export interface Parameters {
-        fiatShamirParameters: FiatShamirParameters
-        databaseType: DatabaseType
+    export type Parameters = FirebaseFunction.DefaultParameters & {
         senderName: string
         senderAddress: string
         receiverName: string

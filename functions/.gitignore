@@ -9,4 +9,4 @@ typings/
 node_modules/
 
 src/privateKeys.ts
-test/firebaseConfig.ts
+test/privateKeys.ts

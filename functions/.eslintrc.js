@@ -41,6 +41,7 @@ module.exports = {
         'no-extend-native': 'off',
         'no-prototype-builtins': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
-        'new-cap': 'off'
+        'new-cap': 'off',
+        'camelcase': 'off'
     }
 };

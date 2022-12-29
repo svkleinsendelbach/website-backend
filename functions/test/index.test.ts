@@ -1,8 +1,18 @@
-// import { expect } from 'chai';
+// import { Logger } from '../src/utils/Logger';
 
 describe('', () => {
-    it('', () => {
-        const a = JSON.stringify(new Date());
-        console.log(new Date(JSON.parse(a)));
+    /*
+    const logger = Logger.start(true, 'testLogger', undefined, 'notice');
+
+    afterEach(async () => {
+        const callResult = await callFunction('deleteTestClubs', {
+            privateKey: unhashedFunctionCallKey(new DatabaseType('testing')),
+        });
+        expectFunctionSuccess(callResult).to.be.equal(undefined);
     });
+
+    it('', () => {
+        console.log();
+    });
+    */
 });

@@ -6,6 +6,10 @@ import { Logger } from './Logger';
 import { Result } from './Result';
 import { DatabaseType } from './DatabaseType';
 
+export type Exclude<T extends U, U> = {
+    [Key in keyof T]: U extends Record<Key, T[Key]> ? never : T[Key];
+};
+
 /**
  * Get the result of a promise:
  *     - Result.success if promise resolves.

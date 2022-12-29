@@ -49,9 +49,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
 }
 
 export namespace VerifyRecaptchaFunction {
-    export interface Parameters {
-        fiatShamirParameters: FiatShamirParameters
-        databaseType: DatabaseType
+    export type Parameters = FirebaseFunction.DefaultParameters & {
         actionType: 'contactForm',
         token: string
     }

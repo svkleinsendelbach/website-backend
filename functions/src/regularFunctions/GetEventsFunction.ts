@@ -74,9 +74,7 @@ export class GetEventsFunction implements FirebaseFunction<
 }
 
 export namespace GetEventsFunction {
-    export interface Parameters {
-        fiatShamirParameters: FiatShamirParameters
-        databaseType: DatabaseType
+    export type Parameters = FirebaseFunction.DefaultParameters & {
         groupIds: EventGroupId[]
     }
 

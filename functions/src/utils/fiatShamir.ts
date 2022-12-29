@@ -56,7 +56,7 @@ export async function checkFiatShamir(parameters: FiatShamirParameters, database
     }
 }
 
-function modularPower(base: bigint, exponent: bigint, modulus: bigint) {
+export function modularPower(base: bigint, exponent: bigint, modulus: bigint) {
     if (modulus === 1n) 
         return 0n;
     base %= modulus;

@@ -54,9 +54,7 @@ export class GetSingleNewsFunction implements FirebaseFunction<
 }
 
 export namespace GetSingleNewsFunction {
-    export interface Parameters {
-        fiatShamirParameters: FiatShamirParameters
-        databaseType: DatabaseType
+    export type Parameters = FirebaseFunction.DefaultParameters & {
         newsId: string
     }
 

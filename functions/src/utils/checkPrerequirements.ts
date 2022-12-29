@@ -1,22 +1,21 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { functionCallKey } from '../privateKeys';
 import { DatabaseType } from './DatabaseType';
+import { checkFiatShamir, FiatShamirParameters } from './fiatShamir';
 import { Logger } from './Logger';
 import { httpsError } from './utils';
 
 export async function checkPrerequirements(
     parameters: {
         databaseType: DatabaseType,
-        privateKey: string,
+        fiatShamirParameters: FiatShamirParameters,
     },
     logger: Logger,
     auth?: AuthData | 'notRequired'
 ) {
     logger.append('checkPrerequirements', { parameters, auth });
 
-    // Check if private key is valid.
-    if (parameters.privateKey !== functionCallKey(parameters.databaseType))
-        throw httpsError('permission-denied', 'Private key is invalid.', logger);
+    // Check fiat shamir
+    checkFiatShamir(parameters.fiatShamirParameters, parameters.databaseType, logger.nextIndent);
 
     // Check if user is authorized to call a function.
     if (auth === undefined)

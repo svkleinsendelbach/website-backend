@@ -4,6 +4,7 @@ import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { recaptchaSecretKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../utils/DatabaseType';
+import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/ParameterContainer';
@@ -24,7 +25,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<VerifyRecaptchaFunction.Parameters>(
             {
-                privateKey: 'string',
+                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
                 databaseType: ['string', DatabaseType.fromString],
                 actionType: ['string', (value: string, logger: Logger): 'contactForm' => {
                     if (value !== 'contactForm')
@@ -49,7 +50,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
 
 export namespace VerifyRecaptchaFunction {
     export interface Parameters {
-        privateKey: string
+        fiatShamirParameters: FiatShamirParameters
         databaseType: DatabaseType
         actionType: 'contactForm',
         token: string

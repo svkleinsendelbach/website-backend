@@ -98,6 +98,18 @@ export function reference(
     return admin.app().database(databaseType.databaseUrl).ref(path || undefined);
 }
 
+export function arrayBuilder<T>(elementBuilder: (element: any, logger: Logger) => T, length?: number): (value: object, logger: Logger) => T[] {
+    return (value: object, logger: Logger) => {
+        if (!Array.isArray(value))
+            throw httpsError('invalid-argument', 'Parameter has to be an array.', logger);
+        if (length !== undefined && value.length !== length)
+            throw httpsError('invalid-argument', `Length of array has to be ${length}.`, logger);
+        return value.map(element => {
+            return elementBuilder(element, logger.nextIndent);
+        });
+    };
+}
+
 declare global {
     export interface String {
 

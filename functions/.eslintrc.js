@@ -40,6 +40,7 @@ module.exports = {
         'arrow-parens': 'off',
         'no-extend-native': 'off',
         'no-prototype-builtins': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'off'
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        'new-cap': 'off'
     }
 };

@@ -4,6 +4,7 @@ import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../utils/DatabaseType';
+import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/ParameterContainer';
@@ -24,7 +25,7 @@ export class GetNewsFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<GetNewsFunction.Parameters>(
             {
-                privateKey: 'string',
+                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
                 databaseType: ['string', DatabaseType.fromString],
                 numberNews: 'number'
             },
@@ -71,7 +72,7 @@ export class GetNewsFunction implements FirebaseFunction<
 
 export namespace GetNewsFunction {
     export interface Parameters {
-        privateKey: string
+        fiatShamirParameters: FiatShamirParameters
         databaseType: DatabaseType
         numberNews: number
     }

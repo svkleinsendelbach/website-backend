@@ -4,11 +4,12 @@ import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../utils/DatabaseType';
+import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/ParameterContainer';
 import { ParameterParser } from '../utils/ParameterParser';
-import { httpsError, reference } from '../utils/utils';
+import { arrayBuilder, httpsError, reference } from '../utils/utils';
 
 export class GetEventsFunction implements FirebaseFunction<
     GetEventsFunction.Parameters,
@@ -24,22 +25,13 @@ export class GetEventsFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<GetEventsFunction.Parameters>(
             {
-                privateKey: 'string',
+                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
                 databaseType: ['string', DatabaseType.fromString],
-                groupIds: ['object', (value: object, logger: Logger) => {
-                    logger.append('GetEventsFunction.constructor.groupIds', { value });
-
-                    // Check if object is an array
-                    if (!Array.isArray(value)) 
-                        throw httpsError('invalid-argument', 'groupIds isn\'t an array.', logger);
-
-                    // Check if group ids are valid
-                    return value.map(groupId => {
-                        if (!EventGroupId.isValid(groupId))
-                            throw httpsError('invalid-argument', `group id '${groupId}' is not a valid event group id.`, logger);
-                        return groupId;
-                    });
-                }]
+                groupIds: ['object', arrayBuilder((element: any, logger: Logger) => {
+                    if (!EventGroupId.isValid(element))
+                        throw httpsError('invalid-argument', `group id '${element}' is not a valid event group id.`, logger);
+                    return element;
+                })]
             },
             this.logger.nextIndent
         );
@@ -83,7 +75,7 @@ export class GetEventsFunction implements FirebaseFunction<
 
 export namespace GetEventsFunction {
     export interface Parameters {
-        privateKey: string
+        fiatShamirParameters: FiatShamirParameters
         databaseType: DatabaseType
         groupIds: EventGroupId[]
     }

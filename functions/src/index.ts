@@ -6,6 +6,7 @@ import { GetNewsFunction } from './regularFunctions/GetNewsFunction';
 import { GetSingleNewsFunction } from './regularFunctions/GetSingleNewsFunction';
 import { VerifyRecaptchaFunction } from './regularFunctions/VerifyRecaptchaFunction';
 import { SendContactMailFunction } from './regularFunctions/SendContactMailFunction';
+import { FiatShamirChallengeGeneratorFunction } from './regularFunctions/FiatShamirChallengeGeneratorFunction';
 
 admin.initializeApp();
 
@@ -18,3 +19,5 @@ export const getSingleNews = createFunction((data, auth) => new GetSingleNewsFun
 export const verifyRecaptcha = createFunction((data, auth) => new VerifyRecaptchaFunction(data, auth));
 
 export const sendContactMail = createFunction((data, auth) => new SendContactMailFunction(data, auth));
+
+export const fiatShamirChallengeGenerator = createFunction((data, auth) => new FiatShamirChallengeGeneratorFunction(data, auth));

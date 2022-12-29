@@ -163,7 +163,7 @@ export class ParameterContainer {
         logger.append('ParameterContainer.optionalParameter', { parameterName, expectedType });
 
         // Return undefined if the parameter doesn't exist.
-        if (!Object.prototype.hasOwnProperty(this.data, parameterName))
+        if (!this.data.hasOwnProperty(parameterName))
             return undefined;
 
         // Get the parameter from the firebase function data.

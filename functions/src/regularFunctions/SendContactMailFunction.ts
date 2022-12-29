@@ -9,6 +9,7 @@ import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/ParameterContainer';
 import { ParameterParser } from '../utils/ParameterParser';
 import { sendContactMailAccount } from '../privateKeys';
+import { FiatShamirParameters } from '../utils/fiatShamir';
 
 export class SendContactMailFunction implements FirebaseFunction<
     SendContactMailFunction.Parameters,
@@ -32,7 +33,7 @@ export class SendContactMailFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<SendContactMailFunction.Parameters>(
             {
-                privateKey: 'string',
+                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
                 databaseType: ['string', DatabaseType.fromString],
                 senderName: 'string',
                 senderAddress: 'string',
@@ -87,7 +88,7 @@ export class SendContactMailFunction implements FirebaseFunction<
 
 export namespace SendContactMailFunction {
     export interface Parameters {
-        privateKey: string
+        fiatShamirParameters: FiatShamirParameters
         databaseType: DatabaseType
         senderName: string
         senderAddress: string

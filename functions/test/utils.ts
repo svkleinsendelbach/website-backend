@@ -10,12 +10,13 @@ import { SendContactMailFunction } from '../src/regularFunctions/SendContactMail
 import { VerifyRecaptchaFunction } from '../src/regularFunctions/VerifyRecaptchaFunction';
 import { DatabaseType } from '../src/utils/DatabaseType';
 import { FirebaseFunction } from '../src/utils/FirebaseFunction';
-import { Exclude } from '../src/utils/utils';
 import { cryptionKeys, fiatShamirKeys, firebaseConfig, testUser } from './privateKeys';
 import { randomBytes } from 'crypto';
 import { FiatShamirParameters, modularPower } from '../src/utils/fiatShamir';
 import { guid } from '../src/classes/guid';
 import { DeleteAllDataFunction } from '../src/testingFunctions/DeleteAllDataFunction';
+import { assert, expect } from 'chai';
+import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/https';
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, 'europe-west1');
@@ -34,13 +35,13 @@ export function getCurrentUser(): User | null {
     return auth.currentUser;
 }
 
-export async function callFunction(functionName: 'v2_getEvents', parameters: Exclude<GetEventsFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<GetEventsFunction.ReturnType>
-export async function callFunction(functionName: 'v2_getNews', parameters: Exclude<GetNewsFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<GetNewsFunction.ReturnType>
-export async function callFunction(functionName: 'v2_getSingleNews', parameters: Exclude<GetSingleNewsFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<GetSingleNewsFunction.ReturnType>
-export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: Exclude<VerifyRecaptchaFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<VerifyRecaptchaFunction.ReturnType>
-export async function callFunction(functionName: 'v2_sendContactMail', parameters: Exclude<SendContactMailFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<SendContactMailFunction.ReturnType>
-export async function callFunction(functionName: 'v2_deleteAllData', parameters: Exclude<DeleteAllDataFunction.Parameters, FirebaseFunction.DefaultParameters>): Promise<DeleteAllDataFunction.ReturnType>
-export async function callFunction<Params, Result>(functionName: string, parameters: Params): Promise<Result> {
+export async function callFunction(functionName: 'v2_getEvents', parameters: Omit<GetEventsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetEventsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getNews', parameters: Omit<GetNewsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getSingleNews', parameters: Omit<GetSingleNewsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetSingleNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: Omit<VerifyRecaptchaFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<VerifyRecaptchaFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_sendContactMail', parameters: Omit<SendContactMailFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<SendContactMailFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_deleteAllData', parameters: Omit<DeleteAllDataFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<DeleteAllDataFunction.ReturnType>>
+export async function callFunction<Params, Result>(functionName: string, parameters: Params): Promise<FirebaseFunction.Result<Result>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);
     const fiatShamirParameters = await getFiatShamirParameters();
@@ -55,7 +56,7 @@ export async function callFunction<Params, Result>(functionName: string, paramet
         parameters: crypter.encodeEncrypt({
             ...parameters,
             fiatShamirParameters: fiatShamirParameters,
-            databaseType: databaseType
+            databaseType: databaseType.value
         })
     });
     return crypter.decryptDecode(httpsCallableResult.data);
@@ -86,15 +87,17 @@ async function callFiatShamirChallengeGeneratorFunction(identifier: guid): Promi
         verbose: true,
         databaseType: databaseType.value,
         parameters: crypter.encodeEncrypt({
-            databaseType: databaseType,
-            identifier: identifier,
+            databaseType: databaseType.value,
+            identifier: identifier.guidString,
             bs: asAndBs.bs
         })
     });
-    const challenges: (0 | 1)[] = crypter.decryptDecode(httpsCallableResult.data);
+    const functionResult: FirebaseFunction.Result<(0 | 1)[]> = crypter.decryptDecode(httpsCallableResult.data);
+    expectSuccess(functionResult);
+    assert(functionResult.state === 'success');
     return {
         as: asAndBs.as,
-        challenges: challenges
+        challenges: functionResult.returnValue
     };
 }
 
@@ -111,6 +114,65 @@ function generateAsAndBs(): { as: bigint[], bs: bigint[] } {
         as: as,
         bs: bs
     };
+}
+
+export function expectFailed<T>(result: FirebaseFunction.Result<T>): Expect<{
+    code: FunctionsErrorCode,
+    message: string,
+}> {
+    expect(result.state).to.be.equal('failure');
+    assert(result.state === 'failure');
+    return new Expect({
+        code: result.error.code,
+        message: result.error.message
+    });
+}
+
+export function expectSuccess<T>(result: FirebaseFunction.Result<T>): Expect<T> {
+    if (result.state === 'failure') {
+        console.log(`Failed with error: ${result.error.code}, ${result.error.message}`);
+        console.log(result.error.details);
+        console.log(result.error.stack);
+    }
+    expect(result.state).to.be.equal('success');
+    assert(result.state === 'success');
+    return new Expect(result.returnValue);
+}
+
+class Expect<T> {
+    public constructor(private readonly value: T) { }
+
+    public get to(): Expect1<T> {
+        return new Expect1<T>(this.value);
+    }
+}
+
+class Expect1<T> {
+    public constructor(private readonly value: T) { }
+
+    public get be(): Expect2<T> {
+        return new Expect2<T>(this.value);
+    }
+}
+
+class Expect2<T> {
+    public constructor(private readonly value: T) { }
+
+    public get deep(): Expect3<T> {
+        return new Expect3<T>(this.value);
+    }
+
+    public equal(value: T, message?: string): Chai.Assertion {
+        return expect(this.value).to.be.equal(value, message);
+    }
+}
+
+class Expect3<T> {
+    public constructor(private readonly value: T) { }
+
+    public equal(value: T, message?: string): Chai.Assertion {
+        return expect(this.value).to.be.deep.equal(value, message);
+    }
 }
 
 export async function getOptionalDatabaseValue<T>(referencePath: string): Promise<T | null> {

@@ -5,10 +5,7 @@ import { FirebaseFunction } from './FirebaseFunction';
 import { Logger } from './Logger';
 import { Result } from './Result';
 import { DatabaseType } from './DatabaseType';
-
-export type Exclude<T extends U, U> = {
-    [Key in keyof T]: U extends Record<Key, T[Key]> ? never : T[Key];
-};
+import { guid } from '../classes/guid';
 
 /**
  * Get the result of a promise:
@@ -112,6 +109,22 @@ export function arrayBuilder<T>(elementBuilder: (element: any, logger: Logger) =
             return elementBuilder(element, logger.nextIndent);
         });
     };
+}
+
+export namespace Json {
+    export function stringify(data: any, space?: string | number): string | undefined {
+        if (data === undefined) return undefined;
+        return JSON.stringify(data, (_, v) => {
+            if (typeof v === 'bigint') return `${v}#bigint`;
+            if (v instanceof guid) return v.guidString;
+            return v;
+        }, space);   
+    }
+    
+    export function parse(data: string | undefined): any {
+        if (data === undefined) return undefined;
+        return JSON.parse(data, (_, v) => typeof v === 'string' && v.endsWith('#bigint') ? BigInt(v.replace(/#bigint$/, '')) : v);
+    }
 }
 
 declare global {

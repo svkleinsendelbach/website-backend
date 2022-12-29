@@ -4,6 +4,7 @@ import { UTF8WithLength16, UTF8WithLength32 } from './UTF8WithLength';
 import { BufferToBitIterator } from './BufferToBitIterator';
 import { CombineIterator } from './CombineIterator';
 import { bitIteratorToBuffer, randomKey, xor, unishortBuffer, unishortString } from './utils';
+import { Json } from '../utils/utils';
 
 /**
  * Used to en- and decrypt vernam and aes.
@@ -98,7 +99,7 @@ export class Crypter {
         if (data === undefined || data === null || data === '') return {};
         const dataBuffer = unishortBuffer(data);
         const decryptedData = this.decryptAesAndVernam(dataBuffer);
-        return JSON.parse(decryptedData.toString('utf8'));
+        return Json.parse(decryptedData.toString('utf8'));
     }
 
     /**
@@ -107,8 +108,8 @@ export class Crypter {
      * @return { string } Encoded and encrypted data.
      */
     public encodeEncrypt(data: any): string {
-        const encodedData = JSON.stringify(data);
-        const dataBuffer = Buffer.from(encodedData, 'utf8');
+        const encodedData = Json.stringify(data);
+        const dataBuffer = Buffer.from(encodedData ?? '', 'utf8');
         const encryptedData = this.encryptVernamAndAes(dataBuffer);
         return unishortString(encryptedData);
     }

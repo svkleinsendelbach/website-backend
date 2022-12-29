@@ -1,4 +1,5 @@
 import { StringBuilder } from './StringBuilder';
+import { Json } from './utils';
 
 /**
  * Level of a log message.
@@ -147,7 +148,7 @@ export class Logger {
      */
     private detailString(indent: number, key: string, detail: { [key: string]: any }): string {
         const builder = new StringBuilder();
-        const jsonLines = JSON.stringify(detail, null, '  ')?.split('\n') ?? [''];
+        const jsonLines = Json.stringify(detail, '  ')?.split('\n') ?? [''];
         builder.appendLine(`${' '.repeat(2 * indent)}| ${`${key}: ${jsonLines.shift()?.gray()}`}`);
         for (const line of jsonLines)
             builder.appendLine(`${' '.repeat(2 * indent)}| ${' '.repeat(key.length + 2)}${line.gray()}`);

@@ -1,18 +1,15 @@
-// import { Logger } from '../src/utils/Logger';
+import { callFunction, expectSuccess } from './utils';
 
 describe('', () => {
-    /*
-    const logger = Logger.start(true, 'testLogger', undefined, 'notice');
-
     afterEach(async () => {
-        const callResult = await callFunction('deleteTestClubs', {
-            privateKey: unhashedFunctionCallKey(new DatabaseType('testing')),
-        });
-        expectFunctionSuccess(callResult).to.be.equal(undefined);
+        const result = await callFunction('v2_deleteAllData', {});
+        expectSuccess(result).to.be.equal(undefined);
     });
 
-    it('', () => {
-        console.log();
+    it('', async () => {
+        const result = await callFunction('v2_getEvents', {
+            groupIds: ['general', 'football-adults/general', 'football-adults/first-team']
+        });
+        expectSuccess(result).to.be.deep.equal([]);
     });
-    */
 });

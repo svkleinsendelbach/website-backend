@@ -1,5 +1,6 @@
 import { Logger } from '../utils/Logger';
 import { httpsError } from '../utils/utils';
+import { guid } from './guid';
 
 export type EventGroupId = 
     'general' | 
@@ -26,7 +27,7 @@ export namespace EventGroupId {
 }
 
 export interface Event {
-  id: string,
+  id: guid,
   date: Date,
   title: string,
   subtitle?: string,

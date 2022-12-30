@@ -5,7 +5,7 @@
 		"body": [
 			"import { AuthData } from 'firebase-functions/lib/common/providers/tasks';",
 			"import { checkPrerequirements } from '../utils/checkPrerequirements';",
-			"import { DatabaseType } from '../utils/DatabaseType';",
+			"import { DatabaseType } from '../classes/DatabaseType';",
 			"import { FiatShamirParameters } from '../utils/fiatShamir';",
 			"import { FirebaseFunction } from '../utils/FirebaseFunction';",
 			"import { Logger } from '../utils/Logger';",

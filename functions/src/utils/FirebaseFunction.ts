@@ -1,5 +1,5 @@
 import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/https';
-import { DatabaseType } from './DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from './fiatShamir';
 
 export interface FirebaseFunction<Parameters, ReturnType> {

@@ -1,7 +1,7 @@
 import { guid } from '../classes/guid';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys, fiatShamirKeys } from '../privateKeys';
-import { DatabaseType } from './DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { Logger } from './Logger';
 import { arrayBuilder, httpsError, reference } from './utils';
 

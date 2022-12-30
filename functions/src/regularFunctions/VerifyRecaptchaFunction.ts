@@ -3,13 +3,14 @@ import fetch from 'cross-fetch';
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { recaptchaSecretKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { httpsError } from '../utils/utils';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class VerifyRecaptchaFunction implements FirebaseFunction<
     VerifyRecaptchaFunction.Parameters,
@@ -25,14 +26,14 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<VerifyRecaptchaFunction.Parameters>(
             {
-                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
-                databaseType: ['string', DatabaseType.fromString],
-                actionType: ['string', (value: string, logger: Logger): 'contactForm' => {
+                fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
+                actionType: ParameterBuilder.builder('string', (value: string, logger: Logger): 'contactForm' => {
                     if (value !== 'contactForm')
                         throw httpsError('invalid-argument', `Invalid action type: ${value}`, logger);
                     return value;
-                }],
-                token: 'string'
+                }),
+                token: ParameterBuilder.trivialBuilder('string')
             },
             this.logger.nextIndent
         );

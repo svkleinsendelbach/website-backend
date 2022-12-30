@@ -4,7 +4,7 @@ import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/http
 import { FirebaseFunction } from './FirebaseFunction';
 import { Logger } from './Logger';
 import { Result } from './Result';
-import { DatabaseType } from './DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { guid } from '../classes/guid';
 
 /**

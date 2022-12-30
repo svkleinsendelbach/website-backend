@@ -1,12 +1,13 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { existsData, httpsError, reference } from '../utils/utils';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class DeleteAllDataFunction implements FirebaseFunction<
     DeleteAllDataFunction.Parameters,
@@ -22,8 +23,8 @@ export class DeleteAllDataFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<DeleteAllDataFunction.Parameters>(
             {
-                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
-                databaseType: ['string', DatabaseType.fromString]
+                fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString)
             },
             this.logger.nextIndent
         );

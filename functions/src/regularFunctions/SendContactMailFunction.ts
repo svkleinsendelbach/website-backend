@@ -3,13 +3,14 @@ import Mail from 'nodemailer/lib/mailer';
 
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { sendContactMailAccount } from '../privateKeys';
 import { FiatShamirParameters } from '../utils/fiatShamir';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class SendContactMailFunction implements FirebaseFunction<
     SendContactMailFunction.Parameters,
@@ -33,13 +34,13 @@ export class SendContactMailFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<SendContactMailFunction.Parameters>(
             {
-                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
-                databaseType: ['string', DatabaseType.fromString],
-                senderName: 'string',
-                senderAddress: 'string',
-                receiverName: 'string',
-                receiverAddress: 'string',
-                message: 'string'
+                fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
+                senderName: ParameterBuilder.trivialBuilder('string'),
+                senderAddress: ParameterBuilder.trivialBuilder('string'),
+                receiverName: ParameterBuilder.trivialBuilder('string'),
+                receiverAddress: ParameterBuilder.trivialBuilder('string'),
+                message: ParameterBuilder.trivialBuilder('string')
             },
             this.logger.nextIndent
         );

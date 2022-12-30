@@ -1,5 +1,5 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { DatabaseType } from './DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { checkFiatShamir, FiatShamirParameters } from './fiatShamir';
 import { Logger } from './Logger';
 import { httpsError } from './utils';

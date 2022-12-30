@@ -3,13 +3,14 @@ import { EventGroupId, EventGroup, Event } from '../classes/Event';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { arrayBuilder, httpsError, reference } from '../utils/utils';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class GetEventsFunction implements FirebaseFunction<
     GetEventsFunction.Parameters,
@@ -25,13 +26,13 @@ export class GetEventsFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<GetEventsFunction.Parameters>(
             {
-                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
-                databaseType: ['string', DatabaseType.fromString],
-                groupIds: ['object', arrayBuilder((element: any, logger: Logger) => {
+                fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
+                groupIds: ParameterBuilder.builder('object', arrayBuilder((element: any, logger: Logger) => {
                     if (!EventGroupId.isValid(element))
                         throw httpsError('invalid-argument', `group id '${element}' is not a valid event group id.`, logger);
                     return element;
-                })]
+                }))
             },
             this.logger.nextIndent
         );
@@ -56,10 +57,12 @@ export class GetEventsFunction implements FirebaseFunction<
             .entries<string>(eventsSnapshot.val())
             .compactMap<Event>(entry => {
                 const event: Omit<Event, 'id'> = crypter.decryptDecode(entry[1]);
-                if (new Date(event.date) < new Date()) 
+                const date = new Date(event.date);
+                if (date < new Date()) 
                     return undefined;
                 return { 
                     ...event, 
+                    date: date,
                     id: entry[0] 
                 };
             });

@@ -2,11 +2,11 @@ import * as functions from 'firebase-functions';
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
-import { DatabaseType } from './DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FirebaseFunction } from './FirebaseFunction';
 import { Logger } from './Logger';
 import { Result } from './Result';
-import { convertToFunctionResultError, toResult } from './utils';
+import { convertToFunctionResultError, httpsError, toResult } from './utils';
 
 export function createFunction<
     FFunction extends FirebaseFunction<any, FirebaseFunction.ReturnType<FFunction>>
@@ -17,7 +17,9 @@ export function createFunction<
 
         // Get database
         const logger = Logger.start(false, 'createFunction', undefined, 'notice');
-        const databaseType = DatabaseType.fromValue(data.databaseType, logger.nextIndent);
+        if (typeof data.data !== 'string') 
+            throw httpsError('invalid-argument', 'Couldn\'t get database type.', logger);
+        const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
 
         // Get result of function call
         let result: Result<FirebaseFunction.Result.Success<FirebaseFunction.ReturnType<FFunction>>, FirebaseFunction.Result.Failure>;

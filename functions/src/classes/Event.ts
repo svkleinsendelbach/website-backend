@@ -1,3 +1,6 @@
+import { Logger } from '../utils/Logger';
+import { httpsError } from '../utils/utils';
+
 export type EventGroupId = 
     'general' | 
     'football-adults/general' | 
@@ -24,10 +27,35 @@ export namespace EventGroupId {
 
 export interface Event {
   id: string,
-  date: string,
+  date: Date,
   title: string,
   subtitle?: string,
   link?: string
+}
+
+export namespace Event {
+    export function fromObject(value: object, logger: Logger): Omit<Event, 'id'> {
+        logger.append('Event.fromObject', { value });
+
+        if (!('date' in value) || typeof value.date !== 'string')
+            throw httpsError('internal', 'Couldn\'t get date for event.', logger);
+                
+        if (!('title' in value) || typeof value.title !== 'string')
+            throw httpsError('internal', 'Couldn\'t get title for event.', logger);
+        
+        if ('subtitle' in value && (typeof value.subtitle !== 'string' && value.subtitle !== undefined))
+            throw httpsError('internal', 'Couldn\'t get subtitle for event.', logger);
+        
+        if ('link' in value && (typeof value.link !== 'string' && value.link !== undefined))
+            throw httpsError('internal', 'Couldn\'t get link for event.', logger);
+
+        return {
+            date: new Date(value.date),
+            title: value.title,
+            subtitle: 'subtitle' in value ? value.subtitle as string : undefined,
+            link: 'link' in value ? value.link as string : undefined
+        };
+    }
 }
 
 export interface EventGroup {

@@ -3,13 +3,14 @@ import { News } from '../classes/News';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { reference } from '../utils/utils';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class GetNewsFunction implements FirebaseFunction<
     GetNewsFunction.Parameters,
@@ -25,9 +26,9 @@ export class GetNewsFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<GetNewsFunction.Parameters>(
             {
-                fiatShamirParameters: ['object', FiatShamirParameters.fromObject],
-                databaseType: ['string', DatabaseType.fromString],
-                numberNews: 'number'
+                fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
+                numberNews: ParameterBuilder.trivialBuilder('number')
             },
             this.logger.nextIndent
         );

@@ -8,7 +8,7 @@ import { GetNewsFunction } from '../src/regularFunctions/GetNewsFunction';
 import { GetSingleNewsFunction } from '../src/regularFunctions/GetSingleNewsFunction';
 import { SendContactMailFunction } from '../src/regularFunctions/SendContactMailFunction';
 import { VerifyRecaptchaFunction } from '../src/regularFunctions/VerifyRecaptchaFunction';
-import { DatabaseType } from '../src/utils/DatabaseType';
+import { DatabaseType } from '../src/classes/DatabaseType';
 import { FirebaseFunction } from '../src/utils/FirebaseFunction';
 import { cryptionKeys, fiatShamirKeys, firebaseConfig, testUser } from './privateKeys';
 import { randomBytes } from 'crypto';

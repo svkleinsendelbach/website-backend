@@ -2,12 +2,13 @@ import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { guid } from '../classes/guid';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
-import { DatabaseType } from '../utils/DatabaseType';
+import { DatabaseType } from '../classes/DatabaseType';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
-import { ParameterContainer } from '../utils/ParameterContainer';
-import { ParameterParser } from '../utils/ParameterParser';
+import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
+import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { arrayBuilder, httpsError, reference } from '../utils/utils';
+import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class FiatShamirChallengeGeneratorFunction implements FirebaseFunction<
     FiatShamirChallengeGeneratorFunction.Parameters,
@@ -23,13 +24,13 @@ export class FiatShamirChallengeGeneratorFunction implements FirebaseFunction<
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FiatShamirChallengeGeneratorFunction.Parameters>(
             {
-                databaseType: ['string', DatabaseType.fromString],
-                identifier: ['string', guid.fromString],
-                bs: ['object', arrayBuilder((element: any, logger: Logger) => {
+                databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
+                identifier: ParameterBuilder.builder('string', guid.fromString),
+                bs: ParameterBuilder.builder('object', arrayBuilder((element: any, logger: Logger) => {
                     if (typeof element !== 'bigint')
                         throw httpsError('invalid-argument', `b '${element}' is not a big int.`, logger);
                     return element;
-                }, 32)]
+                }, 32))
             },
             this.logger.nextIndent
         );

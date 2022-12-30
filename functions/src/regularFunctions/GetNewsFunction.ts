@@ -37,7 +37,7 @@ export class GetNewsFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<GetNewsFunction.ReturnType> {
-        this.logger.append('GetNewsFunction.executeFunction', {}, 'info');
+        this.logger.log('GetNewsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const newsReference = FirebaseDatabase.Reference.fromPath('news', this.parameters.databaseType);

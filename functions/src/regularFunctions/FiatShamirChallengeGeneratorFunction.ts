@@ -40,7 +40,7 @@ export class FiatShamirChallengeGeneratorFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<FiatShamirChallengeGeneratorFunction.ReturnType> {
-        this.logger.append('FiatShamirChallengeGeneratorFunction.executeFunction', {}, 'info');
+        this.logger.log('FiatShamirChallengeGeneratorFunction.executeFunction', {}, 'info');
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const challenges = this.generateChallenges();
         const encrypedBsAndChallenges = crypter.encodeEncrypt({

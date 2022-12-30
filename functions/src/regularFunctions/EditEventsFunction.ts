@@ -45,7 +45,7 @@ export class EditEventsFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<EditEventsFunction.ReturnType> {
-        this.logger.append('EditEventsFunction.executeFunction', {}, 'info');
+        this.logger.log('EditEventsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth); 
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger.nextIndent);
 

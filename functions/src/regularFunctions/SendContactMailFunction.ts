@@ -49,7 +49,7 @@ export class SendContactMailFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<SendContactMailFunction.ReturnType> {
-        this.logger.append('SendContactMailFunction.executeFunction', {}, 'info');
+        this.logger.log('SendContactMailFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired'); 
         const mailOptions: Mail.Options = {
             from: `${this.parameters.senderName} <${this.parameters.senderAddress}>`,

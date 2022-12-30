@@ -1,26 +1,11 @@
 import { StringBuilder } from './StringBuilder';
 import { Json } from './utils';
 
-/**
- * Level of a log message.
- */
-class LogLevel {
+export type LogLevel = 'debug' | 'info' | 'notice';
 
-    /**
-     * Constructs log level with raw value.
-     * @param { 'debug' | 'info' | 'notice' } value Raw value of the log level.
-     */
-    constructor(
-        private readonly value: 'debug' | 'info' | 'notice'
-    ) {}
-
-    /**
-     * Colors specifed text depending on this log level.
-     * @param { string } text Text to color
-     * @return { string } Colored text.
-     */
-    coloredText(text: string): string {
-        switch (this.value) {
+export namespace LogLevel {
+    export function coloredText(logLevel: LogLevel, text: string): string {
+        switch (logLevel) {
         case 'debug': return text.yellow();
         case 'info': return text.red();
         case 'notice': return text.blue();
@@ -28,107 +13,58 @@ class LogLevel {
     }
 }
 
-/**
- * Contains all properties of a log message
- */
 interface LoggingProperty {
-
-    /**
-     * Name of the function the log happend.
-     */
-    readonly functionName: string;
-
-    /**
-     * Level of the log message.
-     */
-    readonly level: LogLevel;
-
-    /**
-     * Indent of the log message.
-     */
+    functionName: string;
+    readonly logLevel: LogLevel;
     readonly indent: number;
-
-    /**
-     * Details of the log message.
-     */
-    readonly details: { [key: string]: any };
+    readonly details: { 
+        [key: PropertyKey]: any
+    };
 }
 
-/**
- * Logger to log multiple log messages.
- */
 export class Logger {
-
-    /**
-     * Constructs logger with log messages properties.
-     * @param { boolean } verbose Indicates whether the logger is verbose.
-     * @param { LoggingProperty[] } properties Properties of log messages.
-     * @param { number } currentIndent Current indent number.
-     */
     private constructor(
         private readonly verbose: boolean,
         private readonly properties: LoggingProperty[],
         private currentIndent: number = 0
     ) {}
 
-    /**
-     * Begins the logger with a log message.
-     * @param { boolean } verbose Indicates whether logger is verbose.
-     * @param { string } functionName Name of the function the log happend.
-     * @param { { string: any }  } details Details of the log message.
-     * @param { 'debug' | 'info' | 'notice' } level Level of the log message.
-     * @return { Logger } New logger with log message.
-     */
     public static start(
         verbose: boolean,
         functionName: string,
         details: { [key: string]: any } = {},
-        level: 'debug' | 'info' | 'notice' = 'debug'
+        logLevel: LogLevel = 'debug'
     ): Logger {
         const property: LoggingProperty = {
             functionName: functionName,
-            level: new LogLevel(level),
+            logLevel: logLevel,
             indent: 0,
             details: details
         };
         return new Logger(verbose, [property]);
     }
 
-    /**
-     * Returns a logger with an increased indent.
-     */
     public get nextIndent(): Logger {
         return new Logger(this.verbose, this.properties, this.currentIndent + 1);
     }
 
-    /**
-     * Appends a new log message.
-     * @param { string } functionName Name of the function the log happend.
-     * @param { { string: any }  } details Details of the log message.
-     * @param { 'debug' | 'info' | 'notice' } level Level of the log message.
-     */
-    public append(
+    public log(
         functionName: string,
         details: { [key: string]: any } = {},
-        level: 'debug' | 'info' | 'notice' = 'debug'
+        logLevel: LogLevel = 'debug'
     ) {
         this.properties.push({
             functionName: functionName,
-            level: new LogLevel(level),
+            logLevel: logLevel,
             indent: this.currentIndent,
             details: details
         });
     }
 
-    /**
-     * Description of specified property.
-     * @param { LoggingProperty } property Property to get the description.
-     * @return { string } Description of specified property.
-     */
     private propertyString(property: LoggingProperty): string {
         const builder = new StringBuilder();
         builder.appendLine(
-            `${' '.repeat(2 * property.indent)}| ${property.level.coloredText(`[${property.functionName}]`)}`
+            `${' '.repeat(2 * property.indent)}| ${LogLevel.coloredText(property.logLevel, `[${property.functionName}]`)}`
         );
         if (this.verbose) {
             for (const key in property.details) {
@@ -139,13 +75,6 @@ export class Logger {
         return builder.toString();
     }
 
-    /**
-     * Description of a log message.
-     * @param { number } indent Indent of the log message.
-     * @param { string } key Key of the log message.
-     * @param { { string: any }  } detail Detail of the log message.
-     * @return { string }Description of a log message.
-     */
     private detailString(indent: number, key: string, detail: { [key: string]: any }): string {
         const builder = new StringBuilder();
         const jsonLines = Json.stringify(detail, '  ')?.split('\n') ?? [''];
@@ -155,9 +84,6 @@ export class Logger {
         return builder.toString();
     }
 
-    /**
-     * Description of this logger.
-     */
     public get joinedMessages(): string {
         const builder = new StringBuilder();
         for (const property of this.properties) 

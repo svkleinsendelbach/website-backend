@@ -9,7 +9,7 @@ export class EditType {
 
 export namespace EditType {
     export function fromString(value: string, logger: Logger): EditType {
-        logger.append('EditType.fromString', { value });
+        logger.log('EditType.fromString', { value });
         if (value !== 'add' && value !== 'change' && value !== 'remove') 
             throw httpsError('internal', `Couldn't parse EditType, got ${value}.`, logger);
         return new EditType(value);

@@ -42,7 +42,7 @@ export class GetEventsFunction implements FirebaseFunction<
     }
     
     public async executeFunction(): Promise<GetEventsFunction.ReturnType> {
-        this.logger.append('GetEventsFunction.executeFunction', {}, 'info');
+        this.logger.log('GetEventsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');   
         const events = await Promise.all(this.parameters.groupIds.map(e => this.getEvents(e)));
         return events.compactMap(event => event);     

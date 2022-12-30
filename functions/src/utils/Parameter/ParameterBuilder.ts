@@ -27,7 +27,7 @@ export namespace ParameterBuilder {
     export function trivialBuilder(type: 'object'): ParameterBuilder<'object', object>;
     export function trivialBuilder<P extends TrivialParameterType>(type: P): ParameterBuilder<P, TypeOf<P>> {
         return new ParameterBuilder<P, TypeOf<P>>([type], (value: TypeOf<P>, logger: Logger) => {
-            logger.append('trivialParameterBuilder', { type, value });
+            logger.log('trivialParameterBuilder', { type, value });
             return value;
         });
     }
@@ -46,7 +46,7 @@ export namespace ParameterBuilder {
     export function optionalBuilder<P extends TrivialParameterType, T>(builder: ParameterBuilder<P, T>): ParameterBuilder<P | 'undefined', T | undefined> {
         const expectedTypes: (P | 'undefined')[] = (builder.expectedTypes as TrivialParameterType[]).includes('undefined') ? builder.expectedTypes : ['undefined', ...builder.expectedTypes];
         return new ParameterBuilder<P | 'undefined', T | undefined>(expectedTypes, (value: TypeOf<P> | undefined, logger: Logger) => {
-            logger.append('optionalBuilder', { expectedTypes: builder.expectedTypes, value });
+            logger.log('optionalBuilder', { expectedTypes: builder.expectedTypes, value });
             if (typeof value === 'undefined') return undefined;
             return builder.build(value, logger.nextIndent);
         });

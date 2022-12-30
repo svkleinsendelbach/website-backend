@@ -24,7 +24,7 @@ export class ParameterParser<Parameters> {
     }
 
     public parseParameters(container: ParameterContainer): void {
-        this.logger.append('ParameterParser.parseParameters', { container });
+        this.logger.log('ParameterParser.parseParameters', { container });
         this.initialParameters = {} as any;
         for (const entry of Object.entries(this.typesOrBuilders))
             (this.initialParameters as any)[entry[0]] = container.parameter(entry[0], entry[1] as ParameterBuilder<TrivialParameterType, unknown>, this.logger.nextIndent);

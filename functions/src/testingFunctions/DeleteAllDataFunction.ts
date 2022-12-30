@@ -34,7 +34,7 @@ export class DeleteAllDataFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<DeleteAllDataFunction.ReturnType> {
-        this.logger.append('DeleteAllDataFunction.executeFunction', {}, 'info');
+        this.logger.log('DeleteAllDataFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         if (this.parameters.databaseType.value !== 'testing')
             throw httpsError('failed-precondition', 'Function can only be called for testing.', this.logger);

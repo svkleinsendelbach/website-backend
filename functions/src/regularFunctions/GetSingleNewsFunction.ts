@@ -38,7 +38,7 @@ export class GetSingleNewsFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<GetSingleNewsFunction.ReturnType> {
-        this.logger.append('GetSingleNewsFunction.executeFunction', {}, 'info');
+        this.logger.log('GetSingleNewsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const newsReference = FirebaseDatabase.Reference.fromPath(`news/${this.parameters.newsId}`, this.parameters.databaseType);

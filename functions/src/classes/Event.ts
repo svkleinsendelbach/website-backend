@@ -36,7 +36,7 @@ export interface Event {
 
 export namespace Event {
     export function fromObject(value: object, logger: Logger): Omit<Event, 'id'> {
-        logger.append('Event.fromObject', { value });
+        logger.log('Event.fromObject', { value });
 
         if (!('date' in value) || typeof value.date !== 'string')
             throw httpsError('internal', 'Couldn\'t get date for event.', logger);

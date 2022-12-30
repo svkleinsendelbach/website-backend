@@ -14,7 +14,7 @@ export async function checkPrerequirements(
     logger: Logger,
     auth?: AuthData | 'notRequired'
 ) {
-    logger.append('checkPrerequirements', { parameters, auth });
+    logger.log('checkPrerequirements', { parameters, auth });
 
     // Check fiat shamir
     checkFiatShamir(parameters.fiatShamirParameters, parameters.databaseType, logger.nextIndent);

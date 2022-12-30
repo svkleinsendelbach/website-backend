@@ -39,7 +39,7 @@ export class EditNewsFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<EditNewsFunction.ReturnType> {
-        this.logger.append('EditNewsFunction.executeFunction', {}, 'info');
+        this.logger.log('EditNewsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth); 
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger.nextIndent);
 
@@ -58,7 +58,7 @@ export class EditNewsFunction implements FirebaseFunction<
     }
 
     private async getIdOfNews(): Promise<string> {
-        this.logger.append('EditNewsFunction.getIdOfNews');
+        this.logger.log('EditNewsFunction.getIdOfNews');
         if (this.parameters.editType.value !== 'add')
             return this.parameters.id;
         const reference = FirebaseDatabase.Reference.fromPath('news', this.parameters.databaseType);

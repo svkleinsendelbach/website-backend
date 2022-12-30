@@ -31,7 +31,7 @@ export namespace guid {
      * @return { guid } Parsed guid.
      */
     export function fromString(value: string, logger: Logger): guid {
-        logger.append('guid.fromString', { value });
+        logger.log('guid.fromString', { value });
         const regex = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
         if (!regex.test(value)) {
             throw httpsError(
@@ -50,7 +50,7 @@ export namespace guid {
      * @return { guid } Parsed guid.
      */
     export function fromValue(value: any, logger: Logger): guid {
-        logger.append('guid.fromValue', { value });
+        logger.log('guid.fromValue', { value });
 
         // Check if value is from type string
         if (typeof value !== 'string') {

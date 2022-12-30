@@ -42,7 +42,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
     }
 
     public async executeFunction(): Promise<VerifyRecaptchaFunction.ReturnType> {
-        this.logger.append('VerifyRecaptchaFunction.executeFunction', {}, 'info');
+        this.logger.log('VerifyRecaptchaFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         const url = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKeys[this.parameters.actionType]}&response=${this.parameters.token}`;
         return await (await fetch(url)).json();

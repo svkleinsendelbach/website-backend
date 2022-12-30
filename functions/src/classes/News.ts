@@ -14,7 +14,7 @@ export interface News {
 
 export namespace News {
     export function fromObject(value: object, logger: Logger): Omit<News, 'id'> {
-        logger.append('News.fromObject', { value });
+        logger.log('News.fromObject', { value });
                 
         if (!('title' in value) || typeof value.title !== 'string')
             throw httpsError('internal', 'Couldn\'t get title for news.', logger);

@@ -14,7 +14,7 @@ export class DatabaseType {
 
 export namespace DatabaseType {
     export function fromString(value: string, logger: Logger): DatabaseType {
-        logger.append('DatabaseType.fromString', { value });
+        logger.log('DatabaseType.fromString', { value });
         if (value !== 'release' && value !== 'debug' && value !== 'testing')
             throw httpsError('internal', `Couldn't parse DatabaseType, got ${value}.`, logger);
         return new DatabaseType(value);

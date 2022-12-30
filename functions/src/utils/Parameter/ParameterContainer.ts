@@ -11,7 +11,7 @@ export class ParameterContainer {
     private readonly data: any;
 
     public constructor(data: any, logger: Logger) {
-        logger.append('ParameterContainer.constructor', { data });
+        logger.log('ParameterContainer.constructor', { data });
 
         // Check if parameters are hand over
         if (data === undefined || data === null)
@@ -30,7 +30,7 @@ export class ParameterContainer {
     }
 
     private optionalParameter<P extends TrivialParameterType, T>(key: PropertyKey, builder: ParameterBuilder<P, T>, logger: Logger): T | undefined {
-        logger.append('ParameterContainer.optionalParameter', { key, builder });
+        logger.log('ParameterContainer.optionalParameter', { key, builder });
 
         // Return undefined if the parameter doesn't exist
         if (!this.data.hasOwnProperty(key))
@@ -54,7 +54,7 @@ export class ParameterContainer {
     }
 
     public parameter<P extends TrivialParameterType, T>(key: PropertyKey, builder: ParameterBuilder<P, T>, logger: Logger): T {
-        logger.append('ParameterContainer.parameter', { key, builder });
+        logger.log('ParameterContainer.parameter', { key, builder });
 
         // Get parameter that is possible optional
         const parameter = this.optionalParameter(key, builder, logger.nextIndent);

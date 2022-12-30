@@ -26,6 +26,14 @@ export async function checkPrerequirements(
 
 export type UserAuthenticationType = 'websiteEditing';
 
+export namespace UserAuthenticationType {
+    export function isValid(value: string): value is UserAuthenticationType {
+        return [
+            'websiteEditing'
+        ].includes(value);
+    }
+}
+
 export async function checkUserAuthentication(auth: AuthData | undefined, type: UserAuthenticationType, databaseType: DatabaseType, logger: Logger) {
 
     // Check if a user is signed in
@@ -34,7 +42,7 @@ export async function checkUserAuthentication(auth: AuthData | undefined, type: 
 
     // Check if a user is authenticated
     const hashedUserId = Crypter.sha512(auth.uid);
-    const reference = FirebaseDatabase.Reference.fromPath(`userAuthentication/${type}/${hashedUserId}`, databaseType);
+    const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${type}/${hashedUserId}/state`, databaseType);
     const snapshot = await reference.snapshot<'authenticated' | 'unauthenticated'>();
     if (!snapshot.exists || snapshot.value !== 'authenticated')
         throw httpsError('permission-denied', `The function must be called while authenticated, not authenticated in for ${type}.`, logger);    

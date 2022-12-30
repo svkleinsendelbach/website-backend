@@ -1,4 +1,5 @@
 import { Logger } from '../Logger';
+import { httpsError } from '../utils';
 import { TrivialParameterType } from './TrivialParameterType';
 
 export type TypeOf<P extends TrivialParameterType> = 
@@ -41,6 +42,21 @@ export namespace ParameterBuilder {
     export function builder<T>(type: 'object', build: (value: object, logger: Logger) => T): ParameterBuilder<'object', T>;
     export function builder<P extends TrivialParameterType, T>(type: P, build: (value: any, logger: Logger) => T): ParameterBuilder<P, T> {
         return new ParameterBuilder<P, T>([type], build);
+    }
+
+    export function guardBuilder<T extends undefined>(type: 'undefined', typeGuard: (value: undefined, logger: Logger) => value is T): ParameterBuilder<'undefined', T>;
+    export function guardBuilder<T extends boolean>(type: 'boolean', typeGuard: (value: boolean, logger: Logger) => value is T): ParameterBuilder<'boolean', T>;
+    export function guardBuilder<T extends string>(type: 'string', typeGuard: (value: string, logger: Logger) => value is T): ParameterBuilder<'string', T>;
+    export function guardBuilder<T extends number>(type: 'number', typeGuard: (value: number, logger: Logger) => value is T): ParameterBuilder<'number', T>;
+    export function guardBuilder<T extends bigint>(type: 'bigint', typeGuard: (value: bigint, logger: Logger) => value is T): ParameterBuilder<'bigint', T>;
+    export function guardBuilder<T extends symbol>(type: 'symbol', typeGuard: (value: symbol, logger: Logger) => value is T): ParameterBuilder<'symbol', T>;
+    export function guardBuilder<T extends object>(type: 'v', typeGuard: (value: object, logger: Logger) => value is T): ParameterBuilder<'object', T>;
+    export function guardBuilder<P extends TrivialParameterType, T extends P>(type: P, typeGuard: (value: any, logger: Logger) => value is T): ParameterBuilder<P, T> {
+        return new ParameterBuilder<P, T>([type], (value: TypeOf<P>, logger: Logger) => {
+            if (!typeGuard(value, logger.nextIndent)) 
+                throw httpsError('invalid-argument', 'Invalid parameter, type guard failed.', logger);
+            return value;
+        });  
     }
 
     export function optionalBuilder<P extends TrivialParameterType, T>(builder: ParameterBuilder<P, T>): ParameterBuilder<P | 'undefined', T | undefined> {

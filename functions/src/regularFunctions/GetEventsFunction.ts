@@ -12,6 +12,7 @@ import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { arrayBuilder, httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { guid } from '../classes/guid';
 
 export class GetEventsFunction implements FirebaseFunction<
     GetEventsFunction.Parameters,
@@ -64,7 +65,7 @@ export class GetEventsFunction implements FirebaseFunction<
                 return { 
                     ...event, 
                     date: date,
-                    id: entry[0] 
+                    id: guid.fromString(entry[0], this.logger.nextIndent) 
                 };
             });
         if (events.length === 0) 

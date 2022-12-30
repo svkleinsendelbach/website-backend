@@ -30,11 +30,7 @@ export class EditEventsFunction implements FirebaseFunction<
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
                 editType: ParameterBuilder.builder('string', EditType.fromString),
-                groupId: ParameterBuilder.builder('string', (value: string, logger: Logger) => { 
-                    if (!EventGroupId.isValid(value)) 
-                        throw httpsError('invalid-argument', 'Invalid event group id.', logger);
-                    return value;
-                }),
+                groupId: ParameterBuilder.guardBuilder('string', EventGroupId.isValid),
                 eventId: ParameterBuilder.builder('string', guid.fromString),
                 event: ParameterBuilder.optionalBuilder(ParameterBuilder.builder('object', Event.fromObject))
             },

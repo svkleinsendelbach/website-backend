@@ -9,7 +9,6 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 
 export class VerifyRecaptchaFunction implements FirebaseFunction<
@@ -28,11 +27,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
-                actionType: ParameterBuilder.builder('string', (value: string, logger: Logger): 'contactForm' => {
-                    if (value !== 'contactForm')
-                        throw httpsError('invalid-argument', `Invalid action type: ${value}`, logger);
-                    return value;
-                }),
+                actionType: ParameterBuilder.guardBuilder('string', (value: string): value is 'contactForm' => value === 'contactForm'),
                 token: ParameterBuilder.trivialBuilder('string')
             },
             this.logger.nextIndent

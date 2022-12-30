@@ -9,6 +9,10 @@ import { SendContactMailFunction } from './regularFunctions/SendContactMailFunct
 import { FiatShamirChallengeGeneratorFunction } from './regularFunctions/FiatShamirChallengeGeneratorFunction';
 import { DeleteAllDataFunction } from './testingFunctions/DeleteAllDataFunction';
 import { EditNewsFunction } from './regularFunctions/EditNewsFunction';
+import { AddUserForWaitingFunction } from './regularFunctions/AddUserForWaitingFunction';
+import { AcceptDeclineWaitingUserFunction } from './regularFunctions/AcceptDeclineWaitingUserFunction';
+import { CheckUserAuthenticationFunction } from './regularFunctions/CheckUserAuthenticationFunction';
+import { GetUnauthenticatedUsersFunction } from './regularFunctions/GetUnauthenticatedUsersFunction';
 
 admin.initializeApp();
 
@@ -27,5 +31,13 @@ export const v2_fiatShamirChallengeGenerator = createFunction((data, auth) => ne
 export const v2_editEvent = createFunction((data, auth) => new GetEventsFunction(data, auth));
 
 export const v2_editNews = createFunction((data, auth) => new EditNewsFunction(data, auth));
+
+export const v2_addUserForWaiting = createFunction((data, auth) => new AddUserForWaitingFunction(data, auth));
+
+export const v2_acceptDeclineWaitingUser = createFunction((data, auth) => new AcceptDeclineWaitingUserFunction(data, auth));
+
+export const v2_checkUserAuthentication = createFunction((data, auth) => new CheckUserAuthenticationFunction(data, auth));
+
+export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
 
 export const v2_deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));

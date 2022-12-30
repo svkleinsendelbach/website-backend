@@ -7,8 +7,9 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { arrayBuilder, httpsError, reference } from '../utils/utils';
+import { arrayBuilder, httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 
 export class FiatShamirChallengeGeneratorFunction implements FirebaseFunction<
     FiatShamirChallengeGeneratorFunction.Parameters,
@@ -47,8 +48,8 @@ export class FiatShamirChallengeGeneratorFunction implements FirebaseFunction<
             challenges: challenges,
             expireDate: new Date(new Date().getTime() + 300000) // + 5 minutes
         });
-        const ref = reference(`fiatShamir/${this.parameters.identifier.guidString}`, this.parameters.databaseType, this.logger.nextIndent);
-        await ref.set(encrypedBsAndChallenges);
+        const reference = FirebaseDatabase.Reference.fromPath(`fiatShamir/${this.parameters.identifier.guidString}`, this.parameters.databaseType);
+        await reference.set(encrypedBsAndChallenges);
         return challenges;
     }
 

@@ -9,8 +9,9 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { httpsError, reference } from '../utils/utils';
+import { httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 
 export class GetSingleNewsFunction implements FirebaseFunction<
     GetSingleNewsFunction.Parameters,
@@ -40,11 +41,11 @@ export class GetSingleNewsFunction implements FirebaseFunction<
         this.logger.append('GetSingleNewsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
-        const newsRef = reference(`news/${this.parameters.newsId}`, this.parameters.databaseType, this.logger.nextIndent);
-        const newsSnapshot = await newsRef.once('value');
-        if (!newsSnapshot.exists())
+        const newsReference = FirebaseDatabase.Reference.fromPath(`news/${this.parameters.newsId}`, this.parameters.databaseType);
+        const newsSnapshot = await newsReference.snapshot<string>();
+        if (!newsSnapshot.exists)
             throw httpsError('not-found', 'News with specified id not found.', this.logger);
-        const news: Omit<News, 'id'> = crypter.decryptDecode(newsSnapshot.val());
+        const news: Omit<News, 'id'> = crypter.decryptDecode(newsSnapshot.value);
         if (news.disabled)
             throw httpsError('unavailable', 'News with specified id is disabled.', this.logger);
         return {

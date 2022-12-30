@@ -1,11 +1,11 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import { FunctionsErrorCode } from 'firebase-functions/lib/common/providers/https';
 import { FirebaseFunction } from './FirebaseFunction';
 import { Logger } from './Logger';
 import { Result } from './Result';
-import { DatabaseType } from '../classes/DatabaseType';
 import { guid } from '../classes/guid';
+
+export type ArrayElement<T> = T extends (infer Element)[] ? Element : never;
 
 /**
  * Get the result of a promise:
@@ -72,33 +72,6 @@ export function httpsError(
     return new functions.https.HttpsError(code, message, logger?.joinedMessages);
 }
 
-/**
- * Checks if data exists at specified reference.
- * @param { admin.database.Reference } reference Reference to check if there is data.
- * @return { Promise<boolean> } True if data exists at reference.
- */
-export async function existsData(reference: admin.database.Reference): Promise<boolean> {
-    return (await reference.once('value')).exists();
-}
-
-/**
- * Get the database reference of specified path.
- * @param { string } path Path to get the database reference to.
- * @param { DatabaseType } databaseType Database type.
- * @param { Logger } logger Logger to log this method.
- * @return { admin.database.Reference } Database reference of specified path.
- */
-export function reference(
-    path: string,
-    databaseType: DatabaseType,
-    logger: Logger,
-): admin.database.Reference {
-    logger.append('reference', { path, databaseType });
-
-    // Return reference.
-    return admin.app().database(databaseType.databaseUrl).ref(path || undefined);
-}
-
 export function arrayBuilder<T>(elementBuilder: (element: any, logger: Logger) => T, length?: number): (value: object, logger: Logger) => T[] {
     return (value: object, logger: Logger) => {
         if (!Array.isArray(value))
@@ -126,6 +99,16 @@ export namespace Json {
         return JSON.parse(data, (_, v) => typeof v === 'string' && v.endsWith('#bigint') ? BigInt(v.replace(/#bigint$/, '')) : v);
     }
 }
+
+export function mapObject<T extends Record<string, any>, K extends keyof T, V>(value: T, key: K, mapper: (v: T[K]) => V): { [
+    Key in keyof T]: Key extends K ? V : T[Key] 
+} {
+    const newValue = {} as any;
+    for (const entry of Object.entries(value))
+        newValue[entry[0]] = entry[0] === key ? mapper(entry[1]) : entry[1];
+    return newValue;
+}
+
 
 declare global {
     export interface String {

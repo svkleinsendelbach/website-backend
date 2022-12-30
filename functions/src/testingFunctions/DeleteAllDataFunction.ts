@@ -6,8 +6,9 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { existsData, httpsError, reference } from '../utils/utils';
+import { httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 
 export class DeleteAllDataFunction implements FirebaseFunction<
     DeleteAllDataFunction.Parameters,
@@ -37,9 +38,10 @@ export class DeleteAllDataFunction implements FirebaseFunction<
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         if (this.parameters.databaseType.value !== 'testing')
             throw httpsError('failed-precondition', 'Function can only be called for testing.', this.logger);
-        const ref = reference('', this.parameters.databaseType, this.logger.nextIndent);
-        if (await existsData(ref))
-            ref.remove();
+        const reference = FirebaseDatabase.Reference.fromPath('', this.parameters.databaseType);
+        const snapshot = await reference.snapshot();
+        if (snapshot.exists)
+            reference.remove();
     }
 }
 

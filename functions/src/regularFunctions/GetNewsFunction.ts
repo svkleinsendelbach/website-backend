@@ -9,8 +9,8 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { reference } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 
 export class GetNewsFunction implements FirebaseFunction<
     GetNewsFunction.Parameters,
@@ -40,12 +40,12 @@ export class GetNewsFunction implements FirebaseFunction<
         this.logger.append('GetNewsFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
-        const newsRef = reference('news', this.parameters.databaseType, this.logger.nextIndent);
-        const newsSnapshot = await newsRef.once('value');
-        if (!newsSnapshot.exists() || !newsSnapshot.hasChildren())
+        const newsReference = FirebaseDatabase.Reference.fromPath('news', this.parameters.databaseType);
+        const newsSnapshot = await newsReference.snapshot<string>();
+        if (!newsSnapshot.exists || !newsSnapshot.hasChildren)
             return { news: [], hasMore: false };
         const allNews = Object
-            .entries<string>(newsSnapshot.val())
+            .entries<string>(newsSnapshot.value)
             .compactMap<News>(entry => {
                 const news: Omit<News, 'id'> = crypter.decryptDecode(entry[1]);
                 return {

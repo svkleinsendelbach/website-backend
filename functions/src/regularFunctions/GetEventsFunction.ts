@@ -9,8 +9,9 @@ import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
-import { arrayBuilder, httpsError, reference } from '../utils/utils';
+import { arrayBuilder, httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 
 export class GetEventsFunction implements FirebaseFunction<
     GetEventsFunction.Parameters,
@@ -49,12 +50,12 @@ export class GetEventsFunction implements FirebaseFunction<
 
     private async getEvents(groupId: EventGroupId): Promise<EventGroup | undefined> {
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
-        const eventsRef = reference(`events/${groupId}`, this.parameters.databaseType, this.logger.nextIndent);
-        const eventsSnapshot = await eventsRef.once('value');
-        if (!eventsSnapshot.exists() || eventsSnapshot.hasChildren())
+        const eventsReference = FirebaseDatabase.Reference.fromPath(`events/${groupId}`, this.parameters.databaseType);
+        const eventsSnapshot = await eventsReference.snapshot<string>();
+        if (!eventsSnapshot.exists || eventsSnapshot.hasChildren)
             return undefined;
         const events = Object
-            .entries<string>(eventsSnapshot.val())
+            .entries<string>(eventsSnapshot.value)
             .compactMap<Event>(entry => {
                 const event: Omit<Event, 'id'> = crypter.decryptDecode(entry[1]);
                 const date = new Date(event.date);

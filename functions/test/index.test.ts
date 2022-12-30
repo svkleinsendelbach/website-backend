@@ -1,6 +1,7 @@
-import { callFunction, expectSuccess } from './utils';
+// import { callFunction, expectSuccess } from './utils';
 
 describe('', () => {
+    /*
     afterEach(async () => {
         const result = await callFunction('v2_deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
@@ -12,4 +13,5 @@ describe('', () => {
         });
         expectSuccess(result).to.be.deep.equal([]);
     });
+    */
 });

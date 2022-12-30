@@ -9,6 +9,7 @@ import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { Crypter } from '../crypter/Crypter';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { cryptionKeys } from '../privateKeys';
 
 export class AddUserForWaitingFunction implements FirebaseFunction<
     AddUserForWaitingFunction.Parameters,
@@ -38,15 +39,15 @@ export class AddUserForWaitingFunction implements FirebaseFunction<
 
     public async executeFunction(): Promise<AddUserForWaitingFunction.ReturnType> {
         this.logger.log('AddUserForWaitingFunction.executeFunction', {}, 'info');
-        await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth); 
-        
+        await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth);         
         const hashedUserId = Crypter.sha512(this.auth!.uid);
+        const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${hashedUserId}`, this.parameters.databaseType); 
-        await reference.set({
+        await reference.set(crypter.encodeEncrypt({
             state: 'unauthenticated',
             firstName: this.parameters.firstName,
             lastName: this.parameters.lastName
-        });
+        }));
     }
 }
 

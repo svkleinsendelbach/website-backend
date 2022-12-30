@@ -1,5 +1,5 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { checkPrerequirements, checkUserAuthentication, UserAuthenticationType } from '../utils/checkPrerequirements';
+import { checkPrerequirements, checkUserAuthentication, UserAuthentication, UserAuthenticationType } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
 import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
@@ -8,6 +8,8 @@ import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { Crypter } from '../crypter/Crypter';
+import { cryptionKeys } from '../privateKeys';
 
 export class AcceptDeclineWaitingUserFunction implements FirebaseFunction<
     AcceptDeclineWaitingUserFunction.Parameters,
@@ -46,10 +48,14 @@ export class AcceptDeclineWaitingUserFunction implements FirebaseFunction<
             if (snapshot.exists)
                 await reference.remove();
         } else {
-            const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${this.parameters.hashedUserId}/state`, this.parameters.databaseType);
-            const snapshot = await reference.snapshot();
-            if (snapshot.exists)
-                reference.set('authenticated');
+            const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
+            const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${this.parameters.hashedUserId}`, this.parameters.databaseType);
+            const snapshot = await reference.snapshot<string>();
+            if (snapshot.exists) {
+                const userAuthentication: UserAuthentication = crypter.decryptDecode(snapshot.value);
+                userAuthentication.state = 'authenticated';
+                reference.set(crypter.encodeEncrypt(userAuthentication));
+            }
         }
     }
 }

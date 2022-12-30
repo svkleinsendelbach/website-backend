@@ -1,6 +1,7 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { DatabaseType } from '../classes/DatabaseType';
 import { Crypter } from '../crypter/Crypter';
+import { cryptionKeys } from '../privateKeys';
 import { checkFiatShamir, FiatShamirParameters } from './fiatShamir';
 import { FirebaseDatabase } from './FirebaseDatabase';
 import { Logger } from './Logger';
@@ -26,6 +27,12 @@ export async function checkPrerequirements(
 
 export type UserAuthenticationType = 'websiteEditing';
 
+export interface UserAuthentication {
+    state: 'authenticated' | 'unauthenticated',
+    firstName: string,
+    lastName: string
+}
+
 export namespace UserAuthenticationType {
     export function isValid(value: string): value is UserAuthenticationType {
         return [
@@ -42,8 +49,12 @@ export async function checkUserAuthentication(auth: AuthData | undefined, type: 
 
     // Check if a user is authenticated
     const hashedUserId = Crypter.sha512(auth.uid);
-    const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${type}/${hashedUserId}/state`, databaseType);
-    const snapshot = await reference.snapshot<'authenticated' | 'unauthenticated'>();
-    if (!snapshot.exists || snapshot.value !== 'authenticated')
+    const crypter = new Crypter(cryptionKeys(databaseType));
+    const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${type}/${hashedUserId}`, databaseType);
+    const snapshot = await reference.snapshot<string>();
+    if (!snapshot.exists)
         throw httpsError('permission-denied', `The function must be called while authenticated, not authenticated in for ${type}.`, logger);    
+    const userAuthentication: UserAuthentication = crypter.decryptDecode(snapshot.value);
+    if (userAuthentication.state === 'unauthenticated')
+        throw httpsError('permission-denied', `The function must be called while authenticated, unauthenticated for ${type}.`, logger);    
 }

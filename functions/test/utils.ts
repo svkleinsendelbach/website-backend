@@ -12,7 +12,6 @@ import { DatabaseType } from '../src/classes/DatabaseType';
 import { FirebaseFunction } from '../src/utils/FirebaseFunction';
 import { cryptionKeys, fiatShamirKeys, firebaseConfig, testUser } from './privateKeys';
 import { randomBytes } from 'crypto';
-import { FiatShamirParameters, modularPower } from '../src/utils/fiatShamir';
 import { guid } from '../src/classes/guid';
 import { DeleteAllDataFunction } from '../src/testingFunctions/DeleteAllDataFunction';
 import { assert, expect } from 'chai';
@@ -22,6 +21,8 @@ import { AddUserForWaitingFunction } from '../src/regularFunctions/AddUserForWai
 import { CheckUserAuthenticationFunction } from '../src/regularFunctions/CheckUserAuthenticationFunction';
 import { EditNewsFunction } from '../src/regularFunctions/EditNewsFunction';
 import { GetUnauthenticatedUsersFunction } from '../src/regularFunctions/GetUnauthenticatedUsersFunction';
+import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
+import { modularPower } from '../src/utils/utils';
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, 'europe-west1');
@@ -125,6 +126,18 @@ function generateAsAndBs(): { as: bigint[], bs: bigint[] } {
         as: as,
         bs: bs
     };
+}
+
+export function expectHttpsError(execute: () => void, code: FunctionsErrorCode) {
+    try {
+        execute();
+    } catch (error: any) {
+        expect(error).to.have.ownProperty('httpErrorCode');
+        expect(error).to.have.ownProperty('code');
+        expect(error.code).to.be.equal(code);
+        return;
+    }
+    expect.fail('Expected to throw an error.');
 }
 
 export function expectFailed<T>(result: FirebaseFunction.Result<T>): Expect<{

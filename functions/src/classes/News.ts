@@ -4,9 +4,9 @@ import { httpsError } from '../utils/utils';
 export interface News {
     id: string,
     title: string;
-    subtitle: string | null;
+    subtitle?: string;
     date: Date;
-    shortDescription: string | null;
+    shortDescription?: string;
     newsUrl: string;
     disabled: boolean;
     thumbnailUrl: string;
@@ -19,7 +19,7 @@ export namespace News {
         if (!('title' in value) || typeof value.title !== 'string')
             throw httpsError('internal', 'Couldn\'t get title for news.', logger);
         
-        if (!('subtitle' in value) || typeof value.subtitle !== 'string')
+        if ('subtitle' in value && (typeof value.subtitle !== 'string' && value.subtitle !== undefined))
             throw httpsError('internal', 'Couldn\'t get subtitle for news.', logger);
 
         if (!('date' in value) || typeof value.date !== 'string')
@@ -39,9 +39,9 @@ export namespace News {
 
         return {
             title: value.title,
-            subtitle: value.subtitle,
+            subtitle: 'subtitle' in value ? value.subtitle as string : undefined,
             date: new Date(value.date),
-            shortDescription: 'shortDescription' in value ? value.shortDescription as string : null,
+            shortDescription: 'shortDescription' in value ? value.shortDescription as string : undefined,
             newsUrl: value.newsUrl,
             disabled: value.disabled,
             thumbnailUrl: value.thumbnailUrl

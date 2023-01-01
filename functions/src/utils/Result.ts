@@ -31,7 +31,7 @@ export class Result<T, E> {
      * Initializes result with success or failure property.
      * @param { ResultValueProperty<T> | ResultErrorProperty<E> } property Success or failure property.
      */
-    private constructor(private readonly property: ResultValueProperty<T> | ResultErrorProperty<E>) {}
+    private constructor(public readonly property: ResultValueProperty<T> | ResultErrorProperty<E>) {}
 
     /**
      * Constructs success result with value.
@@ -76,6 +76,15 @@ export class Result<T, E> {
         if (this.property instanceof ResultValueProperty)
             return this.property.value;
         return null;
+    }
+
+    /**
+     * Returns error if failure result or null otherwise.
+     */
+    get error(): E | null {
+        if (this.property instanceof ResultValueProperty)
+            return null;
+        return this.property.error;
     }
 
     /**

@@ -32,7 +32,7 @@ export async function toResult<T>(promise: Promise<T>): Promise<Result<FirebaseF
  * @param { string | undefined } status Status to check.
  * @return { boolean } true if status is a functions error code, false otherwise.
  */
-function isFunctionsErrorCode(status: string | undefined): status is FunctionsErrorCode {
+export function isFunctionsErrorCode(status: string | undefined): status is FunctionsErrorCode {
     if (status === undefined) return false;
     return [
         'ok', 'cancelled', 'unknown', 'invalid-argument', 'deadline-exceeded', 'not-found', 'already-exists',
@@ -75,9 +75,9 @@ export function httpsError(
 export function arrayBuilder<T>(elementBuilder: (element: any, logger: Logger) => T, length?: number): (value: object, logger: Logger) => T[] {
     return (value: object, logger: Logger) => {
         if (!Array.isArray(value))
-            throw httpsError('invalid-argument', 'Parameter has to be an array.', logger);
+            throw httpsError('internal', 'Parameter has to be an array.', logger);
         if (length !== undefined && value.length !== length)
-            throw httpsError('invalid-argument', `Length of array has to be ${length}.`, logger);
+            throw httpsError('internal', `Length of array has to be ${length}.`, logger);
         return value.map(element => {
             return elementBuilder(element, logger.nextIndent);
         });
@@ -109,6 +109,19 @@ export function mapObject<T extends Record<string, any>, K extends keyof T, V>(v
     return newValue;
 }
 
+export function modularPower(base: bigint, exponent: bigint, modulus: bigint) {
+    if (modulus === 1n) 
+        return 0n;
+    base %= modulus;
+    let result = 1n;
+    while (exponent > 0n) {
+        if (exponent % 2n === 1n) 
+            result = (result * base) % modulus;
+        exponent >>= 1n; 
+        base = (base ** 2n) % modulus;
+    }
+    return result;
+}
 
 declare global {
     export interface String {

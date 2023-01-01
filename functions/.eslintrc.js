@@ -43,6 +43,8 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'off',
         'new-cap': 'off',
         'camelcase': 'off',
-        'no-constant-condition': 'off'
+        'no-constant-condition': 'off',
+        'eol-last': 'warn',
+        'spaced-comment': 'off'
     }
 };

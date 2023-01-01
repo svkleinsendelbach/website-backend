@@ -12,7 +12,7 @@ export class StringBuilder {
      * Constructs the string builder with an intial string.
      * @param { string | undefined } initialString Intial string of the string builder
      */
-    constructor(initialString?: string) {
+    public constructor(initialString?: string) {
         if (initialString !== undefined)
             this.stringArray.push(initialString);
     }
@@ -21,7 +21,7 @@ export class StringBuilder {
      * Indicates whether the result string would be empty.
      * @return { boolean } `true` if the result string would be empty, `false` otherwise.
      */
-    isEmpty(): boolean {
+    public get isEmpty(): boolean {
         return this.stringArray.length == 0;
     }
 
@@ -29,7 +29,7 @@ export class StringBuilder {
      * Append a new substring to the string builder.
      * @param { string } string Substring to append to the string builder.
      */
-    append(string: string) {
+    public append(string: string) {
         this.stringArray.push(string);
     }
 
@@ -37,7 +37,7 @@ export class StringBuilder {
      * Append a new sting with a new line feed to the string builder.
      * @param { string } string Substring to append with a new line feed to the string builder.
      */
-    appendLine(string: string) {
+    public appendLine(string: string) {
         this.stringArray.push(`${string}\n`);
     }
 
@@ -45,14 +45,14 @@ export class StringBuilder {
      * Joins all substring to the result string.
      * @return { string } Result string of the string builder,
      */
-    toString(): string {
+    public toString(): string {
         return this.stringArray.join('');
     }
 
     /**
      * Clears the string builder.
      */
-    clear() {
+    public clear() {
         this.stringArray = [];
     }
 }

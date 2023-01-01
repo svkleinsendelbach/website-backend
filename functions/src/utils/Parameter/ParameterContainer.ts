@@ -18,7 +18,7 @@ export class ParameterContainer {
             throw httpsError('invalid-argument', 'No parameters hand over by the firebase function.', logger);
 
         // Check if database type is valid
-        if (typeof data.databaseType === 'string')
+        if (typeof data.databaseType !== 'string')
             throw httpsError('invalid-argument', 'Missing database type in firebase function parameters.', logger);
         const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
         const crypter = new Crypter(cryptionKeys(databaseType));

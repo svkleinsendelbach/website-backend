@@ -9,7 +9,10 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "mocha --reporter spec -r ts-node/register --timeout 20000 test/**/*.test.ts"
+    "testAll": "mocha --reporter spec -r ts-node/register --timeout 20000 test/**/*.test.ts",
+    "test": "mocha --reporter spec -r ts-node/register --timeout 20000",
+    "testAll:coverage": "nyc npm run testAll",
+    "test:coverage": "nyc npm run test"
   },
   "engines": {
     "node": "16"
@@ -23,6 +26,7 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/nodemailer": "^6.4.7",
@@ -35,7 +39,32 @@
     "eslint-plugin-import": "^2.26.0",
     "firebase": "^9.15.0",
     "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "ts-node": "^10.9.1"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": true,
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/testingFunctions/**/*.*",
+      "src/regularFunctions/**/*Function.ts",
+      "src/index.ts",
+      "src/privateKeys.ts",
+      "src/utils/FirebaseDatabase.ts",
+      "src/utils/checkPrerequirements.ts",
+      "src/utils/createFunction.ts",
+      "src/utils/fiatShamir.ts"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text"
+    ],
+    "report-dir": "coverage"
   },
   "private": true
 }

@@ -96,7 +96,7 @@ export class Crypter {
      * @return { any } Decrypted and decoded data.
      */
     public decryptDecode(data: string): any {
-        if (data === undefined || data === null || data === '') return {};
+        if (data === '') return {};
         const dataBuffer = unishortBuffer(data);
         const decryptedData = this.decryptAesAndVernam(dataBuffer);
         return Json.parse(decryptedData.toString('utf8'));

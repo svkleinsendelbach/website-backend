@@ -44,8 +44,9 @@ export class GetUnauthenticatedUsersFunction implements FirebaseFunction<
         const snapshot = await reference.snapshot<{ [key: string]: string }>();
         return Object
             .entries(snapshot.value)
-            .map(entry => {
+            .compactMap(entry => {
                 const userAuthentication: UserAuthentication = crypter.decryptDecode(entry[1]);
+                if (userAuthentication.state !== 'unauthenticated') return undefined;
                 return {
                     hashedUserId: entry[0],
                     firstName: userAuthentication.firstName,

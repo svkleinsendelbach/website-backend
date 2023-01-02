@@ -64,9 +64,17 @@ export namespace Event {
         subtitle?: string,
         link?: string   
     }
+
+    export interface ReturnType {
+        id: string,
+        date: string,
+        title: string,
+        subtitle?: string,
+        link?: string
+      }
 }
 
 export interface EventGroup {
-  groupId: EventGroupId,
-  events: Event[]
+    groupId: EventGroupId,
+    events: Event.ReturnType[]
 }

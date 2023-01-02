@@ -28,7 +28,7 @@ export class GetNewsFunction implements FirebaseFunction<
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
-                numberNews: ParameterBuilder.trivialBuilder('number')
+                numberNews: ParameterBuilder.optionalBuilder(ParameterBuilder.trivialBuilder('number'))
             },
             this.logger.nextIndent
         );
@@ -46,10 +46,12 @@ export class GetNewsFunction implements FirebaseFunction<
             return { news: [], hasMore: false };
         const allNews = Object
             .entries<string>(newsSnapshot.value)
-            .compactMap<News>(entry => {
+            .compactMap<News.ReturnType>(entry => {
                 const news: Omit<News, 'id'> = crypter.decryptDecode(entry[1]);
+                if (news.disabled) return undefined;
                 return {
                     ...news,
+                    date: new Date(news.date).toISOString(),
                     id: entry[0]
                 };
             });
@@ -57,10 +59,9 @@ export class GetNewsFunction implements FirebaseFunction<
         if (this.parameters.numberNews === undefined)
             return { news: allNews, hasMore: false };
 
-        const newsToReturn: News[] = [];
+        const newsToReturn: News.ReturnType[] = [];
         let hasMore = false;
         for (const news of allNews) {
-            if (news.disabled) continue;
             if (newsToReturn.length === this.parameters.numberNews) {
                 hasMore = true; 
                 break;
@@ -73,15 +74,15 @@ export class GetNewsFunction implements FirebaseFunction<
 
 export namespace GetNewsFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
-        numberNews: number
+        numberNews?: number
     }
 
     export interface ReturnType {
-        news: News[],
+        news: News.ReturnType[],
         hasMore: boolean
     }
     
     export type CallParameters = {
-        numberNews: number
+        numberNews?: number
     }
 }

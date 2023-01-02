@@ -57,4 +57,15 @@ export namespace News {
         disabled: boolean;
         thumbnailUrl: string;
     }
+
+    export interface ReturnType {
+        id: string,
+        title: string;
+        subtitle?: string;
+        date: string;
+        shortDescription?: string;
+        newsUrl: string;
+        disabled: boolean;
+        thumbnailUrl: string;
+    }
 }

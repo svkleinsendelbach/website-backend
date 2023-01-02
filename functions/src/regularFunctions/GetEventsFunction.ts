@@ -11,7 +11,6 @@ import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { arrayBuilder, httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
-import { guid } from '../classes/guid';
 import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class GetEventsFunction implements FirebaseFunction<
@@ -44,8 +43,8 @@ export class GetEventsFunction implements FirebaseFunction<
     
     public async executeFunction(): Promise<GetEventsFunction.ReturnType> {
         this.logger.log('GetEventsFunction.executeFunction', {}, 'info');
-        await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');   
-        const events = await Promise.all(this.parameters.groupIds.map(e => this.getEvents(e)));
+        await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');  
+        const events = await Promise.all(this.parameters.groupIds.map(id => this.getEvents(id)));
         return events.compactMap(event => event);     
     }
 
@@ -53,19 +52,19 @@ export class GetEventsFunction implements FirebaseFunction<
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const eventsReference = FirebaseDatabase.Reference.fromPath(`events/${groupId}`, this.parameters.databaseType);
         const eventsSnapshot = await eventsReference.snapshot<string>();
-        if (!eventsSnapshot.exists || eventsSnapshot.hasChildren)
+        if (!eventsSnapshot.exists || !eventsSnapshot.hasChildren)
             return undefined;
         const events = Object
             .entries<string>(eventsSnapshot.value)
-            .compactMap<Event>(entry => {
+            .compactMap<Event.ReturnType>(entry => {
                 const event: Omit<Event, 'id'> = crypter.decryptDecode(entry[1]);
                 const date = new Date(event.date);
                 if (date < new Date()) 
                     return undefined;
                 return { 
                     ...event, 
-                    date: date,
-                    id: guid.fromString(entry[0], this.logger.nextIndent) 
+                    date: date.toISOString(),
+                    id: entry[0] 
                 };
             });
         if (events.length === 0) 

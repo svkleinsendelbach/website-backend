@@ -45,7 +45,7 @@ export class GetSingleNewsFunction implements FirebaseFunction<
         const newsSnapshot = await newsReference.snapshot<string>();
         if (!newsSnapshot.exists)
             throw httpsError('not-found', 'News with specified id not found.', this.logger);
-        const news: Omit<News, 'id'> = crypter.decryptDecode(newsSnapshot.value);
+        const news: Omit<News.ReturnType, 'id'> = crypter.decryptDecode(newsSnapshot.value);
         if (news.disabled)
             throw httpsError('unavailable', 'News with specified id is disabled.', this.logger);
         return {
@@ -60,7 +60,7 @@ export namespace GetSingleNewsFunction {
         newsId: string
     }
 
-    export type ReturnType = News;
+    export type ReturnType = News.ReturnType;
 
     export type CallParameters = {
         newsId: string

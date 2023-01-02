@@ -76,8 +76,7 @@ describe('utils', () => {
         const result = await toResult<string>(new Promise(resolve => resolve('asdf')));
         expect(result.property).to.be.deep.equal({
             value: {
-                returnValue: 'asdf',
-                state: 'success'
+                returnValue: 'asdf', state: 'success'
             }
         });
     });
@@ -203,6 +202,10 @@ describe('utils', () => {
                 value4: null                  
             }
         });
-        expect(undefinedValuesAsNull([undefined, 6, undefined, undefined, 1, 3])).to.be.deep.equal([null, 6, null, null, 1, 3]);
+        expect(undefinedValuesAsNull([
+            undefined, 6, undefined, undefined, 1, 3
+        ])).to.be.deep.equal([
+            null, 6, null, null, 1, 3
+        ]);
     });
 });

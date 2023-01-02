@@ -1,7 +1,6 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements, checkUserAuthentication, UserAuthentication, UserAuthenticationType } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
@@ -10,6 +9,7 @@ import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class AcceptDeclineWaitingUserFunction implements FirebaseFunction<
     AcceptDeclineWaitingUserFunction.Parameters,

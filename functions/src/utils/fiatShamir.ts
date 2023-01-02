@@ -18,7 +18,7 @@ export async function checkFiatShamir(parameters: FiatShamirParameters, database
         expireDate: string
     } = crypter.decryptDecode(snapshot.value);
     await reference.remove();
-    if (new Date(bsAndChallenges.expireDate) > new Date())
+    if (new Date(bsAndChallenges.expireDate) < new Date())
         throw httpsError('unauthenticated', 'bs and challenges are expired.', logger);
     for (let i = 0; i < 32; i++) {
         const cSquare = modularPower(parameters.cs[i], 2n, fiatShamirKeys.N);

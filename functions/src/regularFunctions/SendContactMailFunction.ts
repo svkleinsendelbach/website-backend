@@ -9,8 +9,8 @@ import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { sendContactMailAccount } from '../privateKeys';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class SendContactMailFunction implements FirebaseFunction<
     SendContactMailFunction.Parameters,

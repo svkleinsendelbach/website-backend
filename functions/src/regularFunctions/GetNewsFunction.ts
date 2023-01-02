@@ -4,13 +4,13 @@ import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class GetNewsFunction implements FirebaseFunction<
     GetNewsFunction.Parameters,

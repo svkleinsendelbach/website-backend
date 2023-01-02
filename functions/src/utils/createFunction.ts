@@ -17,7 +17,7 @@ export function createFunction<
 
         // Get database
         const logger = Logger.start(false, 'createFunction', undefined, 'notice');
-        if (typeof data.data !== 'string') 
+        if (typeof data.databaseType !== 'string') 
             throw httpsError('invalid-argument', 'Couldn\'t get database type.', logger);
         const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
 

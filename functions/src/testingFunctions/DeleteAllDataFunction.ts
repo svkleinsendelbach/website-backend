@@ -1,7 +1,6 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
@@ -9,6 +8,7 @@ import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { httpsError } from '../utils/utils';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class DeleteAllDataFunction implements FirebaseFunction<
     DeleteAllDataFunction.Parameters,

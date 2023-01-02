@@ -1,8 +1,9 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { DatabaseType } from '../classes/DatabaseType';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 import { Crypter } from '../crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
-import { checkFiatShamir, FiatShamirParameters } from './fiatShamir';
+import { checkFiatShamir } from './fiatShamir';
 import { FirebaseDatabase } from './FirebaseDatabase';
 import { Logger } from './Logger';
 import { httpsError } from './utils';
@@ -16,13 +17,14 @@ export async function checkPrerequirements(
     auth?: AuthData | 'notRequired'
 ) {
     logger.log('checkPrerequirements', { parameters, auth });
-
-    // Check fiat shamir
-    checkFiatShamir(parameters.fiatShamirParameters, parameters.databaseType, logger.nextIndent);
-
+    
     // Check if user is authorized to call a function.
     if (auth === undefined)
         throw httpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
+
+    // Check fiat shamir
+    await checkFiatShamir(parameters.fiatShamirParameters, parameters.databaseType, logger.nextIndent);
+
 }
 
 export type UserAuthenticationType = 'websiteEditing';

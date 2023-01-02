@@ -4,12 +4,12 @@ import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { recaptchaSecretKeys } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class VerifyRecaptchaFunction implements FirebaseFunction<
     VerifyRecaptchaFunction.Parameters,

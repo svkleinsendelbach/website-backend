@@ -1,7 +1,6 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements, UserAuthenticationType } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
@@ -10,6 +9,7 @@ import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
 import { Crypter } from '../crypter/Crypter';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { cryptionKeys } from '../privateKeys';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class AddUserForWaitingFunction implements FirebaseFunction<
     AddUserForWaitingFunction.Parameters,

@@ -1,7 +1,6 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements, checkUserAuthentication } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
@@ -12,6 +11,7 @@ import { Event, EventGroupId } from '../classes/Event';
 import { guid } from '../classes/guid';
 import { httpsError, mapObject } from '../utils/utils';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class EditEventsFunction implements FirebaseFunction<
     EditEventsFunction.Parameters,

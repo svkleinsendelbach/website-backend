@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, User, UserCredential } from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { Crypter } from '../src/crypter/Crypter';
 import { GetEventsFunction } from '../src/regularFunctions/GetEventsFunction';
 import { GetNewsFunction } from '../src/regularFunctions/GetNewsFunction';
@@ -23,9 +23,10 @@ import { EditNewsFunction } from '../src/regularFunctions/EditNewsFunction';
 import { GetUnauthenticatedUsersFunction } from '../src/regularFunctions/GetUnauthenticatedUsersFunction';
 import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
 import { modularPower } from '../src/utils/utils';
+import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
 
 const app = initializeApp(firebaseConfig);
-const functions = getFunctions(app, 'europe-west1');
+export const functions = getFunctions(app, 'europe-west1');
 const database = getDatabase(app, firebaseConfig.databaseURL);
 export const auth = getAuth(app);
 
@@ -34,7 +35,8 @@ export async function signInTestUser(): Promise<UserCredential> {
 }
 
 export async function signOutUser() {
-    await signOut(auth);
+    if (getCurrentUser !== null)
+        await signOut(auth);
 }
 
 export function getCurrentUser(): User | null {
@@ -96,7 +98,7 @@ async function callFiatShamirChallengeGeneratorFunction(identifier: guid): Promi
         parameters: string
     }, string>(functions, 'v2_fiatShamirChallengeGenerator');
     const httpsCallableResult = await callableFunction({
-        verbose: true,
+        verbose: false,
         databaseType: databaseType.value,
         parameters: crypter.encodeEncrypt({
             databaseType: databaseType.value,
@@ -164,10 +166,14 @@ export function expectSuccess<T>(result: FirebaseFunction.Result<T>): Expect<T> 
 }
 
 class Expect<T> {
-    public constructor(private readonly value: T) { }
+    public constructor(private readonly _value: T) { }
+
+    public value<Key extends keyof T>(key: Key): Expect<T[Key]> {
+        return new Expect<T[Key]>(this._value[key]);
+    }
 
     public get to(): Expect1<T> {
-        return new Expect1<T>(this.value);
+        return new Expect1<T>(this._value);
     }
 }
 
@@ -215,6 +221,11 @@ export async function getDatabaseValue<T>(referencePath: string): Promise<T> {
     if (optionalValue === null) 
         throw new Error('No data in snapshot.');
     return optionalValue;
+}
+
+export async function setDatabaseValue(referencePath: string, value: FirebaseDatabase.ValueType) {
+    const reference = ref(database, referencePath || undefined);
+    await set(reference, value);
 }
 
 export async function wait(milliseconds: number): Promise<void> {

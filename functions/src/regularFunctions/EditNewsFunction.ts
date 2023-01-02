@@ -1,7 +1,6 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements, checkUserAuthentication } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
@@ -11,6 +10,7 @@ import { EditType } from '../classes/EditType';
 import { News } from '../classes/News';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { httpsError, mapObject } from '../utils/utils';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class EditNewsFunction implements FirebaseFunction<
     EditNewsFunction.Parameters,

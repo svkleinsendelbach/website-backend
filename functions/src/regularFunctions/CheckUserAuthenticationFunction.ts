@@ -1,12 +1,12 @@
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkPrerequirements, checkUserAuthentication, UserAuthenticationType } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
-import { FiatShamirParameters } from '../utils/fiatShamir';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
 import { Logger } from '../utils/Logger';
 import { ParameterContainer } from '../utils/Parameter/ParameterContainer';
 import { ParameterParser } from '../utils/Parameter/ParameterParser';
 import { ParameterBuilder } from '../utils/Parameter/ParameterBuilder';
+import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
 export class CheckUserAuthenticationFunction implements FirebaseFunction<
     CheckUserAuthenticationFunction.Parameters,
@@ -24,8 +24,7 @@ export class CheckUserAuthenticationFunction implements FirebaseFunction<
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
-                type: ParameterBuilder.guardBuilder('string', UserAuthenticationType.isValid),
-                hashedUserId: ParameterBuilder.trivialBuilder('string')
+                type: ParameterBuilder.guardBuilder('string', UserAuthenticationType.isValid)
             },
             this.logger.nextIndent
         );
@@ -42,8 +41,7 @@ export class CheckUserAuthenticationFunction implements FirebaseFunction<
 
 export namespace CheckUserAuthenticationFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
-        type: UserAuthenticationType,
-        hashedUserId: string,
+        type: UserAuthenticationType
     }
 
     export type ReturnType = void;

@@ -80,4 +80,8 @@ export namespace GetNewsFunction {
         news: News[],
         hasMore: boolean
     }
+    
+    export type CallParameters = {
+        numberNews: number
+    }
 }

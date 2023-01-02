@@ -13,6 +13,7 @@ import { AddUserForWaitingFunction } from './regularFunctions/AddUserForWaitingF
 import { AcceptDeclineWaitingUserFunction } from './regularFunctions/AcceptDeclineWaitingUserFunction';
 import { CheckUserAuthenticationFunction } from './regularFunctions/CheckUserAuthenticationFunction';
 import { GetUnauthenticatedUsersFunction } from './regularFunctions/GetUnauthenticatedUsersFunction';
+import { EditEventFunction } from './regularFunctions/EditEventFunction';
 
 admin.initializeApp();
 
@@ -28,7 +29,7 @@ export const v2_sendContactMail = createFunction((data, auth) => new SendContact
 
 export const v2_fiatShamirChallengeGenerator = createFunction((data, auth) => new FiatShamirChallengeGeneratorFunction(data, auth));
 
-export const v2_editEvent = createFunction((data, auth) => new GetEventsFunction(data, auth));
+export const v2_editEvent = createFunction((data, auth) => new EditEventFunction(data, auth));
 
 export const v2_editNews = createFunction((data, auth) => new EditNewsFunction(data, auth));
 

@@ -52,7 +52,9 @@ export class EditNewsFunction implements FirebaseFunction<
         } else {
             if (this.parameters.news === undefined)
                 throw httpsError('invalid-argument', 'No news to set.', this.logger);
-            reference.set(mapObject(this.parameters.news, 'date', date => date.toISOString()));
+            if (this.parameters.editType.value === 'change' && !snapshot.exists)
+                throw httpsError('invalid-argument', 'Couldn\'t change not existing news.', this.logger);
+            await reference.set(mapObject(this.parameters.news, 'date', date => date.toISOString()));
         }
         return id;
     }
@@ -84,7 +86,7 @@ export class EditNewsFunction implements FirebaseFunction<
             return '';
         let index = 2;
         while (true) {
-            if (alreadyUsedIds.slice(1).includes(index))
+            if (!alreadyUsedIds.slice(1).includes(index))
                 return `_${index}`;
             index += 1;
         }
@@ -99,4 +101,10 @@ export namespace EditNewsFunction {
     }
 
     export type ReturnType = string;
+
+    export type CallParameters = {
+        editType: EditType.Value,
+        id: string,
+        news: News.CallParameters | undefined
+    }
 }

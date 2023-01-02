@@ -69,4 +69,10 @@ export namespace FiatShamirChallengeGeneratorFunction {
     }
 
     export type ReturnType = (0 | 1)[];
+
+    export type CallParameters = {
+        databaseType: DatabaseType.Value,
+        identifier: string,
+        bs: bigint[]
+    }
 }

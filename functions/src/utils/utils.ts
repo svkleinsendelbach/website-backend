@@ -109,6 +109,26 @@ export function mapObject<T extends Record<string, any>, K extends keyof T, V>(v
     return newValue;
 }
 
+export type UndefinedValuesAsNull<T> = T extends Record<PropertyKey, any> ? {
+    [Key in keyof T]-?: UndefinedValuesAsNull<T[Key]>
+} : T extends undefined ? null : T;
+
+export function undefinedValuesAsNull<T>(value: T): UndefinedValuesAsNull<T> {
+    if (value === undefined || value === null) return null as any;
+    if (typeof value !== 'object') return value as any;
+    if (Array.isArray(value)) {
+        const newValue = [] as any[];
+        for (const element of value)
+            newValue.push(undefinedValuesAsNull(element));
+        return newValue as any;
+    } else {
+        const newValue = {} as any;
+        for (const entry of Object.entries(value))
+            newValue[entry[0]] = undefinedValuesAsNull(entry[1]);
+        return newValue;
+    }
+}
+
 export function modularPower(base: bigint, exponent: bigint, modulus: bigint) {
     if (modulus === 1n) 
         return 0n;

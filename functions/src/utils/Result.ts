@@ -47,7 +47,7 @@ export class Result<T, E> {
      * @return { Result<void, E> } Success result.
      */
     static voidSuccess<E>(): Result<void, E> {
-        return Result.success((() => {})()); // eslint-disable-line @typescript-eslint/no-empty-function
+        return Result.success(undefined);
     }
 
     /**

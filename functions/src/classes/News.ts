@@ -47,4 +47,14 @@ export namespace News {
             thumbnailUrl: value.thumbnailUrl
         };
     }
+
+    export type CallParameters = {
+        title: string;
+        subtitle?: string;
+        date: string;
+        shortDescription?: string;
+        newsUrl: string;
+        disabled: boolean;
+        thumbnailUrl: string;
+    }
 }

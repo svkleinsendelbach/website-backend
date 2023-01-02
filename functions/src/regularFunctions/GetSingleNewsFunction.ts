@@ -61,4 +61,8 @@ export namespace GetSingleNewsFunction {
     }
 
     export type ReturnType = News;
+
+    export type CallParameters = {
+        newsId: string
+    }
 }

@@ -58,4 +58,9 @@ export namespace VerifyRecaptchaFunction {
       hostname: string;
       errorCodes?: string[];
     }
+
+    export type CallParameters = {
+        actionType: 'contactForm',
+        token: string
+    }
 }

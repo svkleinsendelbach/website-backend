@@ -7,12 +7,12 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "cd .. && firebase deploy --only functions && cd functions",
     "logs": "firebase functions:log",
-    "testAll": "mocha --reporter spec -r ts-node/register --timeout 20000 test/**/*.test.ts",
-    "test": "mocha --reporter spec -r ts-node/register --timeout 20000",
-    "testAll:coverage": "nyc npm run testAll",
-    "test:coverage": "nyc npm run test"
+    "test": "mocha --reporter spec -r ts-node/register --timeout 60000",
+    "testAll": "npm run test test/**/*.test.ts",
+    "test:coverage": "nyc npm run test",
+    "testAll:coverage": "nyc npm run testAll"
   },
   "engines": {
     "node": "16"

@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { DatabaseType } from '../classes/DatabaseType';
-import { ArrayElement } from './utils';
+import { ArrayElement, undefinedValuesAsNull } from './utils';
 
 export namespace FirebaseDatabase {
     export type ValueType = ValueType.TrivialType | ValueType[] | {
@@ -25,7 +25,7 @@ export namespace FirebaseDatabase {
         }
 
         public async set(value: ValueType, onComplete?: (a: Error | null) => void) {
-            await this.reference.set(value, onComplete);
+            await this.reference.set(undefinedValuesAsNull(value as any), onComplete);
         }
 
         public async remove(onComplete?: (a: Error | null) => void) {

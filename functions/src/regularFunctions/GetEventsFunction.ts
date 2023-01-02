@@ -84,4 +84,8 @@ export namespace GetEventsFunction {
     }
 
     export type ReturnType = EventGroup[];
+    
+    export type CallParameters = {
+        groupIds: EventGroupId[]
+    }
 }

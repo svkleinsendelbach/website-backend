@@ -100,4 +100,12 @@ export namespace SendContactMailFunction {
         success: boolean
         message: string
     }
+    
+    export type CallParameters = {
+        senderName: string
+        senderAddress: string
+        receiverName: string
+        receiverAddress: string
+        message: string
+    }
 }

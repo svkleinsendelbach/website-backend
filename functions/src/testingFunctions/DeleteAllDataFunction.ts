@@ -49,4 +49,6 @@ export namespace DeleteAllDataFunction {
     export type Parameters = FirebaseFunction.DefaultParameters;
 
     export type ReturnType = void;
+
+    export type CallParameters = Record<string, never>;
 }

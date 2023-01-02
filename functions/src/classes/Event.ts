@@ -57,6 +57,13 @@ export namespace Event {
             link: 'link' in value ? value.link as string : undefined
         };
     }
+
+    export type CallParameters = {
+        date: string,
+        title: string,
+        subtitle?: string,
+        link?: string   
+    }
 }
 
 export interface EventGroup {

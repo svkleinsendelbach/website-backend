@@ -3,7 +3,7 @@ import { guid } from '../src/classes/guid';
 import { Logger, LogLevel } from '../src/utils/Logger';
 import { Result } from '../src/utils/Result';
 import { StringBuilder } from '../src/utils/StringBuilder';
-import { arrayBuilder, convertToFunctionResultError, isFunctionsErrorCode, Json, mapObject, modularPower, toResult } from '../src/utils/utils';
+import { arrayBuilder, convertToFunctionResultError, isFunctionsErrorCode, Json, mapObject, modularPower, toResult, undefinedValuesAsNull } from '../src/utils/utils';
 import { expectHttpsError } from './utils';
 
 describe('utils', () => {
@@ -171,5 +171,38 @@ describe('utils', () => {
 
     it('compact map', () => {
         expect([undefined, 1, undefined, undefined, 2, 3, undefined, 4].compactMap<number>(v => v)).to.be.deep.equal([1, 2, 3, 4]);
+    });
+
+    it('undefinedValuesAsNull', () => {
+        expect(undefinedValuesAsNull(undefined)).to.be.equal(null);
+        expect(undefinedValuesAsNull(null)).to.be.equal(null);
+        expect(undefinedValuesAsNull(1)).to.be.equal(1);
+        expect(undefinedValuesAsNull({
+            value1: 1,
+            value2: 'asdf',
+            value3: null,
+            value4: undefined
+        })).to.be.deep.equal({
+            value1: 1,
+            value2: 'asdf',
+            value3: null,
+            value4: null
+        });
+        expect(undefinedValuesAsNull({
+            value: {
+                value1: 1,
+                value2: 'asdf',
+                value3: null,
+                value4: undefined                    
+            }
+        })).to.be.deep.equal({
+            value: {
+                value1: 1,
+                value2: 'asdf',
+                value3: null,
+                value4: null                  
+            }
+        });
+        expect(undefinedValuesAsNull([undefined, 6, undefined, undefined, 1, 3])).to.be.deep.equal([null, 6, null, null, 1, 3]);
     });
 });

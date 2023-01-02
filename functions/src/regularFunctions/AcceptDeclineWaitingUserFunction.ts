@@ -42,21 +42,17 @@ export class AcceptDeclineWaitingUserFunction implements FirebaseFunction<
         await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth); 
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger.nextIndent);
 
-        if (this.parameters.action === 'decline') {
-            const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${this.parameters.hashedUserId}`, this.parameters.databaseType);
-            const snapshot = await reference.snapshot();
-            if (snapshot.exists)
-                await reference.remove();
-        } else {
-            const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
-            const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${this.parameters.hashedUserId}`, this.parameters.databaseType);
-            const snapshot = await reference.snapshot<string>();
-            if (snapshot.exists) {
-                const userAuthentication: UserAuthentication = crypter.decryptDecode(snapshot.value);
-                userAuthentication.state = 'authenticated';
-                reference.set(crypter.encodeEncrypt(userAuthentication));
-            }
-        }
+        const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${this.parameters.hashedUserId}`, this.parameters.databaseType);
+        const snapshot = await reference.snapshot<string>();
+        if (! snapshot.exists) return;
+        const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
+        const userAuthentication: UserAuthentication = crypter.decryptDecode(snapshot.value);
+        if (userAuthentication.state === 'authenticated') return;
+        if (this.parameters.action === 'accept') {
+            userAuthentication.state = 'authenticated';
+            await reference.set(crypter.encodeEncrypt(userAuthentication));
+        } else
+            await reference.remove();
     }
 }
 
@@ -68,4 +64,10 @@ export namespace AcceptDeclineWaitingUserFunction {
     }
 
     export type ReturnType = void;
+
+    export type CallParameters = {
+        type: UserAuthenticationType,
+        hashedUserId: string,
+        action: 'accept' | 'decline'
+    }
 }

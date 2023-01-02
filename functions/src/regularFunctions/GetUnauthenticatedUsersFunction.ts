@@ -65,4 +65,8 @@ export namespace GetUnauthenticatedUsersFunction {
         firstName: string,
         lastName: string
     }[];
+
+    export type CallParameters = {
+        type: UserAuthenticationType
+    }
 }

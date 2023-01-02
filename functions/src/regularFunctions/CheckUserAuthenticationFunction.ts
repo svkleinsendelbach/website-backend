@@ -45,4 +45,7 @@ export namespace CheckUserAuthenticationFunction {
     }
 
     export type ReturnType = void;
+    export type CallParameters = {
+        type: UserAuthenticationType
+    }
 }

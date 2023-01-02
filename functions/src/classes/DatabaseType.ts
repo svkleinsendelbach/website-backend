@@ -4,7 +4,7 @@ import { databaseUrl } from '../privateKeys';
 
 export class DatabaseType {
     public constructor(
-        public readonly value: 'release' | 'debug' | 'testing'
+        public readonly value: DatabaseType.Value
     ) {}
 
     public get databaseUrl(): string {
@@ -13,6 +13,8 @@ export class DatabaseType {
 }
 
 export namespace DatabaseType {
+    export type Value = 'release' | 'debug' | 'testing';
+
     export function fromString(value: string, logger: Logger): DatabaseType {
         logger.log('DatabaseType.fromString', { value });
         if (value !== 'release' && value !== 'debug' && value !== 'testing')

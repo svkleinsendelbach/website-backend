@@ -13,19 +13,19 @@ import { httpsError, mapObject } from '../utils/utils';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { FiatShamirParameters } from '../classes/FiatShamirParameters';
 
-export class EditEventsFunction implements FirebaseFunction<
-    EditEventsFunction.Parameters,
-    EditEventsFunction.ReturnType
+export class EditEventFunction implements FirebaseFunction<
+    EditEventFunction.Parameters,
+    EditEventFunction.ReturnType
 > {
 
-    public parameters: EditEventsFunction.Parameters;
+    public parameters: EditEventFunction.Parameters;
 
     private logger: Logger;
 
     public constructor(data: any, private auth: AuthData | undefined) {
-        this.logger = Logger.start(!!data.verbose, 'EditEventsFunction.constructor', { data, auth }, 'notice');
+        this.logger = Logger.start(!!data.verbose, 'EditEventFunction.constructor', { data, auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<EditEventsFunction.Parameters>(
+        const parameterParser = new ParameterParser<EditEventFunction.Parameters>(
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
@@ -40,8 +40,8 @@ export class EditEventsFunction implements FirebaseFunction<
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<EditEventsFunction.ReturnType> {
-        this.logger.log('EditEventsFunction.executeFunction', {}, 'info');
+    public async executeFunction(): Promise<EditEventFunction.ReturnType> {
+        this.logger.log('EditEventFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth); 
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger.nextIndent);
 
@@ -53,12 +53,16 @@ export class EditEventsFunction implements FirebaseFunction<
         } else {
             if (this.parameters.event === undefined)
                 throw httpsError('invalid-argument', 'No event to set.', this.logger);
-            reference.set(mapObject(this.parameters.event, 'date', date => date.toISOString()));
+            if (this.parameters.editType.value === 'add' && snapshot.exists)
+                throw httpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
+            if (this.parameters.editType.value === 'change' && !snapshot.exists)
+                throw httpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
+            await reference.set(mapObject(this.parameters.event, 'date', date => date.toISOString()));
         }
     }
 }
 
-export namespace EditEventsFunction {
+export namespace EditEventFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
         editType: EditType,
         groupId: EventGroupId,
@@ -67,4 +71,11 @@ export namespace EditEventsFunction {
     }
 
     export type ReturnType = void;
+
+    export type CallParameters = {
+        editType: EditType.Value,
+        groupId: EventGroupId,
+        eventId: string,
+        event: Event.CallParameters | undefined
+    }
 }

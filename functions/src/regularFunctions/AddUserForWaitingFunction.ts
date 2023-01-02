@@ -59,4 +59,10 @@ export namespace AddUserForWaitingFunction {
     }
 
     export type ReturnType = void;
+
+    export type CallParameters = {
+        type: UserAuthenticationType,
+        firstName: string,
+        lastName: string
+    }
 }

@@ -3,11 +3,13 @@ import { Logger } from '../utils/Logger';
 
 export class EditType {
     public constructor(
-        public readonly value: 'add' | 'change' | 'remove'
+        public readonly value: EditType.Value
     ) {}
 }
 
 export namespace EditType {
+    export type Value = 'add' | 'change' | 'remove';
+    
     export function fromString(value: string, logger: Logger): EditType {
         logger.log('EditType.fromString', { value });
         if (value !== 'add' && value !== 'change' && value !== 'remove') 

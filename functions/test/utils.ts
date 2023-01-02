@@ -4,7 +4,6 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getDatabase, ref, onValue, set } from 'firebase/database';
 import { Crypter } from '../src/crypter/Crypter';
 import { GetEventsFunction } from '../src/regularFunctions/GetEventsFunction';
-import { GetNewsFunction } from '../src/regularFunctions/GetNewsFunction';
 import { GetSingleNewsFunction } from '../src/regularFunctions/GetSingleNewsFunction';
 import { SendContactMailFunction } from '../src/regularFunctions/SendContactMailFunction';
 import { VerifyRecaptchaFunction } from '../src/regularFunctions/VerifyRecaptchaFunction';
@@ -21,6 +20,7 @@ import { AddUserForWaitingFunction } from '../src/regularFunctions/AddUserForWai
 import { CheckUserAuthenticationFunction } from '../src/regularFunctions/CheckUserAuthenticationFunction';
 import { EditNewsFunction } from '../src/regularFunctions/EditNewsFunction';
 import { GetUnauthenticatedUsersFunction } from '../src/regularFunctions/GetUnauthenticatedUsersFunction';
+import { EditEventFunction } from '../src/regularFunctions/EditEventFunction';
 import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
 import { modularPower } from '../src/utils/utils';
 import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
@@ -43,18 +43,17 @@ export function getCurrentUser(): User | null {
     return auth.currentUser;
 }
 
-export async function callFunction(functionName: 'v2_getEvents', parameters: Omit<GetEventsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetEventsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getNews', parameters: Omit<GetNewsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getSingleNews', parameters: Omit<GetSingleNewsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetSingleNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: Omit<VerifyRecaptchaFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<VerifyRecaptchaFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_sendContactMail', parameters: Omit<SendContactMailFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<SendContactMailFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_deleteAllData', parameters: Omit<DeleteAllDataFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<DeleteAllDataFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_editEvent', parameters: Omit<GetEventsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetEventsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_editNews', parameters: Omit<EditNewsFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<EditNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_addUserForWaiting', parameters: Omit<AddUserForWaitingFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<AddUserForWaitingFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_acceptDeclineWaitingUser', parameters: Omit<AcceptDeclineWaitingUserFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<AcceptDeclineWaitingUserFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_checkUserAuthentication', parameters: Omit<CheckUserAuthenticationFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<CheckUserAuthenticationFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: Omit<GetUnauthenticatedUsersFunction.Parameters, keyof FirebaseFunction.DefaultParameters>): Promise<FirebaseFunction.Result<GetUnauthenticatedUsersFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getEvents', parameters: GetEventsFunction.CallParameters): Promise<FirebaseFunction.Result<GetEventsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getSingleNews', parameters: GetSingleNewsFunction.CallParameters): Promise<FirebaseFunction.Result<GetSingleNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: VerifyRecaptchaFunction.CallParameters): Promise<FirebaseFunction.Result<VerifyRecaptchaFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_sendContactMail', parameters: SendContactMailFunction.CallParameters): Promise<FirebaseFunction.Result<SendContactMailFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_deleteAllData', parameters: DeleteAllDataFunction.CallParameters): Promise<FirebaseFunction.Result<DeleteAllDataFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_addUserForWaiting', parameters: AddUserForWaitingFunction.CallParameters): Promise<FirebaseFunction.Result<AddUserForWaitingFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_acceptDeclineWaitingUser', parameters: AcceptDeclineWaitingUserFunction.CallParameters): Promise<FirebaseFunction.Result<AcceptDeclineWaitingUserFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_checkUserAuthentication', parameters: CheckUserAuthenticationFunction.CallParameters): Promise<FirebaseFunction.Result<CheckUserAuthenticationFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.Result<GetUnauthenticatedUsersFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_editEvent', parameters: EditEventFunction.CallParameters): Promise<FirebaseFunction.Result<EditEventFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_editNews', parameters: EditNewsFunction.CallParameters): Promise<FirebaseFunction.Result<EditNewsFunction.ReturnType>>
 export async function callFunction<Params, Result>(functionName: string, parameters: Params): Promise<FirebaseFunction.Result<Result>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);
@@ -223,9 +222,26 @@ export async function getDatabaseValue<T>(referencePath: string): Promise<T> {
     return optionalValue;
 }
 
+export async function getDecryptedOptionalDatabaseValue<T>(referencePath: string): Promise<T | null> {
+    const crypter = new Crypter(cryptionKeys);
+    const encryptedValue = await getOptionalDatabaseValue<string>(referencePath);
+    if (encryptedValue === null) return null;
+    return crypter.decryptDecode(encryptedValue);
+}
+
+export async function getDecryptedDatabaseValue<T>(referencePath: string): Promise<T> {
+    const crypter = new Crypter(cryptionKeys);
+    const encryptedValue = await getDatabaseValue<string>(referencePath);
+    return crypter.decryptDecode(encryptedValue);
+}
+
 export async function setDatabaseValue(referencePath: string, value: FirebaseDatabase.ValueType) {
     const reference = ref(database, referencePath || undefined);
     await set(reference, value);
+}
+
+export async function existsDatabaseValue(referencePath: string): Promise<boolean> {
+    return (await getOptionalDatabaseValue(referencePath)) !== null;
 }
 
 export async function wait(milliseconds: number): Promise<void> {

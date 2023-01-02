@@ -62,7 +62,7 @@ export class ParameterContainer {
         // Check if the parameter is undefined
         if (typeof parameter === 'undefined') {
             if (!(builder.expectedTypes as TrivialParameterType[]).includes('undefined'))
-                throw httpsError('invalid-argument', 'Parameter cannot be undefined.', logger);
+                throw httpsError('invalid-argument', `Parameter ${key.toString()} cannot be undefined.`, logger);
             return builder.build(parameter as any, logger.nextIndent);
         }
 

@@ -45,20 +45,20 @@ export function getCurrentUser(): User | null {
     return auth.currentUser;
 }
 
-export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: VerifyRecaptchaFunction.CallParameters): Promise<FirebaseFunction.Result<VerifyRecaptchaFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_sendContactMail', parameters: SendContactMailFunction.CallParameters): Promise<FirebaseFunction.Result<SendContactMailFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_deleteAllData', parameters: DeleteAllDataFunction.CallParameters): Promise<FirebaseFunction.Result<DeleteAllDataFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_addUserForWaiting', parameters: AddUserForWaitingFunction.CallParameters): Promise<FirebaseFunction.Result<AddUserForWaitingFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_acceptDeclineWaitingUser', parameters: AcceptDeclineWaitingUserFunction.CallParameters): Promise<FirebaseFunction.Result<AcceptDeclineWaitingUserFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_checkUserAuthentication', parameters: CheckUserAuthenticationFunction.CallParameters): Promise<FirebaseFunction.Result<CheckUserAuthenticationFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_editEvent', parameters: EditEventFunction.CallParameters): Promise<FirebaseFunction.Result<EditEventFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_editNews', parameters: EditNewsFunction.CallParameters): Promise<FirebaseFunction.Result<EditNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getEvents', parameters: GetEventsFunction.CallParameters): Promise<FirebaseFunction.Result<GetEventsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getNews', parameters: GetNewsFunction.CallParameters): Promise<FirebaseFunction.Result<GetNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getSingleNews', parameters: GetSingleNewsFunction.CallParameters): Promise<FirebaseFunction.Result<GetSingleNewsFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.Result<GetUnauthenticatedUsersFunction.ReturnType>>
-export async function callFunction(functionName: 'v2_getTeamSquad', parameters: GetTeamSquadFunction.CallParameters): Promise<FirebaseFunction.Result<GetTeamSquadFunction.ReturnType>>
-export async function callFunction<Params, Result>(functionName: string, parameters: Params): Promise<FirebaseFunction.Result<Result>> {
+export async function callFunction(functionName: 'v2_verifyRecaptcha', parameters: VerifyRecaptchaFunction.CallParameters): Promise<FirebaseFunction.ResultType<VerifyRecaptchaFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_sendContactMail', parameters: SendContactMailFunction.CallParameters): Promise<FirebaseFunction.ResultType<SendContactMailFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_deleteAllData', parameters: DeleteAllDataFunction.CallParameters): Promise<FirebaseFunction.ResultType<DeleteAllDataFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_addUserForWaiting', parameters: AddUserForWaitingFunction.CallParameters): Promise<FirebaseFunction.ResultType<AddUserForWaitingFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_acceptDeclineWaitingUser', parameters: AcceptDeclineWaitingUserFunction.CallParameters): Promise<FirebaseFunction.ResultType<AcceptDeclineWaitingUserFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_checkUserAuthentication', parameters: CheckUserAuthenticationFunction.CallParameters): Promise<FirebaseFunction.ResultType<CheckUserAuthenticationFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_editEvent', parameters: EditEventFunction.CallParameters): Promise<FirebaseFunction.ResultType<EditEventFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_editNews', parameters: EditNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<EditNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getEvents', parameters: GetEventsFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetEventsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getNews', parameters: GetNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getSingleNews', parameters: GetSingleNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetSingleNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetUnauthenticatedUsersFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getTeamSquad', parameters: GetTeamSquadFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetTeamSquadFunction.ReturnType>>
+export async function callFunction<Params, ResultType>(functionName: string, parameters: Params): Promise<FirebaseFunction.ResultType<ResultType>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);
     const fiatShamirParameters = await getFiatShamirParameters();
@@ -109,12 +109,12 @@ async function callFiatShamirChallengeGeneratorFunction(identifier: guid): Promi
             bs: asAndBs.bs
         })
     });
-    const functionResult: FirebaseFunction.Result<(0 | 1)[]> = crypter.decryptDecode(httpsCallableResult.data);
+    const functionResult: FirebaseFunction.ResultType<(0 | 1)[]> = crypter.decryptDecode(httpsCallableResult.data);
     expectSuccess(functionResult);
     assert(functionResult.state === 'success');
     return {
         as: asAndBs.as,
-        challenges: functionResult.returnValue
+        challenges: functionResult.value
     };
 }
 
@@ -145,7 +145,7 @@ export function expectHttpsError(execute: () => void, code: FunctionsErrorCode) 
     expect.fail('Expected to throw an error.');
 }
 
-export function expectFailed<T>(result: FirebaseFunction.Result<T>): Expect<{
+export function expectFailed<T>(result: FirebaseFunction.ResultType<T>): Expect<{
     code: FunctionsErrorCode,
     message: string,
 }> {
@@ -157,7 +157,7 @@ export function expectFailed<T>(result: FirebaseFunction.Result<T>): Expect<{
     });
 }
 
-export function expectSuccess<T>(result: FirebaseFunction.Result<T>): Expect<T> {
+export function expectSuccess<T>(result: FirebaseFunction.ResultType<T>): Expect<T> {
     if (result.state === 'failure') {
         console.log(`Failed with error: ${result.error.code}, ${result.error.message}`);
         console.log(result.error.details);
@@ -165,7 +165,7 @@ export function expectSuccess<T>(result: FirebaseFunction.Result<T>): Expect<T> 
     }
     expect(result.state).to.be.equal('success');
     assert(result.state === 'success');
-    return new Expect(result.returnValue);
+    return new Expect(result.value);
 }
 
 class Expect<T> {

@@ -15,16 +15,10 @@ export type ArrayElement<T> = T extends (infer Element)[] ? Element : never;
  * @param { Promise<T> } promise Promise to get result from.
  * @return { Promise<Result<T, Error>> } Return promise.
  */
-export async function toResult<T>(promise: Promise<T>): Promise<Result<FirebaseFunction.Result.Success<T>, FirebaseFunction.Result.Failure>> {
+export async function toResult<T>(promise: Promise<T>): Promise<FirebaseFunction.ResultType<T>> {
     return promise
-        .then(value => Result.success<FirebaseFunction.Result.Success<T>, FirebaseFunction.Result.Failure>({
-            state: 'success',
-            returnValue: value
-        }))
-        .catch(reason => Result.failure<FirebaseFunction.Result.Success<T>, FirebaseFunction.Result.Failure>({
-            state: 'failure',
-            error: convertToFunctionResultError(reason)
-        }));
+        .then(value => Result.success<T>(value))
+        .catch(reason => Result.failure<FirebaseFunction.Error>(convertToFunctionResultError(reason)));
 }
 
 /**
@@ -46,7 +40,7 @@ export function isFunctionsErrorCode(status: string | undefined): status is Func
  * @param { any } error Error to convert.
  * @return { FirebaseFunction.Result.Error } Converted firebase function result error.
  */
-export function convertToFunctionResultError(error: any): FirebaseFunction.Result.Error {
+export function convertToFunctionResultError(error: any): FirebaseFunction.Error {
     const hasMessage = error.message !== undefined && error.message !== null && error.message !== '';
     const hasStack = error.stack !== undefined && error.stack !== null && error.stack !== '';
     return {

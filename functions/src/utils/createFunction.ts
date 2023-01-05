@@ -9,7 +9,7 @@ import { Result } from './Result';
 import { convertToFunctionResultError, httpsError, toResult } from './utils';
 
 export function createFunction<
-    FFunction extends FirebaseFunction<any, FirebaseFunction.ReturnType<FFunction>>
+    FFunction extends FirebaseFunction<any, any>
 >(
     createFirebaseFunction: (data: any, auth: AuthData | undefined) => FFunction
 ): functions.HttpsFunction & functions.Runnable<any> {
@@ -22,19 +22,20 @@ export function createFunction<
         const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
 
         // Get result of function call
-        let result: Result<FirebaseFunction.Result.Success<FirebaseFunction.ReturnType<FFunction>>, FirebaseFunction.Result.Failure>;
-        try {
-            const firebaseFunction = createFirebaseFunction(data, context.auth);
-            result = await toResult(firebaseFunction.executeFunction());
-        } catch (error: any) {
-            result = Result.failure({
-                state: 'failure',
-                error: convertToFunctionResultError(error)
-            });
-        }
+        const result = await executeFunction(createFirebaseFunction(data, context.auth));
 
         // Encrypt result
         const crypter = new Crypter(cryptionKeys(databaseType));
-        return crypter.encodeEncrypt(result.valueOrError);
+        return crypter.encodeEncrypt(result);
     });
+}
+
+async function executeFunction<
+    FFunction extends FirebaseFunction<any, any>
+>(firebaseFunction: FFunction): Promise<FirebaseFunction.ResultType<FirebaseFunction.ReturnType<FFunction>>> {
+    try {
+        return await toResult(firebaseFunction.executeFunction());
+    } catch (error: any) {
+        return Result.failure<FirebaseFunction.Error>(convertToFunctionResultError(error));
+    }
 }

@@ -41,23 +41,38 @@ describe('utils', () => {
 
     describe('result', () => {
         it('success', () => {
-            const result = Result.success<string, string>('asdf');
-            expect(result.property).to.be.deep.equal({ value: 'asdf' });
+            const result = Result.success<string>('asdf');
+            expect(result).to.be.deep.equal({
+                state: 'success',
+                value: 'asdf'
+            });
             expect(result.get()).to.be.equal('asdf');
             expect(result.value).to.be.equal('asdf');
             expect(result.error).to.be.null;
             expect(result.valueOrError).to.be.equal('asdf');
-            expect(result.map<string>(v => v + '_').property).to.be.deep.equal({ value: 'asdf_' });
-            expect(result.mapError<string>(v => v + '_').property).to.be.deep.equal({ value: 'asdf' });
+            expect(result.map<string>(v => v + '_')).to.be.deep.equal({ 
+                state: 'success',
+                value: 'asdf_'
+            });
+            expect(result.mapError<string>(v => v + '_')).to.be.deep.equal({ 
+                state: 'success',
+                value: 'asdf'
+            });
         });
 
         it('void success', () => {
-            expect(Result.voidSuccess<string>().property).to.be.deep.equal({ value: undefined });
+            expect(Result.voidSuccess()).to.be.deep.equal({ 
+                state: 'success',
+                value: undefined
+            });
         });
 
         it('failure', () => {
-            const result = Result.failure<string, string>('nrtz');
-            expect(result.property).to.be.deep.equal({ error: 'nrtz' });
+            const result = Result.failure<string>('nrtz');
+            expect(result).to.be.deep.equal({ 
+                state: 'failure',
+                error: 'nrtz'
+            });
             try {
                 result.get();
                 expect.fail();
@@ -67,24 +82,29 @@ describe('utils', () => {
             expect(result.value).to.be.null;
             expect(result.error).to.be.equal('nrtz');
             expect(result.valueOrError).to.be.equal('nrtz');
-            expect(result.map<string>(v => v + '_').property).to.be.deep.equal({ error: 'nrtz' });
-            expect(result.mapError<string>(v => v + '_').property).to.be.deep.equal({ error: 'nrtz_' });
+            expect(result.map<string>(v => v + '_')).to.be.deep.equal({ 
+                state: 'failure',
+                error: 'nrtz'
+            });
+            expect(result.mapError<string>(v => v + '_')).to.be.deep.equal({ 
+                error: 'nrtz_',
+                state: 'failure'
+            });
         });
     });
 
     it('toResult success', async () => {
         const result = await toResult<string>(new Promise(resolve => resolve('asdf')));
-        expect(result.property).to.be.deep.equal({
-            value: {
-                returnValue: 'asdf', state: 'success'
-            }
+        expect(result).to.be.deep.equal({
+            state: 'success',
+            value: 'asdf'
         });
     });
 
     it('toResult failure', async () => {
         const result = await toResult<string>(new Promise((_resolve, reject) => reject(new Error('nzesd'))));
-        expect((result.property as any).error.state).to.be.equal('failure');
-        expect((result.property as any).error.error.message).to.be.equal('nzesd');
+        expect(result.state).to.be.equal('failure');
+        expect(result.error?.message).to.be.equal('nzesd');
     });
 
     it('isFunctionsErrorCode invalid', () => {

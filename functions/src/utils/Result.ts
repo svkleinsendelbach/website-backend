@@ -1,120 +1,82 @@
-/**
- * Property of result for success with value.
- */
-class ResultValueProperty<T> {
-
-    /**
-     * Initializes property with value.
-     * @param { T } value Value of success property.
-     */
-    constructor(public readonly value: T) { }
-}
-
-/**
- * Property of result for failure with error.
- */
-class ResultErrorProperty<E> {
-
-    /**
-     * Initializes property with error.
-     * @param { E } error Error of failure property.
-     */
-    constructor(public readonly error: E) {}
-}
-
-/**
- * Result can be success with a value of failure with an error.
- */
-export class Result<T, E> {
-
-    /**
-     * Initializes result with success or failure property.
-     * @param { ResultValueProperty<T> | ResultErrorProperty<E> } property Success or failure property.
-     */
-    private constructor(public readonly property: ResultValueProperty<T> | ResultErrorProperty<E>) {}
-
-    /**
-     * Constructs success result with value.
-     * @param { T } value Value of success result.
-     * @return { Result<T, E> } Success result.
-     */
-    static success<T, E>(value: T): Result<T, E> {
-        return new Result(new ResultValueProperty(value));
+interface IResult<T, E> {
+    readonly state: 'success' | 'failure';
+    readonly value: T | null;
+    readonly error: E | null;
+    readonly valueOrError: T | E;
+    get(): T;
+    map<T2>(mapper: (value: T) => T2): Result<T2, E>
+    mapError<E2>(mapper: (value: E) => E2): Result<T, E2>;
+  }
+  
+export type Result<T, E> = Result.Success<T> | Result.Failure<E>;
+  
+export namespace Result {
+    export class Success<T> implements IResult<T, never> {
+        public readonly state = 'success' as const;
+  
+        public constructor(
+        public readonly value: T
+        ) {}
+  
+        public get error(): null {
+            return null;
+        }
+  
+        public get valueOrError(): T {
+            return this.value;
+        }
+  
+        public get(): T {
+            return this.value;
+        }
+  
+        public map<T2>(mapper: (value: T) => T2): Result<T2, never> {
+            return new Result.Success<T2>(mapper(this.value));
+        }
+  
+        public mapError(): Result<T, never> {
+            return this;
+        }
     }
-
-    /**
-     * constructs success result with void value.
-     * @return { Result<void, E> } Success result.
-     */
-    static voidSuccess<E>(): Result<void, E> {
+  
+    export class Failure<E> implements IResult<never, E> {
+        public readonly state = 'failure' as const;
+  
+        public constructor(
+        public readonly error: E
+        ) {}
+  
+        public get value(): null {
+            return null;
+        }
+  
+        public get valueOrError(): E {
+            return this.error;
+        }
+  
+        public get(): never {
+            throw this.error;
+        }
+  
+        public map(): Result<never, E> {
+            return this;
+        }
+  
+        public mapError<E2>(mapper: (value: E) => E2): Result<never, E2> {
+            return new Result.Failure<E2>(mapper(this.error));
+        }
+    }
+  
+    export function success<T>(value: T): Result<T, never> {
+        return new Result.Success<T>(value);
+    }
+  
+    export function voidSuccess(): Result<void, never> {
         return Result.success(undefined);
     }
-
-    /**
-     * Constructs failure result with error.
-     * @param { E } error Error of failure result.
-     * @return { Result<T, E> } Failure result.
-     */
-    static failure<T, E>(error: E): Result<T, E> {
-        return new Result(new ResultErrorProperty(error));
+  
+    export function failure<E>(error: E): Result<never, E> {
+        return new Result.Failure<E>(error);
     }
-
-    /**
-     * Returns value if success result or throws error otherwise.
-     * @return { T } Value of success result.
-     */
-    get(): T {
-        if (this.property instanceof ResultValueProperty)
-            return this.property.value;
-        throw this.property.error;
-    }
-
-    /**
-     * Returns value if success result or null otherwise.
-     */
-    get value(): T | null {
-        if (this.property instanceof ResultValueProperty)
-            return this.property.value;
-        return null;
-    }
-
-    /**
-     * Returns error if failure result or null otherwise.
-     */
-    get error(): E | null {
-        if (this.property instanceof ResultValueProperty)
-            return null;
-        return this.property.error;
-    }
-
-    /**
-     * Returns value if sucess result or error otherwise.
-     */
-    get valueOrError(): T | E {
-        if (this.property instanceof ResultValueProperty)
-            return this.property.value;
-        return this.property.error;
-    }
-
-    /**
-     * Maps value of success result to new value.
-     * @param { function(val: T): T2 } mapper Mapper to map value of success result.
-     * @return { Result<T2, E> } Mapped result.
-     */
-    map<T2>(mapper: (value: T) => T2): Result<T2, E> {
-        if (this.property instanceof ResultValueProperty)
-            return Result.success(mapper(this.property.value));
-        return Result.failure(this.property.error);
-    }
-
-    /**
-     * Maps error of failure result to new error.
-     * @param { function(err: E): E2 } mapper Mapper to map error of failure result.
-     * @return { Result<T, E2> } Mapped result.
-     */
-    mapError<E2>(mapper: (error: E) => E2): Result<T, E2> {
-        if (this.property instanceof ResultValueProperty)
-            return Result.success(this.property.value);
-        return Result.failure(mapper(this.property.error));
-    }
-}
+  }
+  

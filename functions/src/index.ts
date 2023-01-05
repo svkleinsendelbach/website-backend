@@ -14,6 +14,7 @@ import { AcceptDeclineWaitingUserFunction } from './regularFunctions/AcceptDecli
 import { CheckUserAuthenticationFunction } from './regularFunctions/CheckUserAuthenticationFunction';
 import { GetUnauthenticatedUsersFunction } from './regularFunctions/GetUnauthenticatedUsersFunction';
 import { EditEventFunction } from './regularFunctions/EditEventFunction';
+import { GetTeamSquadFunction } from './regularFunctions/GetTeamSquadFunction';
 
 admin.initializeApp();
 
@@ -40,5 +41,7 @@ export const v2_acceptDeclineWaitingUser = createFunction((data, auth) => new Ac
 export const v2_checkUserAuthentication = createFunction((data, auth) => new CheckUserAuthenticationFunction(data, auth));
 
 export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
+
+export const v2_getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
 
 export const v2_deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));

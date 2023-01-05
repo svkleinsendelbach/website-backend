@@ -25,6 +25,7 @@ import { EditEventFunction } from '../src/regularFunctions/EditEventFunction';
 import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
 import { modularPower } from '../src/utils/utils';
 import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
+import { GetTeamSquadFunction } from '../src/regularFunctions/GetTeamSquadFunction';
 
 const app = initializeApp(firebaseConfig);
 export const functions = getFunctions(app, 'europe-west1');
@@ -56,6 +57,7 @@ export async function callFunction(functionName: 'v2_getEvents', parameters: Get
 export async function callFunction(functionName: 'v2_getNews', parameters: GetNewsFunction.CallParameters): Promise<FirebaseFunction.Result<GetNewsFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_getSingleNews', parameters: GetSingleNewsFunction.CallParameters): Promise<FirebaseFunction.Result<GetSingleNewsFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.Result<GetUnauthenticatedUsersFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_getTeamSquad', parameters: GetTeamSquadFunction.CallParameters): Promise<FirebaseFunction.Result<GetTeamSquadFunction.ReturnType>>
 export async function callFunction<Params, Result>(functionName: string, parameters: Params): Promise<FirebaseFunction.Result<Result>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);

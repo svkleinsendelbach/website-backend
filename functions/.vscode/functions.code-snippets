@@ -48,6 +48,10 @@
 			"\t}",
 			"",
 			"\texport type ReturnType = void;",
+			"",
+			"\texport type CallParameters = {",
+			"",	
+			"\t}",
 			"}",
 			""
 		],

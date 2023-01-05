@@ -1,6 +1,5 @@
 # Compiled JavaScript files
-lib/**/*.js
-lib/**/*.js.map
+lib/
 
 # TypeScript v1 declaration files
 typings/
@@ -8,9 +7,5 @@ typings/
 # Node.js dependency directory
 node_modules/
 
-test/firebaseConfig.ts
-src/recaptchaSecretKey.ts
-src/sendContactMailAccount.ts
-src/websiteEditingFunctions/jwt_rsa_keys.ts
-
-.prettierrc
+src/privateKeys.ts
+test/privateKeys.ts

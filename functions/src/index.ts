@@ -1,118 +1,47 @@
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import { createFunction } from './utils/createFunction';
 
-import * as getData from './AnpfiffInfoData/getAnpfiffInfoData';
-import { EditEventsFunction } from './EditEventsFunction';
-import { EditNewsFunction } from './EditNewsFunction';
-import { GetAllDBPlayersFunction } from './GetAllDBPlayersFunction';
-import { GetEventsFunction } from './GetEventsFunction';
-import { GetHomeTopFunction } from './GetHomeTopFunction';
-import { GetNewsFunction } from './GetNewsFunction';
-import { GetSingleNewsByIdFunction } from './GetSingleNewsByIdFunction';
-import { Logger } from './Logger/Logger';
-import { ParameterContainer } from './ParameterContainer';
-import { SendContactMailFunction } from './SendContactMailFunction';
-import { reference } from './utils';
-import { VerifyRecaptchaFunction } from './VerityRecaptchaFunction';
-import { AcceptDeclineUserWaitingForRegistrationForEditingFunction } from './websiteEditingFunctions/AcceptDeclineUserWaitingForRegistrationForEditingFunction';
-import { AddUserToWaitingForRegistrationForEditingFunction } from './websiteEditingFunctions/AddUserToWaitingForRegistrationForEditingFunction';
-import { CheckUserForEditingFunction } from './websiteEditingFunctions/CheckUserForEditingFunction';
-import { GetUsersToWaitingForRegistrationForEditingFunction } from './websiteEditingFunctions/GetUsersWaitingForRegistrationForEditingFunction';
+import { GetEventsFunction } from './regularFunctions/GetEventsFunction';
+import { GetNewsFunction } from './regularFunctions/GetNewsFunction';
+import { GetSingleNewsFunction } from './regularFunctions/GetSingleNewsFunction';
+import { VerifyRecaptchaFunction } from './regularFunctions/VerifyRecaptchaFunction';
+import { SendContactMailFunction } from './regularFunctions/SendContactMailFunction';
+import { FiatShamirChallengeGeneratorFunction } from './regularFunctions/FiatShamirChallengeGeneratorFunction';
+import { DeleteAllDataFunction } from './testingFunctions/DeleteAllDataFunction';
+import { EditNewsFunction } from './regularFunctions/EditNewsFunction';
+import { AddUserForWaitingFunction } from './regularFunctions/AddUserForWaitingFunction';
+import { AcceptDeclineWaitingUserFunction } from './regularFunctions/AcceptDeclineWaitingUserFunction';
+import { CheckUserAuthenticationFunction } from './regularFunctions/CheckUserAuthenticationFunction';
+import { GetUnauthenticatedUsersFunction } from './regularFunctions/GetUnauthenticatedUsersFunction';
+import { EditEventFunction } from './regularFunctions/EditEventFunction';
+import { GetTeamSquadFunction } from './regularFunctions/GetTeamSquadFunction';
 
 admin.initializeApp();
 
-export const getAnpfiffInfoData = functions
-  .region('europe-west1')
-  .https.onCall(async (data, _context) => await getData.getAnpfiffInfoData(data));
+export const v2_getEvents = createFunction((data, auth) => new GetEventsFunction(data, auth));
 
-export const deleteAllCaches = functions.region('europe-west1').https.onCall(async (_data, _context) => {
-  const cachesRef = admin.database().ref('caches');
-  cachesRef.remove();
-});
+export const v2_getNews = createFunction((data, auth) => new GetNewsFunction(data, auth));
 
-export const getAllDBPlayers = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = GetAllDBPlayersFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_getSingleNews = createFunction((data, auth) => new GetSingleNewsFunction(data, auth));
 
-export const getHomeTop = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = GetHomeTopFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_verifyRecaptcha = createFunction((data, auth) => new VerifyRecaptchaFunction(data, auth));
 
-export const getEvents = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = GetEventsFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_sendContactMail = createFunction((data, auth) => new SendContactMailFunction(data, auth));
 
-export const editEvents = functions.region('europe-west1').https.onCall(async (data, context) => {
-  const firebaseFunction = EditEventsFunction.fromData(data, context);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_fiatShamirChallengeGenerator = createFunction((data, auth) => new FiatShamirChallengeGeneratorFunction(data, auth));
 
-export const editNews = functions.region('europe-west1').https.onCall(async (data, context) => {
-  const firebaseFunction = EditNewsFunction.fromData(data, context);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_editEvent = createFunction((data, auth) => new EditEventFunction(data, auth));
 
-export const getNews = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = GetNewsFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_editNews = createFunction((data, auth) => new EditNewsFunction(data, auth));
 
-export const getSingleNewsById = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = GetSingleNewsByIdFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_addUserForWaiting = createFunction((data, auth) => new AddUserForWaitingFunction(data, auth));
 
-export const verifyRecaptcha = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = VerifyRecaptchaFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_acceptDeclineWaitingUser = createFunction((data, auth) => new AcceptDeclineWaitingUserFunction(data, auth));
 
-export const sendContactMail = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = SendContactMailFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_checkUserAuthentication = createFunction((data, auth) => new CheckUserAuthenticationFunction(data, auth));
 
-export const checkUserForEditing = functions.region('europe-west1').https.onCall(async (data, _context) => {
-  const firebaseFunction = CheckUserForEditingFunction.fromData(data);
-  return await firebaseFunction.executeFunction();
-});
+export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
 
-export const addUserToWaitingForRegistrationForEditing = functions
-  .region('europe-west1')
-  .https.onCall(async (data, _context) => {
-    const firebaseFunction = AddUserToWaitingForRegistrationForEditingFunction.fromData(data);
-    return await firebaseFunction.executeFunction();
-  });
+export const v2_getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
 
-export const getUsersToWaitingForRegistrationForEditing = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    const firebaseFunction = GetUsersToWaitingForRegistrationForEditingFunction.fromData(data, context);
-    return await firebaseFunction.executeFunction();
-  });
-
-export const acceptDeclineUserWaitingForRegistrationForEditing = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    const firebaseFunction = AcceptDeclineUserWaitingForRegistrationForEditingFunction.fromData(data, context);
-    return await firebaseFunction.executeFunction();
-  });
-
-export const addTestUserToTesting = functions.region('europe-west1').https.onCall(async (_data, _context) => {
-  const parameterContainer = new ParameterContainer({ dbType: 'testing' });
-  const logger = Logger.start(parameterContainer, 'addTestUserToTesting');
-  const userId =
-    '3fee1b7d0aa72807c0c9a88e2bb2fb8f10d5aeaecec8ad74ba5c363664d74c97ef5df37b08a52b3f3adc42af114884378c1083c43a612dfd53d0c5cf4286ad05';
-  const userRef = reference(`users/websiteEditors/${userId}`, parameterContainer, logger);
-  userRef.set({ first: 'Test', last: 'User' });
-});
-
-export const deleteAllUsersInTestingDB = functions.region('europe-west1').https.onCall(async (_data, _context) => {
-  const parameterContainer = new ParameterContainer({ dbType: 'testing' });
-  const logger = Logger.start(parameterContainer, 'deleteAllUsersInTestingDB');
-  const usersRef = reference('users', parameterContainer, logger);
-  usersRef.remove();
-});
+export const v2_deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));

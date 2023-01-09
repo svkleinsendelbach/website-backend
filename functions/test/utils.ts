@@ -11,7 +11,7 @@ import { VerifyRecaptchaFunction } from '../src/regularFunctions/VerifyRecaptcha
 import { DatabaseType } from '../src/classes/DatabaseType';
 import { FirebaseFunction } from '../src/utils/FirebaseFunction';
 import { cryptionKeys, fiatShamirKeys, firebaseConfig, testUser } from './privateKeys';
-import { randomBytes } from 'crypto';
+import { webcrypto } from 'crypto';
 import { guid } from '../src/classes/guid';
 import { DeleteAllDataFunction } from '../src/testingFunctions/DeleteAllDataFunction';
 import { assert, expect } from 'chai';
@@ -26,6 +26,7 @@ import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
 import { modularPower } from '../src/utils/utils';
 import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
 import { GetTeamSquadFunction } from '../src/regularFunctions/GetTeamSquadFunction';
+import { Logger } from '../src/utils/Logger';
 
 const app = initializeApp(firebaseConfig);
 export const functions = getFunctions(app, 'europe-west1');
@@ -63,12 +64,12 @@ export async function callFunction<Params, ResultType>(functionName: string, par
     const crypter = new Crypter(cryptionKeys);
     const fiatShamirParameters = await getFiatShamirParameters();
     const callableFunction = httpsCallable<{
-        verbose: boolean,
+        verbose: Logger.VerboseType,
         databaseType: 'release' | 'debug' | 'testing',
         parameters: string
     }, string>(functions, functionName);
     const httpsCallableResult = await callableFunction({
-        verbose: true,
+        verbose: 'coloredVerbose',
         databaseType: databaseType.value,
         parameters: crypter.encodeEncrypt({
             ...parameters,
@@ -96,12 +97,12 @@ async function callFiatShamirChallengeGeneratorFunction(identifier: guid): Promi
     const crypter = new Crypter(cryptionKeys);
     const asAndBs = generateAsAndBs();
     const callableFunction = httpsCallable<{
-        verbose: boolean,
+        verbose: Logger.VerboseType,
         databaseType: 'release' | 'debug' | 'testing',
         parameters: string
     }, string>(functions, 'v2_fiatShamirChallengeGenerator');
     const httpsCallableResult = await callableFunction({
-        verbose: false,
+        verbose: 'none',
         databaseType: databaseType.value,
         parameters: crypter.encodeEncrypt({
             databaseType: databaseType.value,
@@ -118,11 +119,20 @@ async function callFiatShamirChallengeGeneratorFunction(identifier: guid): Promi
     };
 }
 
+function randomBigint(): bigint {
+    const bytes = new Uint8Array(128);
+    webcrypto.getRandomValues(bytes);
+    let result = 0n;
+    for (const byte of bytes)
+        result = (result << 8n) + BigInt(byte);
+    return result;
+}
+
 function generateAsAndBs(): { as: bigint[], bs: bigint[] } {
     const as: bigint[] = [];
     const bs: bigint[] = [];
     for (let i = 0; i < 32; i++) {
-        const a = BigInt('0x' + randomBytes(128).toString('hex')) % fiatShamirKeys.N;
+        const a = randomBigint() % fiatShamirKeys.N;
         const b = modularPower(a, 2n, fiatShamirKeys.N);      
         as.push(a);
         bs.push(b);  

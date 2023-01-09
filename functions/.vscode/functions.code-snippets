@@ -23,7 +23,7 @@
 			"\tprivate logger: Logger;",
 			"",
 			"\tpublic constructor(data: any, auth: AuthData | undefined) {",
-			"\t\tthis.logger = Logger.start(!!data.verbose, '$1Function.constructor', { data, auth }, 'notice');",
+			"\t\tthis.logger = Logger.start(data.verbose, '$1Function.constructor', { data, auth }, 'notice');",
 			"\t\tconst parameterContainer = new ParameterContainer(data, this.logger.nextIndent);",
 			"\t\tconst parameterParser = new ParameterParser<$1Function.Parameters>(",
 			"\t\t\t{",

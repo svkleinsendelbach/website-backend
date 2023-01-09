@@ -23,7 +23,7 @@ export class EditEventFunction implements FirebaseFunction<
     private logger: Logger;
 
     public constructor(data: any, private auth: AuthData | undefined) {
-        this.logger = Logger.start(!!data.verbose, 'EditEventFunction.constructor', { data, auth }, 'notice');
+        this.logger = Logger.start(data.verbose, 'EditEventFunction.constructor', { data, auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<EditEventFunction.Parameters>(
             {

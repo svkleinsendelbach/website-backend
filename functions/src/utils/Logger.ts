@@ -4,7 +4,8 @@ import { Json } from './utils';
 export type LogLevel = 'debug' | 'info' | 'notice';
 
 export namespace LogLevel {
-    export function coloredText(logLevel: LogLevel, text: string): string {
+    export function coloredText(logLevel: LogLevel, text: string, colored: boolean): string {
+        if (!colored) return text;
         switch (logLevel) {
         case 'debug': return text.yellow();
         case 'info': return text.red();
@@ -24,13 +25,13 @@ interface LoggingProperty {
 
 export class Logger {
     private constructor(
-        private readonly verbose: boolean,
+        private readonly verbose: Logger.VerboseType,
         private readonly properties: LoggingProperty[],
         private currentIndent: number = 0
     ) {}
 
     public static start(
-        verbose: boolean,
+        verbose: Logger.VerboseType,
         functionName: string,
         details: { [key: string]: any } = {},
         logLevel: LogLevel = 'debug'
@@ -64,9 +65,9 @@ export class Logger {
     private propertyString(property: LoggingProperty): string {
         const builder = new StringBuilder();
         builder.appendLine(
-            `${' '.repeat(2 * property.indent)}| ${LogLevel.coloredText(property.logLevel, `[${property.functionName}]`)}`
+            `${' '.repeat(2 * property.indent)}| ${LogLevel.coloredText(property.logLevel, `[${property.functionName}]`, this.verbose === 'colored' || this.verbose === 'coloredVerbose')}`
         );
-        if (this.verbose) {
+        if (this.verbose === 'verbose' || this.verbose == 'coloredVerbose') {
             for (const key in property.details) {
                 if (Object.prototype.hasOwnProperty.call(property.details, key))
                     builder.append(this.detailString(property.indent, key, property.details[key]));
@@ -90,4 +91,8 @@ export class Logger {
             builder.append(this.propertyString(property));
         return builder.toString();
     }
+}
+
+export namespace Logger {
+    export type VerboseType = 'none' | 'verbose' | 'colored' | 'coloredVerbose';
 }

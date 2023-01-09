@@ -1,6 +1,7 @@
 import { DatabaseType } from '../classes/DatabaseType';
 import { FirebaseDatabase } from './FirebaseDatabase';
 import { Logger } from './Logger';
+import { httpsError } from './utils';
 
 export interface AnpfiffTeamParameter {
     ligaId: number,
@@ -25,5 +26,7 @@ export async function getAnpfiffTeamParameter(type: AnpfiffTeamParameter.Type, d
     logger.log('getAnpfiffTeamParameter', { type, databaseType });
     const reference = FirebaseDatabase.Reference.fromPath(`anpfiffTeamParameter/${type}`, databaseType);
     const snapshot = await reference.snapshot<AnpfiffTeamParameter>();
+    if (!snapshot.exists) 
+        throw httpsError('internal', 'Couldn\'t get anpfiff team parameter', logger);
     return snapshot.value;
 }

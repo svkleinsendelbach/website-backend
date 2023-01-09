@@ -22,7 +22,7 @@ export class GetTeamSquadFunction implements FirebaseFunction<
     private logger: Logger;
 
     public constructor(data: any, auth: AuthData | undefined) {
-        this.logger = Logger.start(!!data.verbose, 'GetTeamSquadFunction.constructor', { data, auth }, 'notice');
+        this.logger = Logger.start(data.verbose, 'GetTeamSquadFunction.constructor', { data, auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<GetTeamSquadFunction.Parameters>(
             {

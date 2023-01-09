@@ -30,7 +30,7 @@ export class SendContactMailFunction implements FirebaseFunction<
     });
 
     public constructor(data: any, auth: AuthData | undefined) {
-        this.logger = Logger.start(!!data.verbose, 'SendContactMailFunction.constructor', { data, auth }, 'notice');
+        this.logger = Logger.start(data.verbose, 'SendContactMailFunction.constructor', { data, auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
         const parameterParser = new ParameterParser<SendContactMailFunction.Parameters>(
             {

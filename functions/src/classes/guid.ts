@@ -39,7 +39,7 @@ export namespace guid {
             const v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
-        const logger = Logger.start(true, 'guid.newGuid');
+        const logger = Logger.start('none', 'guid.newGuid');
         return guid.fromString(guidString, logger);
     }
 }

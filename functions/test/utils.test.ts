@@ -8,12 +8,12 @@ import { arrayBuilder, convertToFunctionResultError, isFunctionsErrorCode, Json,
 import { expectHttpsError } from './utils';
 
 describe('utils', () => {
-    const logger = Logger.start(true, 'utils');
+    const logger = Logger.start('coloredVerbose', 'utils');
 
     it('log level color', () => {
-        expect(LogLevel.coloredText('debug', 'asdf')).to.be.equal('\x1b[33masdf\x1b[0m');
-        expect(LogLevel.coloredText('info', 'asdf')).to.be.equal('\x1b[31masdf\x1b[0m');
-        expect(LogLevel.coloredText('notice', 'asdf')).to.be.equal('\x1b[34masdf\x1b[0m');
+        expect(LogLevel.coloredText('debug', 'asdf', true)).to.be.equal('\x1b[33masdf\x1b[0m');
+        expect(LogLevel.coloredText('info', 'asdf', true)).to.be.equal('\x1b[31masdf\x1b[0m');
+        expect(LogLevel.coloredText('notice', 'asdf', true)).to.be.equal('\x1b[34masdf\x1b[0m');
     });
 
     describe('string builder', () => {

@@ -45,7 +45,7 @@ namespace ObjectClassType {
 }
 
 describe('ParameterParser', () => {
-    const logger = Logger.start(true, 'ParameterParserTest');
+    const logger = Logger.start('coloredVerbose', 'ParameterParserTest');
 
     function testParameterParser<Parameters>(
         parameterToParse: any,

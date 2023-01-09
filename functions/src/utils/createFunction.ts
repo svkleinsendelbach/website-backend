@@ -16,7 +16,7 @@ export function createFunction<
     return functions.region('europe-west1').https.onCall(async (data, context) => {
 
         // Get database
-        const logger = Logger.start(false, 'createFunction', undefined, 'notice');
+        const logger = Logger.start('none', 'createFunction', undefined, 'notice');
         if (typeof data.databaseType !== 'string') 
             throw httpsError('invalid-argument', 'Couldn\'t get database type.', logger);
         const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);

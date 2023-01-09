@@ -10,7 +10,7 @@ import { databaseUrl } from '../src/privateKeys';
 import { FiatShamirParameters } from '../src/classes/FiatShamirParameters';
 
 describe('classes builder', () => {
-    const logger = Logger.start(true, 'classes builder');
+    const logger = Logger.start('coloredVerbose', 'classes builder');
     
     describe('database type builder', () => {
         it('invalid value', () => {

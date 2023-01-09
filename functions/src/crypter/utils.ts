@@ -1,8 +1,5 @@
-/**
- * Bits of a byte.
- * @param { number } byte Byte to get bits from.
- * @return { number } Bits of specified byte.
- */
+import { webcrypto } from 'crypto';
+
 export function bits(byte: number): (0 | 1)[] {
     const totalBitsCount = 8;
     const bitsArray = Array<0 | 1>(totalBitsCount).fill(0);
@@ -16,23 +13,11 @@ export function bits(byte: number): (0 | 1)[] {
     return bitsArray;
 }
 
-/**
- *
- * @param { 0 | 1 } bit1
- * @param { 0 | 1 } bit2
- * @return { 0 | 1 }
- */
 export function xor(bit1: 0 | 1, bit2: 0 | 1): 0 | 1 {
-    if (bit1 == bit2) return 0;
-    else return 1;
+    return bit1 === bit2 ? 0 : 1;
 }
 
-/**
- *
- * @param { Iterator<0 | 1> } iterator
- * @return { Buffer }
- */
-export function bitIteratorToBuffer(iterator: Iterator<0 | 1>): Buffer {
+export function bitIteratorToBytes(iterator: Iterator<0 | 1>): Uint8Array {
     const bytes: number[] = [];
     let currentByte = 0;
     let index = 0;
@@ -47,41 +32,37 @@ export function bitIteratorToBuffer(iterator: Iterator<0 | 1>): Buffer {
             index = 0;
         }
     }
-    return Buffer.from(bytes);
+    return Uint8Array.from(bytes);
 }
 
-/**
- * Generates an utf-8 key with specified length.
- * @param { number } length Length of key to generate.
- * @return { string } Generated key.
- */
-export function randomKey(length: number): string {
-    let string = '';
-    for (let index = 0; index < length; index++)
-        string += String.fromCharCode(Math.random() * 93 + 33);
-    return string;
+export function randomBytes(length: number): Uint8Array {
+    const bytes = new Uint8Array(length);
+    webcrypto.getRandomValues(bytes);
+    return bytes;
 }
 
-/**
- * Encodes unishort buffer to string.
- * @param { buffer } buffer Buffer to encode.
- * @return { string } Encoded string.
- */
-export function unishortString(buffer: Buffer): string {
+export function unishortString(bytes: Uint8Array): string {
     let string = '';
-    for (const byte of buffer)
+    for (const byte of bytes)
         string += String.fromCharCode(byte);
     return string;
 }
 
-/**
- * Encodes unishort string to buffer.
- * @param { string } string String to encode.
- * @return { buffer } Encoded buffer.
- */
-export function unishortBuffer(string: string): Buffer {
+export function unishortBytes(string: string): Uint8Array {
     const bytes: number[] = [];
     for (let index = 0; index < string.length; index++)
         bytes.push(string.charCodeAt(index));
-    return Buffer.from(bytes);
+    return Uint8Array.from(bytes);
+}
+
+export function addPadding(bytes: Uint8Array): Uint8Array {
+    const missingLength = 16 - bytes.length % 16;
+    const padding = new Uint8Array(missingLength);
+    padding[0] = missingLength;
+    return Uint8Array.from([...padding, ...bytes]);
+}
+
+export function removePadding(bytes: Uint8Array): Uint8Array {
+    const missingLength = bytes[0];
+    return bytes.slice(missingLength);
 }

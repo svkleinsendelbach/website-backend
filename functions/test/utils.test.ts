@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { guid } from '../src/classes/guid';
+import { AnpfiffTeamParameter } from '../src/utils/anpfiffTeamParameter';
 import { Logger, LogLevel } from '../src/utils/Logger';
 import { Result } from '../src/utils/Result';
 import { StringBuilder } from '../src/utils/StringBuilder';
@@ -227,5 +228,11 @@ describe('utils', () => {
         ])).to.be.deep.equal([
             null, 6, null, null, 1, 3
         ]);
+    });
+
+    it('anpfiff team parameter type guard', () => {
+        expect(AnpfiffTeamParameter.Type.typeGuard('first-team')).to.be.true;
+        expect(AnpfiffTeamParameter.Type.typeGuard('second-team')).to.be.true;
+        expect(AnpfiffTeamParameter.Type.typeGuard('invalid-team')).to.be.false;
     });
 });

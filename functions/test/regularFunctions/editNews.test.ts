@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { sha512 } from 'sha512-crypt-ts';
 import { Crypter } from '../../src/crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
 import { signInTestUser, getCurrentUser, setDatabaseValue, callFunction, expectSuccess, signOutUser, existsDatabaseValue, expectFailed, getDatabaseValue } from '../utils';
@@ -7,7 +8,7 @@ describe('edit news', () => {
     beforeEach(async () => {
         await signInTestUser();
         const crypter = new Crypter(cryptionKeys);
-        const hashedUserId = Crypter.sha512(getCurrentUser()!.uid);
+        const hashedUserId = sha512.base64(getCurrentUser()!.uid);
         await setDatabaseValue(`users/authentication/websiteEditing/${hashedUserId}`, crypter.encodeEncrypt({
             state: 'authenticated',
             firstName: 'test',

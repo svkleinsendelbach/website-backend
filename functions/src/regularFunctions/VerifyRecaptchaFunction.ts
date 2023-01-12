@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 
 import { AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { recaptchaSecretKeys } from '../privateKeys';
+import { recaptchaSecretKey } from '../privateKeys';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 import { DatabaseType } from '../classes/DatabaseType';
 import { FirebaseFunction } from '../utils/FirebaseFunction';
@@ -27,7 +27,6 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
-                actionType: ParameterBuilder.guardBuilder('string', (value: string): value is 'contactForm' => value === 'contactForm'),
                 token: ParameterBuilder.trivialBuilder('string')
             },
             this.logger.nextIndent
@@ -39,28 +38,28 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<
     public async executeFunction(): Promise<VerifyRecaptchaFunction.ReturnType> {
         this.logger.log('VerifyRecaptchaFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
-        const url = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKeys[this.parameters.actionType]}&response=${this.parameters.token}`;
+        const url = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${this.parameters.token}`;
         return await (await fetch(url)).json();
     }
 }
 
 export namespace VerifyRecaptchaFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
-        actionType: 'contactForm',
         token: string
     }
 
     export type ReturnType = VerifyRecaptchaFunction.VerifyResponse;
 
     export interface VerifyResponse {
-      success: boolean;
-      challenge_ts: string;
-      hostname: string;
-      errorCodes?: string[];
+        success: boolean;
+        score: number;
+        action: string;
+        challenge_ts: string;
+        hostname: string;
+        errorCodes?: string[];
     }
 
     export type CallParameters = {
-        actionType: 'contactForm',
         token: string
     }
 }

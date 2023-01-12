@@ -13,21 +13,41 @@ export function createFunction<
 >(
     createFirebaseFunction: (data: any, auth: AuthData | undefined) => FFunction
 ): functions.HttpsFunction & functions.Runnable<any> {
-    return functions.region('europe-west1').https.onCall(async (data, context) => {
+    return functions
+        .region('europe-west1')
+        .https
+        .onCall(async (data, context) => {
 
-        // Get database
-        const logger = Logger.start('none', 'createFunction', undefined, 'notice');
-        if (typeof data.databaseType !== 'string') 
-            throw httpsError('invalid-argument', 'Couldn\'t get database type.', logger);
-        const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
+            // Get database
+            const logger = Logger.start('none', 'createFunction', undefined, 'notice');
+            if (typeof data.databaseType !== 'string') 
+                throw httpsError('invalid-argument', 'Couldn\'t get database type.', logger);
+            const databaseType = DatabaseType.fromString(data.databaseType, logger.nextIndent);
 
-        // Get result of function call
-        const result = await executeFunction(createFirebaseFunction(data, context.auth));
+            // Get result of function call
+            const result = await executeFunction(createFirebaseFunction(data, context.auth));
 
-        // Encrypt result
-        const crypter = new Crypter(cryptionKeys(databaseType));
-        return crypter.encodeEncrypt(result);
-    });
+            // Encrypt result
+            const crypter = new Crypter(cryptionKeys(databaseType));
+            return crypter.encodeEncrypt(result);
+        });
+}
+
+export function createSchedule<
+    FFunction extends FirebaseFunction<undefined, void>
+>(
+    schedule: string,
+    createFirebaseFunction: (context: functions.EventContext<Record<string, string>>) => FFunction
+): functions.CloudFunction<any> {
+    return functions
+        .region('europe-west1')
+        .pubsub
+        .schedule(schedule)
+        .timeZone('Europe/Berlin')
+        .onRun(async context => {
+            const firebaseFunction = createFirebaseFunction(context);
+            await firebaseFunction.executeFunction();
+        });
 }
 
 async function executeFunction<

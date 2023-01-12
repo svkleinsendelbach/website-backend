@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { createFunction } from './utils/createFunction';
+import { createFunction, createSchedule } from './utils/createFunction';
 
 import { GetEventsFunction } from './regularFunctions/GetEventsFunction';
 import { GetNewsFunction } from './regularFunctions/GetNewsFunction';
@@ -15,6 +15,7 @@ import { CheckUserAuthenticationFunction } from './regularFunctions/CheckUserAut
 import { GetUnauthenticatedUsersFunction } from './regularFunctions/GetUnauthenticatedUsersFunction';
 import { EditEventFunction } from './regularFunctions/EditEventFunction';
 import { GetTeamSquadFunction } from './regularFunctions/GetTeamSquadFunction';
+import { DailyCleanupFunction } from './regularFunctions/DailyCleanupFunction';
 
 admin.initializeApp();
 
@@ -43,5 +44,7 @@ export const v2_checkUserAuthentication = createFunction((data, auth) => new Che
 export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
 
 export const v2_getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
+
+export const v2_dailyCleanup = createSchedule('0 0 * * *', context => new DailyCleanupFunction(context));
 
 export const v2_deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));

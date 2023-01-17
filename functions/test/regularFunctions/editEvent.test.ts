@@ -1,15 +1,14 @@
 import { expect } from 'chai';
-import { sha512 } from 'sha512-crypt-ts';
 import { guid } from '../../src/classes/guid';
 import { Crypter } from '../../src/crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
-import { signInTestUser, getCurrentUser, setDatabaseValue, callFunction, expectSuccess, signOutUser, existsDatabaseValue, expectFailed, getDatabaseValue } from '../utils';
+import { signInTestUser, getCurrentUser, setDatabaseValue, callFunction, expectSuccess, signOutUser, existsDatabaseValue, expectFailed, getDecryptedDatabaseValue } from '../utils';
 
 describe('edit event', () => {
     beforeEach(async () => {
         await signInTestUser();
         const crypter = new Crypter(cryptionKeys);
-        const hashedUserId = sha512.base64(getCurrentUser()!.uid);
+        const hashedUserId = Crypter.sha512(getCurrentUser()!.uid);
         await setDatabaseValue(`users/authentication/websiteEditing/${hashedUserId}`, crypter.encodeEncrypt({
             state: 'authenticated',
             firstName: 'test',
@@ -75,7 +74,7 @@ describe('edit event', () => {
             }
         });
         expectSuccess(result).to.be.equal(undefined);
-        const databaseValue = await getDatabaseValue(`events/general/${eventId.guidString}`);
+        const databaseValue = await getDecryptedDatabaseValue(`events/general/${eventId.guidString}`);
         expect(databaseValue).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title'
@@ -144,7 +143,7 @@ describe('edit event', () => {
             }
         });
         expectSuccess(result).to.be.equal(undefined);
-        const databaseValue = await getDatabaseValue(`events/general/${eventId.guidString}`);
+        const databaseValue = await getDecryptedDatabaseValue(`events/general/${eventId.guidString}`);
         expect(databaseValue).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title2'

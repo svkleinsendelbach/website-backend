@@ -7,7 +7,6 @@ import { checkFiatShamir } from './fiatShamir';
 import { FirebaseDatabase } from './FirebaseDatabase';
 import { Logger } from './Logger';
 import { httpsError } from './utils';
-import { sha512 } from 'sha512-crypt-ts';
 
 export async function checkPrerequirements(
     parameters: {
@@ -51,7 +50,7 @@ export async function checkUserAuthentication(auth: AuthData | undefined, type: 
         throw httpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
 
     // Check if a user is authenticated
-    const hashedUserId = sha512.base64(auth.uid);
+    const hashedUserId = Crypter.sha512(auth.uid);
     const crypter = new Crypter(cryptionKeys(databaseType));
     const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${type}/${hashedUserId}`, databaseType);
     const snapshot = await reference.snapshot<string>();

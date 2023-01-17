@@ -5,6 +5,7 @@ import { CombineIterator } from './CombineIterator';
 import { bitIteratorToBytes, randomBytes, xor, unishortBytes, unishortString, addPadding, removePadding } from './utils';
 import { Json } from '../utils/utils';
 import { CBCEncryptor, CBCDecryptor } from 'aes-ts';
+import { sha512 as crypt_sha512 } from 'sha512-crypt-ts';
 
 export class Crypter {
     public constructor(
@@ -66,5 +67,10 @@ export namespace Crypter {
         encryptionKey: FixedLength<Uint8Array, 32>
         initialisationVector: FixedLength<Uint8Array, 16>
         vernamKey: FixedLength<Uint8Array, 32>
+    }
+
+    export function sha512(value: string): string {
+        const hashedValue = crypt_sha512.base64(value);
+        return hashedValue.replaceAll('/', '_');
     }
 }

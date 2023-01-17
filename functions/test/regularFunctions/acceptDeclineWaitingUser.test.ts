@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { sha512 } from 'sha512-crypt-ts';
 import { Crypter } from '../../src/crypter/Crypter';
 import { UserAuthentication } from '../../src/utils/checkPrerequirements';
 import { cryptionKeys } from '../privateKeys';
@@ -9,7 +8,7 @@ describe('accept decline waiting user', () => {
     beforeEach(async () => {
         await signInTestUser();
         const crypter = new Crypter(cryptionKeys);
-        const hashedUserId = sha512.base64(getCurrentUser()!.uid);
+        const hashedUserId = Crypter.sha512(getCurrentUser()!.uid);
         await setDatabaseValue(`users/authentication/websiteEditing/${hashedUserId}`, crypter.encodeEncrypt({
             state: 'authenticated',
             firstName: 'test',

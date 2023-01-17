@@ -11,6 +11,8 @@ import { News } from '../classes/News';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { httpsError, mapObject } from '../utils/utils';
 import { FiatShamirParameters } from '../classes/FiatShamirParameters';
+import { Crypter } from '../crypter/Crypter';
+import { cryptionKeys } from '../privateKeys';
 
 export class EditNewsFunction implements FirebaseFunction<
     EditNewsFunction.Parameters,
@@ -54,7 +56,8 @@ export class EditNewsFunction implements FirebaseFunction<
                 throw httpsError('invalid-argument', 'No news to set.', this.logger);
             if (this.parameters.editType.value === 'change' && !snapshot.exists)
                 throw httpsError('invalid-argument', 'Couldn\'t change not existing news.', this.logger);
-            await reference.set(mapObject(this.parameters.news, 'date', date => date.toISOString()));
+            const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
+            await reference.set(crypter.encodeEncrypt(mapObject(this.parameters.news, 'date', date => date.toISOString())));
         }
         return id;
     }

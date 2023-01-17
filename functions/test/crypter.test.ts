@@ -7,7 +7,6 @@ import { CombineIterator } from '../src/crypter/CombineIterator';
 import { Crypter } from '../src/crypter/Crypter';
 import { FixedLength } from '../src/crypter/FixedLength';
 import * as crypterTestData from './dataset/crypterTestData.json';
-import { sha512 } from 'sha512-crypt-ts';
 
 describe('Crypter', () => {
     describe('PseudoRandom', () => {
@@ -263,6 +262,6 @@ describe('Crypter', () => {
     });
 
     it('hash', () => {
-        expect(sha512.base64('lkjdasflnc')).to.be.equal('rbswGhojGpzw7EoB61dz3LpecUiFV7y0QHhO7xLHbgtPHhjsKxH6nbUg2p6B5CpSAa1hMzJKBfM8twldRbKj1g');
+        expect(Crypter.sha512('lkjdasflnc')).to.be.equal('rbswGhojGpzw7EoB61dz3LpecUiFV7y0QHhO7xLHbgtPHhjsKxH6nbUg2p6B5CpSAa1hMzJKBfM8twldRbKj1g');
     });
 });

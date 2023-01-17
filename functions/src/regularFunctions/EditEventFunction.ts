@@ -12,6 +12,8 @@ import { guid } from '../classes/guid';
 import { httpsError, mapObject } from '../utils/utils';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { FiatShamirParameters } from '../classes/FiatShamirParameters';
+import { Crypter } from '../crypter/Crypter';
+import { cryptionKeys } from '../privateKeys';
 
 export class EditEventFunction implements FirebaseFunction<
     EditEventFunction.Parameters,
@@ -57,7 +59,8 @@ export class EditEventFunction implements FirebaseFunction<
                 throw httpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
             if (this.parameters.editType.value === 'change' && !snapshot.exists)
                 throw httpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
-            await reference.set(mapObject(this.parameters.event, 'date', date => date.toISOString()));
+            const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
+            await reference.set(crypter.encodeEncrypt(mapObject(this.parameters.event, 'date', date => date.toISOString())));
         }
     }
 }

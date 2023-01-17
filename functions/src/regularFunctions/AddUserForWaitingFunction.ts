@@ -10,7 +10,6 @@ import { Crypter } from '../crypter/Crypter';
 import { FirebaseDatabase } from '../utils/FirebaseDatabase';
 import { cryptionKeys } from '../privateKeys';
 import { FiatShamirParameters } from '../classes/FiatShamirParameters';
-import { sha512 } from 'sha512-crypt-ts';
 
 export class AddUserForWaitingFunction implements FirebaseFunction<
     AddUserForWaitingFunction.Parameters,
@@ -41,7 +40,7 @@ export class AddUserForWaitingFunction implements FirebaseFunction<
     public async executeFunction(): Promise<AddUserForWaitingFunction.ReturnType> {
         this.logger.log('AddUserForWaitingFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth);         
-        const hashedUserId = sha512.base64(this.auth!.uid);
+        const hashedUserId = Crypter.sha512(this.auth!.uid);
         const crypter = new Crypter(cryptionKeys(this.parameters.databaseType));
         const reference = FirebaseDatabase.Reference.fromPath(`users/authentication/${this.parameters.type}/${hashedUserId}`, this.parameters.databaseType); 
         await reference.set(crypter.encodeEncrypt({

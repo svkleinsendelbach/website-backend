@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { httpsCallable } from 'firebase/functions';
-import { sha512 } from 'sha512-crypt-ts';
 import { DatabaseType } from '../../src/classes/DatabaseType';
 import { FiatShamirParameters } from '../../src/classes/FiatShamirParameters';
 import { guid } from '../../src/classes/guid';
@@ -146,7 +145,7 @@ describe('General', () => {
     
     it('check user authentication unauthenticated', async () => {
         const crypter = new Crypter(cryptionKeys);
-        await setDatabaseValue(`users/authentication/websiteEditing/${sha512.base64(getCurrentUser()!.uid)}`, crypter.encodeEncrypt({
+        await setDatabaseValue(`users/authentication/websiteEditing/${Crypter.sha512(getCurrentUser()!.uid)}`, crypter.encodeEncrypt({
             state: 'unauthenticated',
             firstName: 'first',
             lastName: 'last'
@@ -159,7 +158,7 @@ describe('General', () => {
     
     it('authenication valid', async () => {
         const crypter = new Crypter(cryptionKeys);
-        await setDatabaseValue(`users/authentication/websiteEditing/${sha512.base64(getCurrentUser()!.uid)}`, crypter.encodeEncrypt({
+        await setDatabaseValue(`users/authentication/websiteEditing/${Crypter.sha512(getCurrentUser()!.uid)}`, crypter.encodeEncrypt({
             state: 'authenticated',
             firstName: 'first',
             lastName: 'last'

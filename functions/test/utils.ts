@@ -27,6 +27,7 @@ import { modularPower } from '../src/utils/utils';
 import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
 import { GetTeamSquadFunction } from '../src/regularFunctions/GetTeamSquadFunction';
 import { Logger } from '../src/utils/Logger';
+import { DisableNewsFunction } from '../src/regularFunctions/DisableNewsFunction';
 
 const app = initializeApp(firebaseConfig);
 export const functions = getFunctions(app, 'europe-west1');
@@ -59,6 +60,7 @@ export async function callFunction(functionName: 'v2_getNews', parameters: GetNe
 export async function callFunction(functionName: 'v2_getSingleNews', parameters: GetSingleNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetSingleNewsFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetUnauthenticatedUsersFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_getTeamSquad', parameters: GetTeamSquadFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetTeamSquadFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_disableNews', parameters: DisableNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<DisableNewsFunction.ReturnType>>
 export async function callFunction<Params, ResultType>(functionName: string, parameters: Params): Promise<FirebaseFunction.ResultType<ResultType>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);
@@ -252,6 +254,12 @@ export async function getDecryptedDatabaseValue<T>(referencePath: string): Promi
 export async function setDatabaseValue(referencePath: string, value: FirebaseDatabase.ValueType) {
     const reference = ref(database, referencePath || undefined);
     await set(reference, value);
+}
+
+export async function setEncryptedDatabaseValue(referencePath: string, value: FirebaseDatabase.ValueType) {
+    const crypter = new Crypter(cryptionKeys);
+    const encryptedValue = crypter.encodeEncrypt(value);
+    await setDatabaseValue(referencePath, encryptedValue);
 }
 
 export async function existsDatabaseValue(referencePath: string): Promise<boolean> {

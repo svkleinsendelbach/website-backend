@@ -28,7 +28,8 @@ export class GetNewsFunction implements FirebaseFunction<
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
-                numberNews: ParameterBuilder.optionalBuilder(ParameterBuilder.trivialBuilder('number'))
+                numberNews: ParameterBuilder.optionalBuilder(ParameterBuilder.trivialBuilder('number')),
+                alsoDisabled: ParameterBuilder.optionalBuilder(ParameterBuilder.trivialBuilder('boolean'))
             },
             this.logger.nextIndent
         );
@@ -48,7 +49,8 @@ export class GetNewsFunction implements FirebaseFunction<
             .entries<string>(newsSnapshot.value)
             .compactMap<News.ReturnType>(entry => {
                 const news: Omit<News, 'id'> = crypter.decryptDecode(entry[1]);
-                if (news.disabled) return undefined;
+                if (!(this.parameters.alsoDisabled ?? false) && news.disabled) 
+                    return undefined;
                 return {
                     ...news,
                     date: new Date(news.date).toISOString(),
@@ -75,6 +77,7 @@ export class GetNewsFunction implements FirebaseFunction<
 export namespace GetNewsFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
         numberNews?: number
+        alsoDisabled?: boolean
     }
 
     export interface ReturnType {
@@ -84,5 +87,6 @@ export namespace GetNewsFunction {
     
     export type CallParameters = {
         numberNews?: number
+        alsoDisabled?: boolean
     }
 }

@@ -30,34 +30,65 @@ describe('get news', () => {
     it('get news', async () => {
         const news3 = await addNews(3, false);
         const news4 = await addNews(4, false);
-        await addNews(5, true);
+        const news5 = await addNews(5, true);
         const news1 = await addNews(1, false);
-        await addNews(2, true);
+        const news2 = await addNews(2, true);
         const result1 = await callFunction('v2_getNews', {});
         expectSuccess(result1).to.be.deep.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
         const result2 = await callFunction('v2_getNews', {
-            numberNews: 5
+            alsoDisabled: true
         });
         expectSuccess(result2).to.be.deep.equal({
             hasMore: false,
-            news: [news4, news3, news1]
+            news: [news5, news4, news3, news2, news1]
         });
         const result3 = await callFunction('v2_getNews', {
-            numberNews: 3
+            numberNews: 5
         });
         expectSuccess(result3).to.be.deep.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
         const result4 = await callFunction('v2_getNews', {
-            numberNews: 1
+            numberNews: 5,
+            alsoDisabled: true
         });
         expectSuccess(result4).to.be.deep.equal({
+            hasMore: false,
+            news: [news5, news4, news3, news2, news1]
+        });
+        const result5 = await callFunction('v2_getNews', {
+            numberNews: 3
+        });
+        expectSuccess(result5).to.be.deep.equal({
+            hasMore: false,
+            news: [news4, news3, news1]
+        });
+        const result6 = await callFunction('v2_getNews', {
+            numberNews: 3,
+            alsoDisabled: true
+        });
+        expectSuccess(result6).to.be.deep.equal({
+            hasMore: true,
+            news: [news5, news4, news3]
+        });
+        const result7 = await callFunction('v2_getNews', {
+            numberNews: 1
+        });
+        expectSuccess(result7).to.be.deep.equal({
             hasMore: true,
             news: [news4]
+        });
+        const result8 = await callFunction('v2_getNews', {
+            numberNews: 1,
+            alsoDisabled: true
+        });
+        expectSuccess(result8).to.be.deep.equal({
+            hasMore: true,
+            news: [news5]
         });
     });
 });

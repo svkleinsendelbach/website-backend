@@ -17,6 +17,7 @@ import { EditEventFunction } from './regularFunctions/EditEventFunction';
 import { GetTeamSquadFunction } from './regularFunctions/GetTeamSquadFunction';
 import { DailyCleanupFunction } from './regularFunctions/DailyCleanupFunction';
 import { DisableNewsFunction } from './regularFunctions/DisableNewsFunction';
+import { BfvLivetickerFunction } from './regularFunctions/BfvLivetickerFunction';
 
 admin.initializeApp();
 
@@ -47,6 +48,8 @@ export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new Get
 export const v2_getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
 
 export const v2_disableNews = createFunction((data, auth) => new DisableNewsFunction(data, auth));
+
+export const v2_bfvLiveticker = createFunction((data, auth) => new BfvLivetickerFunction(data, auth));
 
 export const v2_dailyCleanup = createSchedule('0 0 * * *', context => new DailyCleanupFunction(context));
 

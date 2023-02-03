@@ -16,6 +16,10 @@ export class HtmlDom {
     public nodesByClass(className: string): HtmlNodeList {
         return new HtmlNodeList(this.dom.getElementsByClassName(className));
     }
+
+    public nodeByTag(tagName: string): HtmlNodeList {
+        return new HtmlNodeList(this.dom.getElementsByTagName(tagName));
+    }
 }
 
 export class HtmlNode {
@@ -37,6 +41,11 @@ export class HtmlNode {
     public nodesByClass(className: string): HtmlNodeList {
         if (this.node === null) return new HtmlNodeList();
         return new HtmlNodeList(this.node.getElementsByClassName(className));
+    }
+
+    public nodesByTag(tagName: string): HtmlNodeList {
+        if (this.node === null) return new HtmlNodeList();
+        return new HtmlNodeList(this.node.getElementsByTagName(tagName));
     }
 
     public get children(): HtmlNodeList {
@@ -67,6 +76,11 @@ export class HtmlNode {
         return new HtmlValue(this.node.getAttribute(key));
     }
 
+    public get attributes(): { name: string, value: string }[] | null {
+        if (this.node === null) return null;
+        return this.node.attributes as any;
+    }
+
     public get description(): string {
         return JSON.stringify(this.nodeObject, undefined, 2);
     }
@@ -79,6 +93,7 @@ export class HtmlNode {
         return this.node.childNodes.map((node, index) => {
             return {
                 index: index,
+                tag: node.nodeName,
                 id: node.getAttribute('id') ?? undefined,
                 class: node.getAttribute('class') ?? undefined,
                 src: node.getAttribute('src') ?? undefined,
@@ -110,6 +125,11 @@ export class HtmlNodeList {
     public forEach(callbackFn: (node: HtmlNode, index: number) => void): void {
         if (this.nodes === null) return;
         this.nodes.map(node => new HtmlNode(node)).forEach(callbackFn);
+    }
+
+    public at(index: number): HtmlNode {
+        if (this.nodes === null) return new HtmlNode();
+        return new HtmlNode(this.nodes[index]);
     }
 }
 

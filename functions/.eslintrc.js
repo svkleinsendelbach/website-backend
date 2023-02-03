@@ -46,6 +46,7 @@ module.exports = {
         'camelcase': 'off',
         'no-constant-condition': 'off',
         'eol-last': 'warn',
-        'spaced-comment': 'off'
+        'spaced-comment': 'off',
+        '@typescript-eslint/no-inferrable-types': 'off'
     }
 };

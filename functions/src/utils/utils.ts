@@ -137,6 +137,24 @@ export function modularPower(base: bigint, exponent: bigint, modulus: bigint) {
     return result;
 }
 
+export type Nullable<T> = {
+    [P in keyof T]: Nullable<T[P]> | null;
+};
+
+export function ensureNotNullable<T>(nullableValue: Nullable<T>, previousKeyPath: string = ''): T {
+    if (nullableValue === null)
+        throw new Error(`Ensure not null failed: ${previousKeyPath} is null.`);
+    if (typeof nullableValue !== 'object' || Array.isArray(nullableValue))
+        return nullableValue as T;
+    const value: T = {} as T;
+    for (const entry of Object.entries(nullableValue)) {
+        if (entry[1] === null)
+            throw new Error(`Ensure not null failed: ${previousKeyPath}/${entry[0]} is null.`);
+        value[entry[0] as keyof T] = ensureNotNullable(entry[1] as any, `${previousKeyPath}/${entry[0]}`);
+    }
+    return value;
+}
+
 declare global {
     export interface String {
 

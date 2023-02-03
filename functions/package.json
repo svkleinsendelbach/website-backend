@@ -9,7 +9,7 @@
     "start": "npm run shell",
     "deploy": "cd .. && firebase deploy --only functions && cd functions",
     "logs": "firebase functions:log",
-    "test": "mocha --reporter spec -r ts-node/register --timeout 60000",
+    "test": "mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0",
     "testFunctions": "npm run test test/**Functions/*.test.ts",
     "testUtils": "npm run test test/*.test.ts",
     "testAll": "npm run test test/**/*.test.ts test/*.test.ts",

@@ -28,6 +28,7 @@ import { FirebaseDatabase } from '../src/utils/FirebaseDatabase';
 import { GetTeamSquadFunction } from '../src/regularFunctions/GetTeamSquadFunction';
 import { Logger } from '../src/utils/Logger';
 import { DisableNewsFunction } from '../src/regularFunctions/DisableNewsFunction';
+import { BfvLivetickerFunction } from '../src/regularFunctions/BfvLivetickerFunction';
 
 const app = initializeApp(firebaseConfig);
 export const functions = getFunctions(app, 'europe-west1');
@@ -61,6 +62,7 @@ export async function callFunction(functionName: 'v2_getSingleNews', parameters:
 export async function callFunction(functionName: 'v2_getUnauthenticatedUsers', parameters: GetUnauthenticatedUsersFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetUnauthenticatedUsersFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_getTeamSquad', parameters: GetTeamSquadFunction.CallParameters): Promise<FirebaseFunction.ResultType<GetTeamSquadFunction.ReturnType>>
 export async function callFunction(functionName: 'v2_disableNews', parameters: DisableNewsFunction.CallParameters): Promise<FirebaseFunction.ResultType<DisableNewsFunction.ReturnType>>
+export async function callFunction(functionName: 'v2_bfvLiveticker', parameters: BfvLivetickerFunction.CallParameters): Promise<FirebaseFunction.ResultType<BfvLivetickerFunction.ReturnType>>
 export async function callFunction<Params, ResultType>(functionName: string, parameters: Params): Promise<FirebaseFunction.ResultType<ResultType>> {
     const databaseType = new DatabaseType('testing');
     const crypter = new Crypter(cryptionKeys);

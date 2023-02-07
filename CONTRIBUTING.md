@@ -8,7 +8,7 @@
 
 * If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/svkleinsendelbach/website-backend/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
-* For more detailed information on submitting a bug report and creating an issue, visit our [reporting guidelines]([https://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#reporting-an-issue](https://github.com/svkleinsendelbach/website-backend#bug-report-and-feature-request)).
+* For more detailed information on submitting a bug report and creating an issue, visit our [reporting guidelines](https://github.com/svkleinsendelbach/website-backend#bug-report-and-feature-request).
 
 #### **Did you write a patch that fixes a bug?**
 

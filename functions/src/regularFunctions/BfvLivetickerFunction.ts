@@ -11,6 +11,7 @@ import { HtmlDom } from '../WebsiteExtractor/HtmlNode';
 import DOMParser from 'dom-parser';
 import { ensureNotNullable, httpsError } from '../utils/utils';
 import fetch from 'cross-fetch';
+import { checkPrerequirements } from '../utils/checkPrerequirements';
 
 export class BfvLivetickerFunction implements FirebaseFunction<
     BfvLivetickerFunction.Parameters,
@@ -38,7 +39,7 @@ export class BfvLivetickerFunction implements FirebaseFunction<
 
     public async executeFunction(): Promise<BfvLivetickerFunction.ReturnType> {
         this.logger.log('BfvLivetickerFunction.executeFunction', {}, 'info');
-        // TODO await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
+        await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
 
         const gameInfo = await this.fetchGameInfoFromGamePage(this.parameters.gameId);
         const livetickerIds = await this.fetchLivetickerIdsFromGamePage(this.parameters.gameId);

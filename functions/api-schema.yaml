@@ -1,0 +1,1302 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/stevenkellner/svkleinsendelbach-website-backend/1.0.0
+info:
+  version: "1.0.0"
+  title: svkleinsendelbach-website-backend
+  description: The API for SV Kleinsendelbach website
+paths:
+  /v2_acceptDeclineWaitingUser:
+    post:
+      tags: 
+        - Backend v2
+      description: Accept / decline waiting user.
+      operationId: v2_acceptDeclineWaitingUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - type
+                    - hashedUserId
+                    - action
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      $ref: '#/components/schemas/UserAuthenticationType'
+                    hashedUserId:
+                      type: string
+                      description: Hashed user id of the user to accept or decline.
+                    action:
+                      type: string
+                      enum:
+                        - accept
+                        - decline
+                      description: Specifies whether accept or decline waiting user.
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'   
+  /v2_addUserForWaiting:
+    post:
+      tags:
+        - Backend v2
+      description: Add a user to the waiting users.
+      operationId: v2_addUserForWaiting
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - type
+                    - firstName
+                    - lastName
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      $ref: '#/components/schemas/UserAuthenticationType'
+                    firstName:
+                      type: string
+                      description: First name of the user to add.
+                    lastName:
+                      type: string
+                      description: Last name of the user to add.
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'   
+  /v2_bfvLiveticker:
+    post:
+      tags:
+        - Backend v2
+      description: Get the liveticker of specified game from bfv.de.
+      operationId: v2_bfvLiveticker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - gameId
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    gameId:
+                      type: string
+                      description: Id of the game to get liveticker from.
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                type: object
+                required:
+                  - id
+                  - competition
+                  - result
+                  - date
+                  - homeTeam
+                  - awayTeam
+                  - livetickers
+                properties:
+                  id: 
+                    type: string
+                  competition: 
+                    type: object
+                    required:
+                      - name
+                      - link
+                      - gameDay
+                    properties:
+                      name:
+                        type: string
+                      link:
+                        type: string
+                      gameDay:
+                        type: number
+                  result:
+                    type: object
+                    required:
+                      - home
+                      - away
+                    properties:
+                      home:
+                        type: number
+                      away:
+                        type: number
+                  date:
+                    type: string
+                  homeTeam:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - imageId
+                    properties:
+                      id: 
+                        type: string
+                      name:
+                        type: string
+                      imageId:
+                        type: string
+                  awayTeam:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - imageId
+                    properties:
+                      id: 
+                        type: string
+                      name:
+                        type: string
+                      imageId:
+                        type: string
+                  adress:
+                    type: string
+                  adressDescription:
+                    type: string
+                  livetickers:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - loadNew
+                        - isModifiedSinceTimestamp
+                        - results
+                      properties:
+                        id:
+                          type: string
+                        loadNew:
+                          type: boolean
+                        isModifiedSinceTimestamp:
+                          type: string
+                        results:
+                          type: array
+                          items:
+                            oneOf:
+                              - $ref: '#/components/schemas/BfvLivetickerResultComment'
+                              - $ref: '#/components/schemas/BfvLivetickerResultSection'
+                              - $ref: '#/components/schemas/BfvLivetickerResultTitledResult'
+                              - $ref: '#/components/schemas/BfvLivetickerResultGoal'
+                              - $ref: '#/components/schemas/BfvLivetickerResultSubstitute'
+                              - $ref: '#/components/schemas/BfvLivetickerResultCard'
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'  
+  /v2_checkUserAuthentication:
+    post:
+      tags: 
+        - Backend v2
+      description: Check user authentication of specified user.
+      operationId: v2_checkUserAuthentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - type
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      $ref: '#/components/schemas/UserAuthenticationType'
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'  
+  /v2_disableNews:
+    post:
+      tags: 
+        - Backend v2
+      description: Disable / enable specifed news.
+      operationId: v2_disableNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - editType
+                    - id
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - disable
+                        - enable
+                      description: Specifies whether disable or enable news.
+                    id:
+                      type: string
+                      description: Id of news to disable / enable,
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'
+  /v2_editEvent:
+    post:
+      tags: 
+        - Backend v2
+      description: Edit an event.
+      operationId: v2_editEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - editType
+                    - groupId
+                    - eventId
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    editType:
+                      $ref: '#/components/schemas/EditType'
+                    groupId:
+                      $ref: '#/components/schemas/EventGroupId'
+                    eventId:
+                      $ref: '#/components/schemas/Guid'
+                    event: 
+                      $ref: '#/components/schemas/Event'
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'
+  /v2_editNews:
+    post:
+      tags: 
+        - Backend v2
+      description: Edit a news.
+      operationId: v2_editNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - editType
+                    - newsId
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    editType:
+                      $ref: '#/components/schemas/EditType'
+                    newsId:
+                      type: string
+                    event: 
+                      $ref: '#/components/schemas/Event'
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError'   
+  /v2_getEvents:
+    post:
+      tags: 
+        - Backend v2
+      description: Get events of specified event group ids.
+      operationId: v2_getEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - groupIds
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    groupIds:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/EventGroupId'
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  type: object
+                  required:
+                    - groupId
+                    - events
+                  properties:
+                    groupId:
+                      $ref: '#/components/schemas/EventGroupId'
+                    events:
+                      type: array
+                      items:
+                        type: 
+                          $ref: '#/components/schemas/Event'
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError' 
+  /v2_getNews:
+    post:
+      tags: 
+        - Backend v2
+      description: Get news.
+      operationId: v2_getNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    numberNews:
+                      type: number
+                    alsoDisabled:
+                      type: boolean
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                type: object
+                required:
+                  - news
+                  - hasMore
+                properties:
+                  news:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/News'
+                  hasMore:
+                    type: boolean
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError' 
+  /v2_getSingleNews:
+    post:
+      tags: 
+        - Backend v2
+      description: Get news with specified id.
+      operationId: v2_getSingleNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - newsId
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    newsId:
+                      type: string
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/News'
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError' 
+  /v2_getTeamSquad:
+    post:
+      tags: 
+        - Backend v2
+      description: Get team squad from anpfiff.info.
+      operationId: v2_getTeamSquad
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - type
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - first-team
+                        - second-team
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                type: object
+                required:
+                  - squad
+                  - coach
+                  - stab
+                properties:
+                  squad:
+                    type: object
+                    required:
+                      - goalkeeper
+                      - defence
+                      - midfield
+                      - offence
+                      - notSpecified
+                    properties:
+                      goalkeeper:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamSquadPerson'
+                      defence:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamSquadPerson'
+                      midfield:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamSquadPerson'
+                      offence:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamSquadPerson'
+                      notSpecified:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamSquadPerson'
+                  coach:
+                    type: object
+                    nullable: true
+                    required:
+                      - imageId
+                      - name
+                      - personParameters
+                      - age
+                    properties:
+                      imageId:
+                        type: number
+                        nullable: true
+                      name:
+                        type: string
+                        nullable: true
+                      personParameters:
+                        type: object
+                        nullable: true
+                        required: 
+                          - spielkreis
+                          - personId
+                        properties:
+                          spielkreis:
+                            type: number
+                          personId:
+                            type: number
+                      age:
+                        type: number
+                        nullable: true
+                  stab:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - imageId
+                        - function
+                        - name
+                        - personParameters
+                    properties:
+                      imageId:
+                        type: number
+                        nullable: true
+                      function:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                        nullable: true
+                      personParameters:
+                        type: object
+                        nullable: true
+                        required: 
+                          - spielkreis
+                          - personId
+                        properties:
+                          spielkreis:
+                            type: number
+                          personId:
+                            type: number
+
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError' 
+  /v2_getUnauthenticatedUsers:
+    post:
+      tags: 
+        - Backend v2
+      description: Get all unautheticated users.
+      operationId: v2_getUnauthenticatedUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - databaseType
+                - parameters
+              properties:
+                databaseType:
+                  $ref: '#/components/schemas/DatabaseType'
+                parameters:
+                  type: object
+                  description: Parameters of this api. Have to be encoded and encrypted to string.
+                  required:
+                    - type
+                    - databaseType
+                    - fiatShamirParameters
+                  properties:
+                    type:
+                      $ref: '#/components/schemas/UserAuthenticationType'
+                    databaseType:
+                      $ref: '#/components/schemas/DatabaseType'
+                    fiatShamirParameters:
+                      $ref: '#/components/schemas/FiatShamirParameters'
+      responses:
+        'success':
+          description: Function successfully executed.
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  type: object
+                  required: 
+                    - hashedUserId
+                    - firstName
+                    - lastName
+                  properties:
+                    hashedUserId:
+                      type: string
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+        'failure':
+          description: Function failed with an error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/FirebaseFunctionError' 
+components:
+  schemas:
+    BigInt:
+      type: string
+      format: bigint
+      example: 99#bigint
+      description: Representation of a bigint (javascript).
+    Guid:
+      type: string
+      format: uuid
+      example: 0729A580-2240-41E6-9EB5-0002A5D5C51B
+      description: Representation of a guid.
+    DatabaseType:
+      type: string
+      enum:
+        - release
+        - debug
+        - testing
+      description: Representation of the type used database.
+    UserAuthenticationType:
+      type: string
+      enum:
+        - websiteEditing
+      description: Type of a user authentication.
+    FiatShamirParameters:
+      type: object
+      required:
+        - identifier
+        - cs
+      description: Parameters that contains the properties for fiat-shamir authentication.
+      properties:
+        identifier: 
+          $ref: '#/components/schemas/Guid'
+        cs:
+          type: array
+          items:
+            $ref: '#/components/schemas/BigInt'
+          minItems: 32
+          maxItems: 32
+          description: In fiat-shamir authentication used c-values.
+    FirebaseFunctionError:
+      type: object
+      required:
+        - code
+        - message
+      description: Error throws if function execution failed.
+      properties:
+        code:
+          $ref: '#/components/schemas/FirebaseFunctionErrorCode'
+        message:
+          type: string
+        details:
+          oneOf:
+            - type: string
+            - type: object
+        stack:
+          type: string
+    FirebaseFunctionErrorCode:
+      type: string
+      description: Code of the error throws if function execution failed.
+      enum:
+        - ok
+        - cancelled
+        - unknown
+        - invalid-argument
+        - deadline-exceeded
+        - not-found
+        - already-exists
+        - permission-denied
+        - resource-exhausted
+        - failed-precondition
+        - aborted
+        - out-of-range
+        - unimplemented
+        - internal
+        - unavailable
+        - data-loss
+        - unauthenticated
+    BfvLivetickerResultComment:
+      type: object
+      required: 
+        - type
+        - resultLikes
+        - text
+        - time
+        - reportLink
+      properties:
+        type:
+          type: string
+          enum:
+            - comment
+        resultLikes:
+          type: object
+          required:
+            - likes
+            - liked
+            - likeApiRoute
+            - unlikeApiRoute
+          properties:
+            likes:
+              type: number
+            liked:
+              type: boolean
+            likeApiRoute:
+              type: string
+            unlikeApiRoute:
+              type: string
+        text:
+          type: string
+          nullable: true
+        time:
+          type: number
+          nullable: true
+        reportLink:
+          type: string
+          nullable: true
+    BfvLivetickerResultSection:
+      type: object
+      required: 
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          enum:
+            - section
+        text:
+          type: string
+    BfvLivetickerResultTitledResult:
+      type: object
+      required: 
+        - type
+        - resultLikes
+        - text
+        - time
+        - reportLink
+        - headline
+      properties:
+        type:
+          type: string
+          enum:
+            - whistle
+            - corner
+            - penalty
+            - ownGoal
+            - time
+            - specialAction
+            - freeKick
+            - shotOnGoal
+        resultLikes:
+          type: object
+          required:
+            - likes
+            - liked
+            - likeApiRoute
+            - unlikeApiRoute
+          properties:
+            likes:
+              type: number
+            liked:
+              type: boolean
+            likeApiRoute:
+              type: string
+            unlikeApiRoute:
+              type: string
+        text:
+          type: string
+          nullable: true
+        time:
+          type: number
+          nullable: true
+        reportLink:
+          type: string
+          nullable: true
+        headline:
+          type: string
+          nullable: true
+    BfvLivetickerResultGoal:
+      type: object
+      required: 
+        - type
+        - resultLikes
+        - text
+        - time
+        - reportLink
+        - headline
+        - team
+        - player
+        - result
+      properties:
+        type:
+          type: string
+          enum:
+            - goal
+            - penaltyGoal
+        resultLikes:
+          type: object
+          required:
+            - likes
+            - liked
+            - likeApiRoute
+            - unlikeApiRoute
+          properties:
+            likes:
+              type: number
+            liked:
+              type: boolean
+            likeApiRoute:
+              type: string
+            unlikeApiRoute:
+              type: string
+        text:
+          type: string
+          nullable: true
+        time:
+          type: number
+          nullable: true
+        reportLink:
+          type: string
+          nullable: true
+        headline:
+          type: string
+          nullable: true
+        team:
+          type: string
+          enum:
+            - home
+            - away
+        player:
+          type: object
+          required: 
+            - id
+            - name
+            - number
+          properties:
+            id: 
+              type: string
+            name: 
+              type: string
+            number: 
+              type: number
+        result:
+          type: object
+          required: 
+            - home
+            - away
+          properties:
+            home: 
+              type: number
+            away:
+              type: number
+    BfvLivetickerResultSubstitute:
+      type: object
+      required: 
+        - type
+        - resultLikes
+        - text
+        - time
+        - reportLink
+        - headline
+        - team
+        - playerIn
+        - playerOut
+      properties:
+        type:
+          type: string
+          enum:
+            - substitute
+        resultLikes:
+          type: object
+          required:
+            - likes
+            - liked
+            - likeApiRoute
+            - unlikeApiRoute
+          properties:
+            likes:
+              type: number
+            liked:
+              type: boolean
+            likeApiRoute:
+              type: string
+            unlikeApiRoute:
+              type: string
+        text:
+          type: string
+          nullable: true
+        time:
+          type: number
+          nullable: true
+        reportLink:
+          type: string
+          nullable: true
+        headline:
+          type: string
+          nullable: true
+        team:
+          type: string
+          enum:
+            - home
+            - away
+        playerIn:
+          type: object
+          required: 
+            - id
+            - name
+            - number
+          properties:
+            id: 
+              type: string
+            name: 
+              type: string
+            number: 
+              type: number
+        playerOut:
+          type: object
+          required: 
+            - id
+            - name
+            - number
+          properties:
+            id: 
+              type: string
+            name: 
+              type: string
+            number: 
+              type: number
+    BfvLivetickerResultCard:
+      type: object
+      required: 
+        - type
+        - resultLikes
+        - text
+        - time
+        - reportLink
+        - headline
+        - team
+        - player
+        - entries
+      properties:
+        type:
+          type: string
+          enum:
+            - yellowCard
+            - secondYellowCard
+            - redCard
+        resultLikes:
+          type: object
+          required:
+            - likes
+            - liked
+            - likeApiRoute
+            - unlikeApiRoute
+          properties:
+            likes:
+              type: number
+            liked:
+              type: boolean
+            likeApiRoute:
+              type: string
+            unlikeApiRoute:
+              type: string
+        text:
+          type: string
+          nullable: true
+        time:
+          type: number
+          nullable: true
+        reportLink:
+          type: string
+          nullable: true
+        headline:
+          type: string
+          nullable: true
+        team:
+          type: string
+          enum:
+            - home
+            - away
+        player:
+          type: object
+          required: 
+            - id
+            - name
+            - number
+          properties:
+            id: 
+              type: string
+            name: 
+              type: string
+            number: 
+              type: number
+        entries:
+          type: object
+          nullable: true
+          required: 
+            - games
+            - goals
+            - yellowCards
+            - secondYellowCards
+            - redCards
+          properties:
+            games:
+              type: string
+            goals:
+              type: string
+            yellowCards:
+              type: string
+            secondYellowCards:
+              type: string
+            redCards:
+              type: string
+    EditType:
+      type: string
+      enum: 
+        - add
+        - change
+        - remove
+    EventGroupId:
+      type: string
+      enum: 
+        - general
+        - football-adults/general
+        - football-adults/first-team
+        - football-adults/second-team
+        - football-adults/ah-team
+        - football-youth/general
+        - football-youth/c-youth
+        - football-youth/e-youth
+        - football-youth/f-youth
+        - football-youth/g-youth
+        - gymnastics
+        - dancing
+    Event:
+      type: object
+      required:
+        - id
+        - date
+        - title
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        link:
+          type: string
+    News:
+      type: object
+      required:
+        - id
+        - title
+        - date
+        - newsUrl
+        - disabled
+        - thumbnailUrl
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        date: 
+          type: string
+        shortDescription:
+          type: string
+        newsUrl:
+          type: string
+        disabled:
+          type: boolean
+        thumbnailUrl:
+          type: string
+    TeamSquadPerson:
+      type: object
+      required:
+        - imageId
+        - firstName
+        - lastName
+        - personParameters
+        - age
+        - countInSquad
+        - goals
+        - assists
+      properties:
+        imageId:
+          type: number
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        personParameters:
+          type: object
+          nullable: true
+          required: 
+            - spielkreis
+            - personId
+          properties:
+            spielkreis:
+              type: number
+            personId:
+              type: number
+        age:
+          type: number
+          nullable: true
+        countInSquad:
+          type: number
+          nullable: true
+        goals:
+          type: number
+          nullable: true
+        assists:
+          type: number
+          nullable: true

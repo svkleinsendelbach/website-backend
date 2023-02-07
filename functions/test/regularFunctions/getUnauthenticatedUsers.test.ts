@@ -17,7 +17,7 @@ describe('get unauthenticated users', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
@@ -38,7 +38,7 @@ describe('get unauthenticated users', () => {
     }
 
     it('empty users', async () => {
-        const result = await callFunction('v2_getUnauthenticatedUsers', {
+        const result = await callFunction('getUnauthenticatedUsers', {
             type: 'websiteEditing'
         });
         expectSuccess(result).to.be.deep.equal([]);
@@ -48,7 +48,7 @@ describe('get unauthenticated users', () => {
         await addUser(1, 'authenticated');
         await addUser(2, 'authenticated');
         await addUser(3, 'authenticated');
-        const result = await callFunction('v2_getUnauthenticatedUsers', {
+        const result = await callFunction('getUnauthenticatedUsers', {
             type: 'websiteEditing'
         });
         expectSuccess(result).to.be.deep.equal([]);
@@ -58,7 +58,7 @@ describe('get unauthenticated users', () => {
         const user1 = await addUser(1, 'unauthenticated');
         const user2 = await addUser(2, 'unauthenticated');
         const user3 = await addUser(3, 'unauthenticated');
-        const result = await callFunction('v2_getUnauthenticatedUsers', {
+        const result = await callFunction('getUnauthenticatedUsers', {
             type: 'websiteEditing'
         });
         expectSuccess(result).to.be.deep.equal([
@@ -73,7 +73,7 @@ describe('get unauthenticated users', () => {
         const user4 = await addUser(4, 'unauthenticated');
         await addUser(5, 'authenticated');
         await addUser(6, 'authenticated');
-        const result = await callFunction('v2_getUnauthenticatedUsers', {
+        const result = await callFunction('getUnauthenticatedUsers', {
             type: 'websiteEditing'
         });
         expectSuccess(result).to.be.deep.equal([

@@ -16,13 +16,13 @@ describe('edit news', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
 
     it('Remove not existing news', async () => {
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'remove',
             id: 'news_id',
             news: undefined
@@ -36,7 +36,7 @@ describe('edit news', () => {
             title: 'title'
         });
         expect(await existsDatabaseValue('news/news_id')).to.be.true;
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'remove',
             id: 'news_id',
             news: undefined
@@ -46,7 +46,7 @@ describe('edit news', () => {
     });
     
     it('Add news not given over', async () => {
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'add',
             id: 'news_id',
             news: undefined
@@ -56,7 +56,7 @@ describe('edit news', () => {
     
     it('Add news not existsting', async () => {
         const date = new Date();
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'add',
             id: 'news_id',
             news: {
@@ -101,7 +101,7 @@ describe('edit news', () => {
             thumbnailUrl: 'thumbnailUrl'
         });
         const date = new Date();
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'add',
             id: 'news_id',
             news: {
@@ -124,7 +124,7 @@ describe('edit news', () => {
     });
 
     it('Change news not given over', async () => {
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'change',
             id: 'news_id',
             news: undefined
@@ -134,7 +134,7 @@ describe('edit news', () => {
     
     it('Change news not existsting', async () => {
         const date = new Date();
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'change',
             id: 'news_id',
             news: {
@@ -157,7 +157,7 @@ describe('edit news', () => {
             thumbnailUrl: 'thumbnailUrl'
         });
         const date = new Date();
-        const result = await callFunction('v2_editNews', {
+        const result = await callFunction('editNews', {
             editType: 'change',
             id: 'news_id',
             news: {

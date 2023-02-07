@@ -5,7 +5,7 @@ import { callFunction, expectSuccess, setDatabaseValue } from '../utils';
 
 describe('get events', () => {
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 
@@ -35,7 +35,7 @@ describe('get events', () => {
             date: date4.toISOString(),
             title: 'event4'
         }));
-        const result = await callFunction('v2_getEvents', {
+        const result = await callFunction('getEvents', {
             groupIds: ['general', 'football-adults/first-team']
         });
         expectSuccess(result).to.be.deep.equal([

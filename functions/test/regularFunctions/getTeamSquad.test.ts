@@ -6,7 +6,7 @@ import teamSquadData from '../dataset/teamSquadData.json';
 
 describe('get team squad', () => {
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 
@@ -26,7 +26,7 @@ describe('get team squad', () => {
             teamId: 30675,
             vereinId: 294
         });
-        const result = await callFunction('v2_getTeamSquad', {
+        const result = await callFunction('getTeamSquad', {
             type: 'first-team'
         });
         expectSuccess(result).to.be.deep.equal(teamSquadData);

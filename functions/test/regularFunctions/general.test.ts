@@ -13,14 +13,14 @@ describe('General', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
 
     it('check prerequirements not signed in', async () => {
         await signOutUser();
-        const result = await callFunction('v2_checkUserAuthentication', {
+        const result = await callFunction('checkUserAuthentication', {
             type: 'websiteEditing'
         });
         expectFailed(result).value('code').to.be.deep.equal('permission-denied');
@@ -40,7 +40,7 @@ describe('General', () => {
             verbose: boolean,
             databaseType: 'release' | 'debug' | 'testing',
             parameters: string
-        }, string>(functions, 'v2_checkUserAuthentication');
+        }, string>(functions, 'checkUserAuthentication');
         const httpsCallableResult = await callableFunction({
             verbose: true,
             databaseType: databaseType.value,
@@ -81,7 +81,7 @@ describe('General', () => {
             verbose: boolean,
             databaseType: 'release' | 'debug' | 'testing',
             parameters: string
-        }, string>(functions, 'v2_checkUserAuthentication');
+        }, string>(functions, 'checkUserAuthentication');
         const httpsCallableResult = await callableFunction({
             verbose: true,
             databaseType: databaseType.value,
@@ -122,7 +122,7 @@ describe('General', () => {
             verbose: boolean,
             databaseType: 'release' | 'debug' | 'testing',
             parameters: string
-        }, string>(functions, 'v2_checkUserAuthentication');
+        }, string>(functions, 'checkUserAuthentication');
         const httpsCallableResult = await callableFunction({
             verbose: true,
             databaseType: databaseType.value,
@@ -137,7 +137,7 @@ describe('General', () => {
     });
     
     it('check user authentication not authenticated', async () => {
-        const result = await callFunction('v2_checkUserAuthentication', {
+        const result = await callFunction('checkUserAuthentication', {
             type: 'websiteEditing'
         });
         expectFailed(result).value('code').to.be.equal('permission-denied');
@@ -150,7 +150,7 @@ describe('General', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_checkUserAuthentication', {
+        const result = await callFunction('checkUserAuthentication', {
             type: 'websiteEditing'
         });
         expectFailed(result).value('code').to.be.equal('permission-denied');
@@ -163,7 +163,7 @@ describe('General', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_checkUserAuthentication', {
+        const result = await callFunction('checkUserAuthentication', {
             type: 'websiteEditing'
         });
         expectSuccess(result).to.be.equal(undefined);
@@ -171,7 +171,7 @@ describe('General', () => {
 
     it('create function no database type', async () => {
         try {
-            const callableFunction = httpsCallable<Record<string, never>, string>(functions, 'v2_checkUserAuthentication');
+            const callableFunction = httpsCallable<Record<string, never>, string>(functions, 'checkUserAuthentication');
             await callableFunction({});
         } catch (error: any) {
             expect(error.code).to.be.equal('functions/invalid-argument');

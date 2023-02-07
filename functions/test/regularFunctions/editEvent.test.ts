@@ -17,14 +17,14 @@ describe('edit event', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
 
     it('Remove not existing event', async () => {
         const eventId = guid.newGuid();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'remove',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -40,7 +40,7 @@ describe('edit event', () => {
             title: 'title'
         });
         expect(await existsDatabaseValue(`events/general/${eventId.guidString}`)).to.be.true;
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'remove',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -52,7 +52,7 @@ describe('edit event', () => {
     
     it('Add event not given over', async () => {
         const eventId = guid.newGuid();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'add',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -64,7 +64,7 @@ describe('edit event', () => {
     it('Add event not existsting', async () => {
         const eventId = guid.newGuid();
         const date = new Date();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'add',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -88,7 +88,7 @@ describe('edit event', () => {
             title: 'title'
         });
         const date = new Date();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'add',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -102,7 +102,7 @@ describe('edit event', () => {
 
     it('Change event not given over', async () => {
         const eventId = guid.newGuid();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'change',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -114,7 +114,7 @@ describe('edit event', () => {
     it('Change event not existsting', async () => {
         const eventId = guid.newGuid();
         const date = new Date();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'change',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -133,7 +133,7 @@ describe('edit event', () => {
             title: 'title'
         });
         const date = new Date();
-        const result = await callFunction('v2_editEvent', {
+        const result = await callFunction('editEvent', {
             editType: 'change',
             groupId: 'general',
             eventId: eventId.guidString,

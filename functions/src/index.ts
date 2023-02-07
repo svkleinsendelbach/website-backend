@@ -21,36 +21,36 @@ import { BfvLivetickerFunction } from './regularFunctions/BfvLivetickerFunction'
 
 admin.initializeApp();
 
-export const v2_getEvents = createFunction((data, auth) => new GetEventsFunction(data, auth));
+export const getEvents = createFunction((data, auth) => new GetEventsFunction(data, auth));
 
-export const v2_getNews = createFunction((data, auth) => new GetNewsFunction(data, auth));
+export const getNews = createFunction((data, auth) => new GetNewsFunction(data, auth));
 
-export const v2_getSingleNews = createFunction((data, auth) => new GetSingleNewsFunction(data, auth));
+export const getSingleNews = createFunction((data, auth) => new GetSingleNewsFunction(data, auth));
 
-export const v2_verifyRecaptcha = createFunction((data, auth) => new VerifyRecaptchaFunction(data, auth));
+export const verifyRecaptcha = createFunction((data, auth) => new VerifyRecaptchaFunction(data, auth));
 
-export const v2_sendContactMail = createFunction((data, auth) => new SendContactMailFunction(data, auth));
+export const sendContactMail = createFunction((data, auth) => new SendContactMailFunction(data, auth));
 
-export const v2_fiatShamirChallengeGenerator = createFunction((data, auth) => new FiatShamirChallengeGeneratorFunction(data, auth));
+export const fiatShamirChallengeGenerator = createFunction((data, auth) => new FiatShamirChallengeGeneratorFunction(data, auth));
 
-export const v2_editEvent = createFunction((data, auth) => new EditEventFunction(data, auth));
+export const editEvent = createFunction((data, auth) => new EditEventFunction(data, auth));
 
-export const v2_editNews = createFunction((data, auth) => new EditNewsFunction(data, auth));
+export const editNews = createFunction((data, auth) => new EditNewsFunction(data, auth));
 
-export const v2_addUserForWaiting = createFunction((data, auth) => new AddUserForWaitingFunction(data, auth));
+export const addUserForWaiting = createFunction((data, auth) => new AddUserForWaitingFunction(data, auth));
 
-export const v2_acceptDeclineWaitingUser = createFunction((data, auth) => new AcceptDeclineWaitingUserFunction(data, auth));
+export const acceptDeclineWaitingUser = createFunction((data, auth) => new AcceptDeclineWaitingUserFunction(data, auth));
 
-export const v2_checkUserAuthentication = createFunction((data, auth) => new CheckUserAuthenticationFunction(data, auth));
+export const checkUserAuthentication = createFunction((data, auth) => new CheckUserAuthenticationFunction(data, auth));
 
-export const v2_getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
+export const getUnauthenticatedUsers = createFunction((data, auth) => new GetUnauthenticatedUsersFunction(data, auth));
 
-export const v2_getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
+export const getTeamSquad = createFunction((data, auth) => new GetTeamSquadFunction(data, auth));
 
-export const v2_disableNews = createFunction((data, auth) => new DisableNewsFunction(data, auth));
+export const disableNews = createFunction((data, auth) => new DisableNewsFunction(data, auth));
 
-export const v2_bfvLiveticker = createFunction((data, auth) => new BfvLivetickerFunction(data, auth));
+export const bfvLiveticker = createFunction((data, auth) => new BfvLivetickerFunction(data, auth));
 
-export const v2_dailyCleanup = createSchedule('0 0 * * *', context => new DailyCleanupFunction(context));
+export const dailyCleanup = createSchedule('0 0 * * *', context => new DailyCleanupFunction(context));
 
-export const v2_deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));
+export const deleteAllData = createFunction((data, auth) => new DeleteAllDataFunction(data, auth));

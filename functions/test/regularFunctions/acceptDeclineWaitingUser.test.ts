@@ -17,7 +17,7 @@ describe('accept decline waiting user', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
@@ -29,7 +29,7 @@ describe('accept decline waiting user', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'accept'
@@ -50,7 +50,7 @@ describe('accept decline waiting user', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'accept'
@@ -65,7 +65,7 @@ describe('accept decline waiting user', () => {
     });
     
     it('Accept missing user', async () => {
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'accept'
@@ -80,7 +80,7 @@ describe('accept decline waiting user', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'decline'
@@ -101,7 +101,7 @@ describe('accept decline waiting user', () => {
             firstName: 'first',
             lastName: 'last'
         }));
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'decline'
@@ -112,7 +112,7 @@ describe('accept decline waiting user', () => {
     });
 
     it('Decline missing user', async () => {
-        const result = await callFunction('v2_acceptDeclineWaitingUser', {
+        const result = await callFunction('acceptDeclineWaitingUser', {
             type: 'websiteEditing',
             hashedUserId: 'asdf',
             action: 'decline'

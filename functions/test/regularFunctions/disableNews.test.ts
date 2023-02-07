@@ -16,13 +16,13 @@ describe('disable news', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
 
     it('Disable not existing news', async () => {
-        const result = await callFunction('v2_disableNews', {
+        const result = await callFunction('disableNews', {
             editType: 'disable',
             id: 'news_id'
         });
@@ -38,7 +38,7 @@ describe('disable news', () => {
             disabled: false,
             thumbnailUrl: 'thumbnailUrl'
         });
-        const result = await callFunction('v2_disableNews', {
+        const result = await callFunction('disableNews', {
             editType: 'disable',
             id: 'news_id'
         });
@@ -62,7 +62,7 @@ describe('disable news', () => {
             disabled: true,
             thumbnailUrl: 'thumbnailUrl'
         });
-        const result = await callFunction('v2_disableNews', {
+        const result = await callFunction('disableNews', {
             editType: 'enable',
             id: 'news_id'
         });

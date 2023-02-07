@@ -9,13 +9,13 @@ describe('add user for waiting', () => {
     });
 
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
         await signOutUser();
     });
 
     it('add user', async () => {
-        const result = await callFunction('v2_addUserForWaiting', {
+        const result = await callFunction('addUserForWaiting', {
             type: 'websiteEditing',
             firstName: 'first',
             lastName: 'last'

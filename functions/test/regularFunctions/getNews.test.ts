@@ -5,7 +5,7 @@ import { callFunction, expectSuccess, setDatabaseValue } from '../utils';
 
 describe('get news', () => {
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 
@@ -33,26 +33,26 @@ describe('get news', () => {
         const news5 = await addNews(5, true);
         const news1 = await addNews(1, false);
         const news2 = await addNews(2, true);
-        const result1 = await callFunction('v2_getNews', {});
+        const result1 = await callFunction('getNews', {});
         expectSuccess(result1).to.be.deep.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result2 = await callFunction('v2_getNews', {
+        const result2 = await callFunction('getNews', {
             alsoDisabled: true
         });
         expectSuccess(result2).to.be.deep.equal({
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result3 = await callFunction('v2_getNews', {
+        const result3 = await callFunction('getNews', {
             numberNews: 5
         });
         expectSuccess(result3).to.be.deep.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result4 = await callFunction('v2_getNews', {
+        const result4 = await callFunction('getNews', {
             numberNews: 5,
             alsoDisabled: true
         });
@@ -60,14 +60,14 @@ describe('get news', () => {
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result5 = await callFunction('v2_getNews', {
+        const result5 = await callFunction('getNews', {
             numberNews: 3
         });
         expectSuccess(result5).to.be.deep.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result6 = await callFunction('v2_getNews', {
+        const result6 = await callFunction('getNews', {
             numberNews: 3,
             alsoDisabled: true
         });
@@ -75,14 +75,14 @@ describe('get news', () => {
             hasMore: true,
             news: [news5, news4, news3]
         });
-        const result7 = await callFunction('v2_getNews', {
+        const result7 = await callFunction('getNews', {
             numberNews: 1
         });
         expectSuccess(result7).to.be.deep.equal({
             hasMore: true,
             news: [news4]
         });
-        const result8 = await callFunction('v2_getNews', {
+        const result8 = await callFunction('getNews', {
             numberNews: 1,
             alsoDisabled: true
         });

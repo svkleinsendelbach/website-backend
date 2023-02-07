@@ -9,7 +9,7 @@ import gameIds from '../dataset/gameIds.json';
 
 describe('bfv liveticker', () => {
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 

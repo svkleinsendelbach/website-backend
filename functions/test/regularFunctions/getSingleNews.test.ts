@@ -5,7 +5,7 @@ import { callFunction, expectFailed, expectSuccess, setDatabaseValue } from '../
 
 describe('get single news', () => {
     afterEach(async () => {
-        const result = await callFunction('v2_deleteAllData', {});
+        const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 
@@ -29,7 +29,7 @@ describe('get single news', () => {
 
     it('get news', async () => {
         const news = await addNews(false);
-        const result = await callFunction('v2_getSingleNews', {
+        const result = await callFunction('getSingleNews', {
             newsId: 'news_id'
         });
         expectSuccess(result).to.be.deep.equal(news);
@@ -37,14 +37,14 @@ describe('get single news', () => {
 
     it('get disabled news', async () => {
         await addNews(true);
-        const result = await callFunction('v2_getSingleNews', {
+        const result = await callFunction('getSingleNews', {
             newsId: 'news_id'
         });
         expectFailed(result).value('code').to.be.equal('unavailable');
     });
 
     it('get not existing news', async () => {
-        const result = await callFunction('v2_getSingleNews', {
+        const result = await callFunction('getSingleNews', {
             newsId: 'news_id'
         });
         expectFailed(result).value('code').to.be.equal('not-found');

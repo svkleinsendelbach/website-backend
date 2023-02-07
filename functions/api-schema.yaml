@@ -7,12 +7,12 @@ info:
   title: svkleinsendelbach-website-backend
   description: The API for SV Kleinsendelbach website
 paths:
-  /v2_acceptDeclineWaitingUser:
+  /acceptDeclineWaitingUser:
     post:
       tags: 
         - Backend v2
       description: Accept / decline waiting user.
-      operationId: v2_acceptDeclineWaitingUser
+      operationId: acceptDeclineWaitingUser
       requestBody:
         content:
           application/json:
@@ -58,12 +58,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'   
-  /v2_addUserForWaiting:
+  /addUserForWaiting:
     post:
       tags:
         - Backend v2
       description: Add a user to the waiting users.
-      operationId: v2_addUserForWaiting
+      operationId: addUserForWaiting
       requestBody:
         content:
           application/json:
@@ -106,12 +106,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'   
-  /v2_bfvLiveticker:
+  /bfvLiveticker:
     post:
       tags:
         - Backend v2
       description: Get the liveticker of specified game from bfv.de.
-      operationId: v2_bfvLiveticker
+      operationId: bfvLiveticker
       requestBody:
         content:
           application/json:
@@ -243,12 +243,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'  
-  /v2_checkUserAuthentication:
+  /checkUserAuthentication:
     post:
       tags: 
         - Backend v2
       description: Check user authentication of specified user.
-      operationId: v2_checkUserAuthentication
+      operationId: checkUserAuthentication
       requestBody:
         content:
           application/json:
@@ -283,12 +283,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'  
-  /v2_disableNews:
+  /disableNews:
     post:
       tags: 
         - Backend v2
       description: Disable / enable specifed news.
-      operationId: v2_disableNews
+      operationId: disableNews
       requestBody:
         content:
           application/json:
@@ -331,12 +331,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'
-  /v2_editEvent:
+  /editEvent:
     post:
       tags: 
         - Backend v2
       description: Edit an event.
-      operationId: v2_editEvent
+      operationId: editEvent
       requestBody:
         content:
           application/json:
@@ -379,12 +379,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'
-  /v2_editNews:
+  /editNews:
     post:
       tags: 
         - Backend v2
       description: Edit a news.
-      operationId: v2_editNews
+      operationId: editNews
       requestBody:
         content:
           application/json:
@@ -424,12 +424,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError'   
-  /v2_getEvents:
+  /getEvents:
     post:
       tags: 
         - Backend v2
       description: Get events of specified event group ids.
-      operationId: v2_getEvents
+      operationId: getEvents
       requestBody:
         content:
           application/json:
@@ -483,12 +483,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError' 
-  /v2_getNews:
+  /getNews:
     post:
       tags: 
         - Backend v2
       description: Get news.
-      operationId: v2_getNews
+      operationId: getNews
       requestBody:
         content:
           application/json:
@@ -538,12 +538,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError' 
-  /v2_getSingleNews:
+  /getSingleNews:
     post:
       tags: 
         - Backend v2
       description: Get news with specified id.
-      operationId: v2_getSingleNews
+      operationId: getSingleNews
       requestBody:
         content:
           application/json:
@@ -582,12 +582,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError' 
-  /v2_getTeamSquad:
+  /getTeamSquad:
     post:
       tags: 
         - Backend v2
       description: Get team squad from anpfiff.info.
-      operationId: v2_getTeamSquad
+      operationId: getTeamSquad
       requestBody:
         content:
           application/json:
@@ -723,12 +723,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/FirebaseFunctionError' 
-  /v2_getUnauthenticatedUsers:
+  /getUnauthenticatedUsers:
     post:
       tags: 
         - Backend v2
       description: Get all unautheticated users.
-      operationId: v2_getUnauthenticatedUsers
+      operationId: getUnauthenticatedUsers
       requestBody:
         content:
           application/json:

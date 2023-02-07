@@ -2,7 +2,7 @@
     "squad": {
         "goalkeeper": [
             {
-                "age": 25,
+                "age": 26,
                 "assists": 0,
                 "countInSquad": 14,
                 "firstName": "Maximilian",
@@ -11,19 +11,6 @@
                 "lastName": "Hollmig",
                 "personParameters": {
                     "personId": 166324,
-                    "spielkreis": 2
-                }
-            },
-            {
-                "age": 22,
-                "assists": 0,
-                "countInSquad": 0,
-                "firstName": "Mario",
-                "goals": 0,
-                "imageId": 476137,
-                "lastName": "Müller",
-                "personParameters": {
-                    "personId": 267395,
                     "spielkreis": 2
                 }
             },
@@ -305,7 +292,7 @@
                 }
             },
             {
-                "age": 24,
+                "age": 25,
                 "assists": 0,
                 "countInSquad": 0,
                 "firstName": "Christoph",

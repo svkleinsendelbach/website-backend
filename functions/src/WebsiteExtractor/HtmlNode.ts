@@ -17,7 +17,7 @@ export class HtmlDom {
         return new HtmlNodeList(this.dom.getElementsByClassName(className));
     }
 
-    public nodeByTag(tagName: string): HtmlNodeList {
+    public nodesByTag(tagName: string): HtmlNodeList {
         return new HtmlNodeList(this.dom.getElementsByTagName(tagName));
     }
 }

@@ -5,207 +5,195 @@ export type BfvLiveticker = {
 };
 
 export namespace BfvLiveticker {    
-    export function toBfvLiveticker(ticker: BfvApiLiveticker): BfvLiveticker {
+    export function mapBfvLiveticker(ticker: BfvApiLiveticker, homeImageId: string): BfvLiveticker {
         return {
             loadNew: ticker.loadNew,
             ifModifiedSinceTimestamp: ticker.ifModifiedSinceTimestamp,
-            results: ticker.results.map(result => {
-                switch (result.eventIcon) {
-                case null: return {
-                    type: 'comment',
-                    ...result as BfvApiLiveticker.Result.Comment
-                };
-                case '24/whistle': return {
-                    type: 'whistle',
-                    ...result as BfvApiLiveticker.Result.Whistle
-                };
-                case '24/specialAction': return {
-                    type: 'specialAction',
-                    ...result as BfvApiLiveticker.Result.SpecialAction
-                };
-                case '24/football': return {
-                    type: 'goal',
-                    ...result as BfvApiLiveticker.Result.Football
-                };
-                case '24/substitute': return {
-                    type: 'substitute',
-                    ...result as BfvApiLiveticker.Result.Substitute
-                };
-                case '24/yellowCard': return {
-                    type: 'yellowCard',
-                    ...result as BfvApiLiveticker.Result.YellowCard
-                };
-                case '24/secondYellowCard': return {
-                    type: 'secondYellowCard',
-                    ...result as BfvApiLiveticker.Result.SecondYellowCard
-                };
-                case '24/redCard': return {
-                    type: 'redCard',
-                    ...result as BfvApiLiveticker.Result.RedCard
-                };
-                case '24/corner': return {
-                    type: 'corner',
-                    ...result as BfvApiLiveticker.Result.Corner
-                };
-                case '24/freeKick': return {
-                    type: 'freeKick',
-                    ...result as BfvApiLiveticker.Result.FreeKick
-                };
-                case '24/shotOnGoal': return {
-                    type: 'shotOnGoal',
-                    ...result as BfvApiLiveticker.Result.ShotOnGoal
-                };
-                case '24/penalty': return {
-                    type: 'penalty',
-                    ...result as BfvApiLiveticker.Result.Penalty
-                };
-                case '24/penaltyGoal': return {
-                    type: 'penaltyGoal',
-                    ...result as BfvApiLiveticker.Result.PenaltyGoal
-                };
-                case '24/ownGoal': return {
-                    type: 'ownGoal',
-                    ...result as BfvApiLiveticker.Result.OwnGoal
-                };
-                case '24/time': return {
-                    type: 'time',
-                    ...result as BfvApiLiveticker.Result.Time
-                };
-                default:
-                    throw new Error(`Invalid event icon: ${result.eventIcon}`);
+            results: ticker.results.compactMap(result => {
+                try {
+                    switch (result.eventIcon) {
+                    case null: return mapCommentResult(result);
+                    case '24/whistle': return mapTitledResult(result, 'whistle');
+                    case '24/specialAction': return mapTitledResult(result, 'specialAction');
+                    case '24/football': return mapGoalResult(result as BfvApiLiveticker.Result.Football, 'goal', homeImageId);
+                    case '24/substitute': return mapSubstituteResult(result as BfvApiLiveticker.Result.Substitute, homeImageId);
+                    case '24/yellowCard': return mapCardResult(result as BfvApiLiveticker.Result.YellowCard, 'yellowCard', homeImageId);
+                    case '24/secondYellowCard': return mapCardResult(result as BfvApiLiveticker.Result.SecondYellowCard, 'secondYellowCard', homeImageId);
+                    case '24/redCard': return mapCardResult(result as BfvApiLiveticker.Result.RedCard, 'redCard', homeImageId);
+                    case '24/corner': return mapTitledResult(result, 'corner');
+                    case '24/freeKick': return mapTitledResult(result, 'freeKick');
+                    case '24/shotOnGoal': return mapTitledResult(result, 'shotOnGoal');
+                    case '24/penalty': return mapTitledResult(result, 'penalty');
+                    case '24/penaltyGoal': return mapGoalResult(result as BfvApiLiveticker.Result.PenaltyGoal, 'penaltyGoal', homeImageId);
+                    case '24/ownGoal': return mapTitledResult(result, 'ownGoal');
+                    case '24/time': return mapTitledResult(result, 'time');
+                    default: throw new Error(`Invalid event icon: ${result.eventIcon}`);
+                    }
+                } catch {
+                    return undefined;
                 }
             })
         };
     }
 
-    export type Result = 
-        | Result.Comment 
-        | Result.TitledAction 
-        | Result.OptionalTitledAction 
-        | Result.Goal 
-        | Result.Substitute 
-        | Result.Card  
-
-    export namespace Result {        
-        export type Comment = {
-            type: 'comment';
-            headline: null | string;
-            likes: number;
-            liked: boolean;
-            likeApiRoute: null | string;
-            unlikeApiRoute: null | string;
-            ownGoal: boolean;
-            text: null | string;
-            time: null | string;
-            section: null | string;
-            options: null | Utils.Options;
-        };
-        
-        export type TitledAction = Utils.DefaultProperties & {
-            type: 'whistle' | 'corner' | 'penalty' | 'ownGoal' | 'time';
-            headline: string;
-        };
-        
-        export type OptionalTitledAction = Utils.DefaultProperties & {
-            type: 'specialAction' | 'freeKick' | 'shotOnGoal';
-            headline: null | string;
-        };
-
-        export type Goal = Utils.DefaultProperties & {
-            type: 'goal' | 'penaltyGoal';
-            headline: string;
-            goal: null | Utils.Goal
-        };
-        
-        export type Substitute = Utils.DefaultProperties & {
-            type: 'substitute';
-            headline: string;
-            substitution: null | Utils.Substitution
-        };
-        
-        export type Card = Utils.DefaultProperties & {
-            type: 'yellowCard' | 'secondYellowCard' | 'redCard';
-            headline: string;
-            card: string;
-            statistic: null | Utils.Statistic
-            team: Utils.Team
-        };
-        
-        export namespace Utils {
-            export type Options = {
-                reportLink: {
-                    href: string;
-                    text: string;
-                    title: string;
-                };
-                socialsharing: {
-                    services: unknown[];
-                };
+    export function mapCommentResult(result: BfvApiLiveticker.Result.Comment): Result.Comment | Result.Section {
+        if (result.section !== null) {
+            return {
+                type: 'section',
+                text: result.section
             };
-        
-            export type DefaultProperties = {
+        }
+        return mapResultProperties(result, 'comment');
+    }
+
+    export function mapTitledResult(result: BfvApiLiveticker.Result.Whistle | BfvApiLiveticker.Result.Corner | BfvApiLiveticker.Result.Penalty | BfvApiLiveticker.Result.OwnGoal | BfvApiLiveticker.Result.Time | BfvApiLiveticker.Result.SpecialAction | BfvApiLiveticker.Result.FreeKick | BfvApiLiveticker.Result.ShotOnGoal, type: 'whistle' | 'corner' | 'penalty' | 'ownGoal' | 'time' | 'specialAction' | 'freeKick' | 'shotOnGoal'): Result.TitledResult {
+        return {
+            headline: result.headline,
+            ...mapResultProperties(result, type)
+        };
+    }
+
+    export function mapGoalResult(result: BfvApiLiveticker.Result.Football | BfvApiLiveticker.Result.PenaltyGoal, type: 'goal' | 'penaltyGoal', homeImageId: string): Result.Goal {
+        if (result.goal === null)
+            throw new Error(`Couldn' get goal from ${type} result.`);
+        const imageId = /^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g.exec(result.goal.player.teamLogo.teamIcon)?.groups?.id;
+        return {
+            headline: result.headline,
+            team: imageId === homeImageId ? 'home' : 'away',
+            player: {
+                id: result.goal.player.id,
+                name: result.goal.player.name,
+                number: Number.parseInt(result.goal.player.number)
+            },
+            result: {
+                home: result.goal.result.teams[0].actualGoals, 
+                away: result.goal.result.teams[1].actualGoals
+            },
+            ...mapResultProperties(result, type)
+        };
+    }
+
+    export function mapSubstituteResult(result: BfvApiLiveticker.Result.Substitute, homeImageId: string): Result.Substitute {
+        if (result.substitution === null)
+            throw new Error('Couldn\' get substitution from substitution result.');
+        const imageId = /^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g.exec(result.substitution.player.teamLogo.teamIcon)?.groups?.id;
+        return {
+            headline: result.headline,
+            team: imageId === homeImageId ? 'home' : 'away',
+            playerIn: {
+                id: result.substitution.player.id,
+                name: result.substitution.player.name,
+                number: Number.parseInt(result.substitution.player.number)
+            },
+            playerOut: {
+                id: result.substitution.player2.id,
+                name: result.substitution.player2.name,
+                number: Number.parseInt(result.substitution.player2.number)
+            },
+            ...mapResultProperties(result, 'substitute')
+        };
+    }
+
+    export function mapCardResult(result: BfvApiLiveticker.Result.YellowCard | BfvApiLiveticker.Result.SecondYellowCard | BfvApiLiveticker.Result.RedCard, type: 'yellowCard' | 'secondYellowCard' | 'redCard', homeImageId: string): Result.Card {
+        if (result.statistic === null)
+            throw new Error(`Couldn' get statistic from ${type} result.`);
+        const imageId = /^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g.exec(result.statistic.player.teamLogo.teamIcon)?.groups?.id;
+        let entries: Record<'games' | 'goals' | 'yellowCards' | 'secondYellowCards' | 'redCards', number> | null = null;
+        if (result.statistic.entries !== null) {
+            const keyMap: Record<string, 'games' | 'goals' | 'yellowCards' | 'secondYellowCards' | 'redCards'> = {
+                '16/player': 'games', '24/football': 'goals', '24/yellowCard': 'yellowCards', '24/secondYellowCard': 'secondYellowCards', '24/redCard': 'redCards'
+            };
+            entries = {
+                games: 0, goals: 0, yellowCards: 0, secondYellowCards: 0, redCards: 0
+            };
+            for (const entry of result.statistic.entries)
+                entries[keyMap[entry.icon]] = entry.count;
+        }
+        return {
+            headline: result.headline,
+            team: imageId === homeImageId ? 'home' : 'away',
+            player: {
+                id: result.statistic.player.id,
+                name: result.statistic.player.name,
+                number: Number.parseInt(result.statistic.player.number)
+            },
+            entries: entries,
+            ...mapResultProperties(result, type)
+        };
+    }
+
+    export function mapResultProperties<Type extends string>(result: BfvApiLiveticker.Result, type: Type): Result.ResultProperties<Type> {
+        if (type === 'comment' && 'section' in result && result.section !== null || result.likeApiRoute === null || result.unlikeApiRoute === null)
+            throw new Error('Couldn\' get like api route from section result.');
+        return {
+            type: type,
+            resultLikes: {
+                likes: result.likes,
+                liked: result.liked,
+                likeApiRoute: result.likeApiRoute,
+                unlikeApiRoute: result.unlikeApiRoute
+            },
+            text: result.text || null,
+            time: result.time !== null ? Number.parseInt(/^(?<time>\d+?)'$/g.exec(result.time)?.groups?.time ?? 'NaN') : null,
+            reportLink: result.options?.reportLink.href ?? null
+        };
+    }
+
+    export type Result = Result.Comment | Result.Section | Result.TitledResult | Result.Goal | Result.Substitute | Result.Card;
+
+    export namespace Result {
+        export type ResultProperties<Type extends string> = {
+            type: Type;
+            resultLikes: {
                 likes: number;
                 liked: boolean;
                 likeApiRoute: string;
                 unlikeApiRoute: string;
-                ownGoal: boolean;
-                text: string;
-                time: string;
-                options: Options;
+            };
+            text: string | null;
+            time: number | null;
+            reportLink: string | null;
+        }
+
+        export type Player = {
+            id: string;
+            name: string;
+            number: number;
+        }
+
+        export type Comment = ResultProperties<'comment'>;
+
+        export type Section = {
+            type: 'section',
+            text: string;
+        }
+
+        export type TitledResult = ResultProperties<'whistle' | 'corner' | 'penalty' | 'ownGoal' | 'time' | 'specialAction' | 'freeKick' | 'shotOnGoal'> & {
+            headline: string | null;
+        }
+
+        export type Goal = ResultProperties<'goal' | 'penaltyGoal'> & {
+            headline: string | null;
+            team: 'home' | 'away';
+            player: Player;
+            result: {
+                home: number,
+                away: number 
             }
-            
-            export type TeamLogo = {
-                teamName: string;
-                teamIcon: string;
-            }
-            
-            export type Player = {
-                id: string;
-                name: string;
-                number: string;
-                teamLogo: TeamLogo
-                image: {
-                    src: string;
-                    alt: string;
-                    title: string;
-                };
-                link: {
-                    href: string;
-                };
-            };
-            
-            export type Goal = {
-                teamName: string;
-                player: Player;
-                result: {
-                    halftime: boolean;
-                    teams: {
-                        teamIcon: string;
-                        actualGoals: number;
-                        type: string;
-                    }[];
-                };
-            };
-            
-            export type Substitution = {
-                headline: string;
-                player: Player
-                player2: Player
-                teamLogo: TeamLogo
-            }
-            
-            export type Statistic = {
-                text: null | string;
-                player: Player
-                entries: null | {
-                    count: number;
-                    icon: string;
-                }[];
-            };
-            
-            export type Team = {
-                name: string;
-            };
+        }
+
+        export type Substitute = ResultProperties<'substitute'> & {
+            headline: string | null;
+            team: 'home' | 'away';
+            playerIn: Player;
+            playerOut: Player;
+        }
+
+        export type Card = ResultProperties<'yellowCard' | 'secondYellowCard' | 'redCard'> & {
+            headline: string | null;
+            team: 'home' | 'away';
+            player: Player;
+            entries: Record<'games' | 'goals' | 'yellowCards' | 'secondYellowCards' | 'redCards', number> | null;
         }
     }
 }

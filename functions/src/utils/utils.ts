@@ -89,16 +89,7 @@ export namespace Json {
     }
     
     export function parse(data: string | undefined): any {
-        if (data === undefined) return undefined;// Preserve newlines, etc. - use valid JSON
-        data = data.replace(/\\n/g, '\\n')
-            .replace(/\\'/g, '\\\'')
-            .replace(/\\"/g, '\\"')
-            .replace(/\\&/g, '\\&')
-            .replace(/\\r/g, '\\r')
-            .replace(/\\t/g, '\\t')
-            .replace(/\\b/g, '\\b')
-            .replace(/\\f/g, '\\f');
-        // Remove non-printable and other non-valid JSON characters
+        if (data === undefined) return undefined;
         // eslint-disable-next-line no-control-regex
         data = data.replace(/[\u0000-\u001F]+/g, '');
         return JSON.parse(data, (_, v) => typeof v === 'string' && v.endsWith('#bigint') ? BigInt(v.replace(/#bigint$/, '')) : v);

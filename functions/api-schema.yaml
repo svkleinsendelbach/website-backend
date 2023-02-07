@@ -3,7 +3,7 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/stevenkellner/svkleinsendelbach-website-backend/1.0.0
 info:
-  version: "1.0.0"
+  version: "2.0.0"
   title: svkleinsendelbach-website-backend
   description: The API for SV Kleinsendelbach website
 paths:

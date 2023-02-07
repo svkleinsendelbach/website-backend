@@ -14,7 +14,8 @@
     "testUtils": "npm run test test/*.test.ts",
     "testAll": "npm run test test/**/*.test.ts test/*.test.ts",
     "test:coverage": "nyc npm run test",
-    "testUtils:coverage": "nyc npm run testUtils"
+    "testUtils:coverage": "nyc npm run testUtils",
+    "generateApiSchemaDocs": "cd .. && redoc-cli build functions/api-schema.yaml -o functions/docs/api-schema.html && cd functions"
   },
   "engines": {
     "node": "16"

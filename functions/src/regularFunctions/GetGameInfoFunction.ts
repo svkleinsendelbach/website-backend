@@ -72,9 +72,9 @@ export class GetGameInfoFunction implements FirebaseFunction<
         if (homeImageId === null || awayImageId === null)
             throw httpsError('not-found', 'Couldn\'t get ids for home and away team images.', this.logger);
         const dateValue = node.nthChild(3).nthChild(5).nthChild(3).value;
-        const date1 = dateValue.regexGroup(/^\s*(?<date>\d{2})\.\d{2}\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toInt();
-        const date2 = dateValue.regexGroup(/^\s*\d{2}\.(?<date>\d{2})\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toInt();
-        const date3 = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.(?<date>\d{4})\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toInt();
+        const date1 = dateValue.regexGroup(/^\s*(?<date>\d{2})\.\d{2}\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
+        const date2 = dateValue.regexGroup(/^\s*\d{2}\.(?<date>\d{2})\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
+        const date3 = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.(?<date>\d{4})\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
         const date4 = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/(?<time>\d{2}:\d{2}) Uhr\s*$/g, 'time').toString();
         const date = date1 === null || date2 === null || date3 === null || date4 === null ? null : `${date3}-${date2}-${date1}T${date4}:00.000Z`;
         const adressValue = dom.nodesByClass('bfv-game-info').at(0).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(3).value;

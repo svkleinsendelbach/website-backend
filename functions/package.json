@@ -28,6 +28,7 @@
     "dom-parser": "^0.1.6",
     "firebase-admin": "^11.4.1",
     "firebase-functions": "^4.1.1",
+    "fontkit": "^2.0.2",
     "nodemailer": "^6.8.0",
     "sha512-crypt-ts": "^0.1.27"
   },
@@ -35,6 +36,7 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.4",
     "@types/dom-parser": "^0.1.1",
+    "@types/fontkit": "^2.0.1",
     "@types/mocha": "^10.0.1",
     "@types/nodemailer": "^6.4.7",
     "@types/utf8": "^3.0.1",

@@ -57,11 +57,15 @@ export namespace BfvLiveticker {
         if (result.goal === null)
             throw new Error(`Couldn' get goal from ${type} result.`);
         const imageId = /^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g.exec(result.goal.player.teamLogo.teamIcon)?.groups?.id;
+        const playerImageId = /^https:\/\/cdn.bfv.de\/public\/(?<imageId>\S+?)\.stamp$/.exec(result.goal.player.image.src)?.groups?.imageId;
+        if (playerImageId === undefined) 
+            throw new Error('Couldn\' get player image id from result.');
         return {
             headline: result.headline,
             team: imageId === homeImageId ? 'home' : 'away',
             player: {
                 id: result.goal.player.id,
+                imageId: playerImageId,
                 name: result.goal.player.name,
                 number: Number.parseInt(result.goal.player.number)
             },
@@ -77,16 +81,22 @@ export namespace BfvLiveticker {
         if (result.substitution === null)
             throw new Error('Couldn\' get substitution from substitution result.');
         const imageId = /^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g.exec(result.substitution.player.teamLogo.teamIcon)?.groups?.id;
+        const playerInImageId = /^https:\/\/cdn.bfv.de\/public\/(?<imageId>\S+?)\.stamp$/.exec(result.substitution.player.image.src)?.groups?.imageId;
+        const playerOutImageId = /^https:\/\/cdn.bfv.de\/public\/(?<imageId>\S+?)\.stamp$/.exec(result.substitution.player2.image.src)?.groups?.imageId;
+        if (playerInImageId === undefined || playerOutImageId === undefined) 
+            throw new Error('Couldn\' get player image id from result.');
         return {
             headline: result.headline,
             team: imageId === homeImageId ? 'home' : 'away',
             playerIn: {
                 id: result.substitution.player.id,
+                imageId: playerInImageId,
                 name: result.substitution.player.name,
                 number: Number.parseInt(result.substitution.player.number)
             },
             playerOut: {
                 id: result.substitution.player2.id,
+                imageId: playerOutImageId,
                 name: result.substitution.player2.name,
                 number: Number.parseInt(result.substitution.player2.number)
             },
@@ -109,11 +119,15 @@ export namespace BfvLiveticker {
             for (const entry of result.statistic.entries)
                 entries[keyMap[entry.icon]] = entry.count;
         }
+        const playerImageId = /^https:\/\/cdn.bfv.de\/public\/(?<imageId>\S+?)\.stamp$/.exec(result.statistic.player.image.src)?.groups?.imageId;
+        if (playerImageId === undefined) 
+            throw new Error('Couldn\' get player image id from result.');
         return {
             headline: result.headline,
             team: imageId === homeImageId ? 'home' : 'away',
             player: {
                 id: result.statistic.player.id,
+                imageId: playerImageId,
                 name: result.statistic.player.name,
                 number: Number.parseInt(result.statistic.player.number)
             },
@@ -157,6 +171,7 @@ export namespace BfvLiveticker {
 
         export type Player = {
             id: string;
+            imageId: string;
             name: string;
             number: number;
         }

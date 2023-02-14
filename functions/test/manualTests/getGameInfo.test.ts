@@ -3,17 +3,17 @@ import * as fs from 'fs';
 import { BfvLiveticker } from '../../src/classes/BfvLiveticker';
 import { Crypter } from '../../src/crypter/Crypter';
 import { cryptionKeys } from '../privateKeys';
-import { BfvLivetickerFunction } from '../../src/regularFunctions/BfvLivetickerFunction';
+import { GetGameInfoFunction } from '../../src/regularFunctions/GetGameInfoFunction';
 import { guid } from '../../src/classes/guid';
 import gameIds from '../dataset/gameIds.json';
 
-describe('bfv liveticker', () => {
+describe('get game info', () => {
     afterEach(async () => {
         const result = await callFunction('deleteAllData', {});
         expectSuccess(result).to.be.equal(undefined);
     });
 
-    it('liveticker', async () => {
+    it('get game info with liveticker', async () => {
         const types = ['comment', 'section', 'whistle', 'corner', 'penalty', 'ownGoal', 'time', 'specialAction', 'freeKick', 'shotOnGoal', 'goal', 'penaltyGoal', 'substitute', 'yellowCard', 'secondYellowCard', 'redCard'];
         const results: Record<string, BfvLiveticker.Result[]> = {};
         for (const type of types) 
@@ -23,7 +23,7 @@ describe('bfv liveticker', () => {
             i += 1;
             console.log(`${i} / ${gameIds.length} | ${gameId}`);
             const crypter = new Crypter(cryptionKeys);
-            const firebaseFunction = new BfvLivetickerFunction({
+            const firebaseFunction = new GetGameInfoFunction({
                 databaseType: 'testing',
                 parameters: crypter.encodeEncrypt({
                     databaseType: 'testing',

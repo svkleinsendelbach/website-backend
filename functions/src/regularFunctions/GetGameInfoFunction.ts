@@ -11,21 +11,22 @@ import { HtmlDom } from '../WebsiteExtractor/HtmlNode';
 import DOMParser from 'dom-parser';
 import { ensureNotNullable, httpsError } from '../utils/utils';
 import fetch from 'cross-fetch';
+import * as fontkit from 'fontkit';
 import { checkPrerequirements } from '../utils/checkPrerequirements';
 
-export class BfvLivetickerFunction implements FirebaseFunction<
-    BfvLivetickerFunction.Parameters,
-    BfvLivetickerFunction.ReturnType
+export class GetGameInfoFunction implements FirebaseFunction<
+    GetGameInfoFunction.Parameters,
+    GetGameInfoFunction.ReturnType
 > {
 
-    public parameters: BfvLivetickerFunction.Parameters;
+    public parameters: GetGameInfoFunction.Parameters;
 
     private logger: Logger;
 
     public constructor(data: any, auth: AuthData | undefined) {
-        this.logger = Logger.start(data.verbose, 'BfvLivetickerFunction.constructor', { data, auth }, 'notice');
+        this.logger = Logger.start(data.verbose, 'GetGameInfoFunction.constructor', { data, auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<BfvLivetickerFunction.Parameters>(
+        const parameterParser = new ParameterParser<GetGameInfoFunction.Parameters>(
             {
                 fiatShamirParameters: ParameterBuilder.builder('object', FiatShamirParameters.fromObject),
                 databaseType: ParameterBuilder.builder('string', DatabaseType.fromString),
@@ -37,8 +38,8 @@ export class BfvLivetickerFunction implements FirebaseFunction<
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<BfvLivetickerFunction.ReturnType> {
-        this.logger.log('BfvLivetickerFunction.executeFunction', {}, 'info');
+    public async executeFunction(): Promise<GetGameInfoFunction.ReturnType> {
+        this.logger.log('GetGameInfoFunction.executeFunction', {}, 'info');
         await checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');
 
         const gameInfo = await this.fetchGameInfoFromGamePage(this.parameters.gameId);
@@ -57,7 +58,7 @@ export class BfvLivetickerFunction implements FirebaseFunction<
         };
     }
 
-    private async fetchGameInfoFromGamePage(gameId: string): Promise<Omit<BfvLivetickerFunction.ReturnType, 'livetickers'>> {
+    private async fetchGameInfoFromGamePage(gameId: string): Promise<Omit<GetGameInfoFunction.ReturnType, 'livetickers'>> {
         const url = `https://www.bfv.de/spiele/${gameId}`;
         const html = await (await fetch(url)).text();
         const dom = new HtmlDom(new DOMParser().parseFromString(html));
@@ -81,14 +82,17 @@ export class BfvLivetickerFunction implements FirebaseFunction<
         const adress2 = adressValue.regexGroup(/^[\S\s]+?\|[\S\s]+?\|(?<city>[\S\s]+?)$/g, 'city').toString();
         const adress = adress1 === null || adress2 === null ? null : `${adress1}, ${adress2}`;
         const title = dom.nodesByTag('head').at(0).nodesByTag('title').at(0).value;
-        return ensureNotNullable<Omit<BfvLivetickerFunction.ReturnType, 'livetickers'>>({
+        return ensureNotNullable<Omit<GetGameInfoFunction.ReturnType, 'livetickers'>>({
             id: gameId,
             competition: {
                 name: node.nthChild(3).nthChild(1).nthChild(1).value.toString(),
                 link: node.nthChild(3).nthChild(1).attribute('href').toString(),
                 gameDay: node.nthChild(3).nthChild(3).value.regexGroup(/^(?<day>\d+?)\. Spieltag$/g, 'day').toInt()
             },
-            result: await this.fetchResultFromPartialGamePage(gameId),
+            result: {
+                home: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString()),
+                away: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString())                
+            },
             date: date,
             homeTeam: {
                 name: title.regexGroup(/^Spiel (?<name>[\S\s]+?) gegen [\S\s]+?&nbsp;\| BFV$/g, 'name').toString(),
@@ -105,43 +109,42 @@ export class BfvLivetickerFunction implements FirebaseFunction<
         });
     }
 
-    private async fetchResultFromPartialGamePage(gameId: string): Promise<Record<'home' | 'away', number>> {
-        const url = `https://www.bfv.de/partial/spieldetail/liveticker/ergebnis-buehne/${gameId}`;
-        const html = await (await fetch(url)).text();
-        const dom = new HtmlDom(new DOMParser().parseFromString(html));
-        return {
-            home: this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).value.toString()),
-            away: this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).value.toString())
-        };
-    }
-
-    private mapResult(result: string | null): number {
-        if (result === null) 
-            return 0;
-        const numberMap: Record<string, number> = {
-            '56': 0, '57': 0, '6F': 0, '79': 0, '7B': 0, '89': 0, '8D': 0, 'A0': 0, 'A4': 0, 'B9': 0,
-            '53': 1, '62': 1, '68': 1, '76': 1, '80': 1, '8A': 1, '90': 1, '9D': 1, 'A3': 1, 'AA': 1,
-            '54': 2, '55': 2, '5C': 2, '84': 2, '8B': 2, '96': 2, 'B0': 2, 'B6': 2, 'B8': 2, 'BC': 2,
-            '50': 3, '5E': 3, '5F': 3, '60': 3, '72': 3, '73': 3, '74': 3, '82': 3, '87': 3, '9A': 3,
-            '61': 4, '85': 4, '8C': 4, '91': 4, '98': 4, 'A6': 4, 'AC': 4, 'AE': 4, 'B3': 4, 'BB': 4,
-            '5A': 5, '6B': 5, '7E': 5, '88': 5, '8F': 5, 'A8': 5, 'A9': 5, 'B1': 5, 'B4': 5, 'BA': 5,
-            '59': 6, '5D': 6, '78': 6, '7D': 6, '9E': 6, '9F': 6, 'A1': 6, 'A5': 6, 'AF': 6, 'BD': 6,
-            '58': 7, '5B': 7, '6A': 7, '77': 7, '7C': 7, '94': 7, '97': 7, '9C': 7, 'AD': 7, 'B5': 7,
-            '52': 8, '63': 8, '65': 8, '66': 8, '6E': 8, '75': 8, '83': 8, '92': 8, '93': 8, 'AB': 8,
-            '51': 9, '67': 9, '71': 9, '7A': 9, '7F': 9, '81': 9, '99': 9, '9B': 9, 'B2': 9, 'B7': 9
-        };
-        
-        let r = '';
-        const regex = /&#xE6(?<n>[0-9A-F]{2});/gm;
+    private async mapResult(rawResult: string | null, fontId: string | null): Promise<number | undefined> {
+        if (rawResult === null || fontId === null)
+            return undefined;
+        const fontUrl = `//app.bfv.de/export.fontface/-/format/ttf/id/${fontId}/type/font`;
+        const font = fontkit.create(Buffer.from(await (await fetch(fontUrl)).arrayBuffer()));
+        let result = 0;
+        const regex = /&#x(?<codePoint>[0-9A-F]{4});/gm;
         let match;
-        while ((match = regex.exec(result)) !== null) {
+        while ((match = regex.exec(rawResult)) !== null) {
             if (match.index === regex.lastIndex)
                 regex.lastIndex++;
-            if (match.groups!.n in numberMap)
-                r += numberMap[match.groups!.n].toString();
+            const codePoint = Number.parseInt(match.groups!.codePoint, 16);
+            const glyph = this.mapGlyph(codePoint, font);
+            if (glyph === 'X' || glyph === '-')
+                return undefined;
+            result = 10 * result + glyph;
         }
-        
-        return Number.isNaN(Number.parseInt(r)) ? 0 : Number.parseInt(r);
+        return result;
+    }
+
+    private mapGlyph(codePoint: number, font: fontkit.Font): 'X' | '-' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 {
+        switch (JSON.stringify(font.glyphForCodePoint(codePoint).bbox)) {
+        case '{"minX":51,"minY":-9,"maxX":607,"maxY":547}': return 'X';
+        case '{"minX":21,"minY":221,"maxX":331,"maxY":359}': return '-';
+        case '{"minX":47,"minY":-5,"maxX":597,"maxY":748}': return 0;
+        case '{"minX":26,"minY":0,"maxX":323,"maxY":748}': return 1;
+        case '{"minX":43,"minY":0,"maxX":552,"maxY":748}': return 2;
+        case '{"minX":36,"minY":-6,"maxX":539,"maxY":748}': return 3;
+        case '{"minX":22,"minY":0,"maxX":609,"maxY":742}': return 4;
+        case '{"minX":51,"minY":-6,"maxX":561,"maxY":742}': return 5;
+        case '{"minX":43,"minY":-5,"maxX":564,"maxY":748}': return 6;
+        case '{"minX":20,"minY":0,"maxX":537,"maxY":742}': return 7;
+        case '{"minX":49,"minY":-5,"maxX":573,"maxY":748}': return 8;
+        case '{"minX":40,"minY":-6,"maxX":560,"maxY":747}': return 9;
+        default: return 'X';
+        }
     }
     
     private async fetchLivetickerIdsFromGamePage(gameId: string): Promise<string[]> {
@@ -162,7 +165,7 @@ export class BfvLivetickerFunction implements FirebaseFunction<
     }
 }
 
-export namespace BfvLivetickerFunction {
+export namespace GetGameInfoFunction {
     export type Parameters = FirebaseFunction.DefaultParameters & {
         gameId: string;
     }
@@ -175,8 +178,8 @@ export namespace BfvLivetickerFunction {
             gameDay: number;
         };
         result: {
-            home: number;
-            away: number;
+            home: number | undefined;
+            away: number | undefined;
         }
         date: string;
         homeTeam: ReturnType.Team;

@@ -1,52 +1,62 @@
 module.exports = {
-    root: true,
     env: {
-        es6: true,
-        node: true
+      browser: true,
+      es2021: true,
+      node: true
     },
     extends: [
-        'eslint:recommended',
-        'plugin:import/errors',
-        'plugin:import/warnings',
-        'plugin:import/typescript',
-        'google',
-        'plugin:@typescript-eslint/recommended'
+      'standard-with-typescript',
+      'eslint:recommended',
+      'plugin:import/errors',
+      'plugin:import/warnings',
+      'plugin:import/typescript',
+      'plugin:@typescript-eslint/recommended'
     ],
     parser: '@typescript-eslint/parser',
+    overrides: [
+    ],
     parserOptions: {
-        project: ['tsconfig.json', 'tsconfig.dev.json'],
-        sourceType: 'module'
+      project: 'tsconfig.json',
+      ecmaVersion: 'latest',
+      sourceType: 'module'
     },
     ignorePatterns: [
-        '/lib/**/*', // Ignore built files.
-        '/coverage/**/*'
+      '/lib/**/*',
+      '/.eslintrc.js',
+      '/coverage/**/*'
     ],
     plugins: [
-        '@typescript-eslint',
-        'import'
+      '@typescript-eslint',
+      'import'
     ],
     rules: {
-        'quotes': ['warn', 'single'],
-        'import/no-unresolved': 0,
-        'indent': ['warn', 4],
-        'padded-blocks': 'off',
-        'comma-dangle': ['warn', 'never'],
-        'object-curly-spacing': ['warn', 'always'],
-        'curly': ['warn', 'multi-or-nest'],
-        'max-len': 'off',
-        '@typescript-eslint/no-namespace': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-        'require-jsdoc': 'off',
-        'no-trailing-spaces': 'off',
-        'arrow-parens': 'off',
-        'no-extend-native': 'off',
-        'no-prototype-builtins': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'off',
-        'new-cap': 'off',
-        'camelcase': 'off',
-        'no-constant-condition': 'off',
-        'eol-last': 'warn',
-        'spaced-comment': 'off',
-        '@typescript-eslint/no-inferrable-types': 'off'
+      '@typescript-eslint/semi': ['error', 'always'],
+      '@typescript-eslint/indent': ['error', 4],
+      '@typescript-eslint/no-empty-function': ['error', {
+        'allow': ['functions', 'arrowFunctions', 'methods', 'constructors', 'asyncFunctions', 'asyncMethods']
+      }],
+      '@typescript-eslint/method-signature-style': ['error', 'method'],
+      '@typescript-eslint/member-delimiter-style': ['error', {
+        multiline: {
+          delimiter: 'semi',
+          requireLast: true
+        }
+      }],
+      '@typescript-eslint/no-namespace': 'off',
+      '@typescript-eslint/no-redeclare': 'off',
+      '@typescript-eslint/space-before-function-paren': ['error', 'never'],
+      '@typescript-eslint/no-invalid-void-type': 'off',
+      'n/handle-callback-err': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/class-literal-property-style': 'off',
+      'curly': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      'object-shorthand': ['error', 'never'],
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
+      '@typescript-eslint/consistent-type-assertions': 'off',
+      '@typescript-eslint/no-inferrable-types': 'off',
+      '@typescript-eslint/consistent-type-definitions': 'off'
     }
-};
+  }
+  

@@ -27,7 +27,7 @@
 			"\t}",
 			"",
 			"\tpublic async executeFunction(): Promise<$1Function.ReturnType> {",
-			"\t\this.logger.log('$1Function.executeFunction', {}, 'info');",
+			"\t\tthis.logger.log('$1Function.executeFunction', {}, 'info');",
 			"\t\tawait checkPrerequirements(this.parameters, this.logger.nextIndent, 'notRequired');",
 			"\t}",
 			"}",

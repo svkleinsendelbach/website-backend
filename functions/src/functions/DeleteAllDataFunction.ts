@@ -37,5 +37,11 @@ export namespace DeleteAllDataFunction {
         databaseType: DatabaseType;
     };
 
+    export namespace Parameters {
+        export type Flatten = {
+            databaseType: DatabaseType.Value;
+        };
+    }
+
     export type ReturnType = void;
 }

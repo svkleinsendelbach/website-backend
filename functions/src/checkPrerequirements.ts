@@ -13,4 +13,5 @@ export async function checkPrerequirements(
     // Check if user is authorized to call a function.
     if (auth === undefined)
         throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
+    return auth !== undefined;
 }

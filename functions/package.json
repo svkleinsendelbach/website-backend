@@ -15,31 +15,18 @@
     "testAll": "npm run test test/**/*.test.ts test/*.test.ts",
     "test:coverage": "nyc npm run test",
     "testUtils:coverage": "nyc npm run testUtils",
-    "generateApiSchemaDocs": "cd .. && redoc-cli build functions/api-schema.yaml -o functions/docs/api-schema.html && cd functions"
+    "generateApiSchemaDocs": "cd .. && redoc-cli build functions/api-schema.yaml -o functions/docs/api-schema.html && cd functions",
+    "secrets": "ts-node ../../secrets/crets/src/manageSecrets.ts"
   },
   "engines": {
     "node": "16"
   },
   "main": "lib/src/index.js",
-  "dependencies": {
-    "aes-ts": "^0.0.0-alpha.0",
-    "cross-fetch": "^3.1.5",
-    "crypto": "^1.0.1",
-    "dom-parser": "^0.1.6",
-    "firebase-admin": "^11.4.1",
-    "firebase-functions": "^4.1.1",
-    "fontkit": "^2.0.2",
-    "nodemailer": "^6.8.0",
-    "sha512-crypt-ts": "^0.1.27"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.4",
-    "@types/dom-parser": "^0.1.1",
-    "@types/fontkit": "^2.0.1",
     "@types/mocha": "^10.0.1",
-    "@types/nodemailer": "^6.4.7",
-    "@types/utf8": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "chai": "^4.3.7",
@@ -58,16 +45,7 @@
     "include": [
       "src/**/*.ts"
     ],
-    "exclude": [
-      "src/testingFunctions/**/*.*",
-      "src/regularFunctions/**/*Function.ts",
-      "src/index.ts",
-      "src/privateKeys.ts",
-      "src/utils/FirebaseDatabase.ts",
-      "src/utils/checkPrerequirements.ts",
-      "src/utils/createFunction.ts",
-      "src/utils/fiatShamir.ts"
-    ],
+    "exclude": [],
     "reporter": [
       "html",
       "lcov",

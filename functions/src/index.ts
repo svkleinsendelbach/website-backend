@@ -4,11 +4,14 @@ import { FirebaseFunction } from 'firebase-function';
 import { getCryptionKeys } from './privateKeys';
 import { UserAuthenticationAddFunction } from './functions/UserAuthenticationAddFunction';
 import { UserAuthenticationCheckFunction } from './functions/UserAuthenticationCheckFunction';
+import { UserAuthenticationAcceptDeclineFunction } from './functions/UserAuthenticationAcceptDeclineFunction';
 
 admin.initializeApp();
 
-export const deleteAllData = FirebaseFunction.create((data, auth) => new DeleteAllDataFunction(data, auth), getCryptionKeys);
+export const deleteAllData = FirebaseFunction.create((data, auth, logger) => new DeleteAllDataFunction(data, auth, logger), getCryptionKeys);
 
-export const userAuthenticationAdd = FirebaseFunction.create((data, auth) => new UserAuthenticationAddFunction(data, auth), getCryptionKeys);
+export const userAuthenticationAdd = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAddFunction(data, auth, logger), getCryptionKeys);
 
-export const userAuthenticationCheck = FirebaseFunction.create((data, auth) => new UserAuthenticationCheckFunction(data, auth), getCryptionKeys);
+export const userAuthenticationCheck = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationCheckFunction(data, auth, logger), getCryptionKeys);
+
+export const userAuthenticationAcceptDecline = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAcceptDeclineFunction(data, auth, logger), getCryptionKeys);

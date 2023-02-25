@@ -2,7 +2,8 @@ import { Crypter } from 'firebase-function';
 import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationCheckFunction } from '../src/functions/UserAuthenticationCheckFunction';
-import { cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { type UserAuthentication } from '../src/types/UserAuthentication';
+import { callKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
 
 describe('userAuthenticationCheck', () => {
     const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, {
@@ -15,16 +16,16 @@ describe('userAuthenticationCheck', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters.Flatten, DeleteAllDataFunction.ReturnType>('deleteAllData', {
-            databaseType: 'testing'
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {
+            callKey: callKey
         });
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('not authenticated', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters.Flatten, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            databaseType: 'testing',
+        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
+            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -35,13 +36,13 @@ describe('userAuthenticationCheck', () => {
 
     it('unauthenticated', async() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
+        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters.Flatten, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            databaseType: 'testing',
+        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
+            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -52,13 +53,13 @@ describe('userAuthenticationCheck', () => {
 
     it('authenticated', async() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
+        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters.Flatten, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            databaseType: 'testing',
+        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
+            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success;

@@ -1,21 +1,18 @@
-import { DatabaseType, type FirebaseFunction, Logger, ParameterBuilder, ParameterContainer, ParameterParser, VerboseType, Crypter, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, Crypter, DatabaseReference, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { checkPrerequirements } from '../checkPrerequirements';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getCallKey, getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
 export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthenticationAddFunction.Parameters, UserAuthenticationAddFunction.ReturnType> {
-    public readonly parameters: UserAuthenticationAddFunction.Parameters;
+    public readonly parameters: UserAuthenticationAddFunction.Parameters & { databaseType: DatabaseType };
 
-    private readonly logger: Logger;
-
-    public constructor(data: unknown, private readonly auth: AuthData | undefined) {
-        this.logger = Logger.start(VerboseType.getFromObject(data), 'UserAuthenticationAddFunction.constructor', { data: data, auth: auth }, 'notice');
+    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
+        this.logger.log('UserAuthenticationAddFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<UserAuthenticationAddFunction.Parameters>(
             {
-                databaseType: ParameterBuilder.build('string', DatabaseType.fromString),
+                callKey: ParameterBuilder.value('string'),
                 type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard),
                 firstName: ParameterBuilder.value('string'),
                 lastName: ParameterBuilder.value('string')
@@ -28,7 +25,8 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
 
     public async executeFunction(): Promise<UserAuthenticationAddFunction.ReturnType> {
         this.logger.log('UserAuthenticationAddFunction.executeFunction', {}, 'info');
-        await checkPrerequirements(this.parameters, this.logger.nextIndent, this.auth);
+        if (this.parameters.callKey !== getCallKey(this.parameters.databaseType))
+            throw HttpsError('permission-denied', 'Call key is not valid for this function call.', this.logger);
         if (this.auth === undefined)
             throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type).child(Crypter.sha512(this.auth.uid));
@@ -42,20 +40,11 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
 
 export namespace UserAuthenticationAddFunction {
     export type Parameters = {
-        databaseType: DatabaseType;
+        callKey: string;
         type: UserAuthenticationType;
         firstName: string;
         lastName: string;
     };
-
-    export namespace Parameters {
-        export type Flatten = {
-            databaseType: DatabaseType.Value;
-            type: UserAuthenticationType;
-            firstName: string;
-            lastName: string;
-        };
-    }
 
     export type ReturnType = void;
 }

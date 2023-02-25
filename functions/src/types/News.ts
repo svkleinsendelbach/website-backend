@@ -1,4 +1,4 @@
-import { HttpsError, type Logger } from 'firebase-function';
+import { HttpsError, type ILogger } from 'firebase-function';
 
 export interface News {
     id: string;
@@ -12,7 +12,7 @@ export interface News {
 }
 
 export namespace News {
-    export function fromObject(value: object | null, logger: Logger): Omit<News, 'id'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<News, 'id'> {
         logger.log('News.fromObject', { value: value });
 
         if (value === null)

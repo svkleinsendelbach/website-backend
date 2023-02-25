@@ -1,4 +1,4 @@
-import { HttpsError, type Logger } from 'firebase-function';
+import { HttpsError, type ILogger } from 'firebase-function';
 import { type Guid } from '../classes/Guid';
 
 export type EventGroupId =
@@ -34,7 +34,7 @@ export type Event = {
 };
 
 export namespace Event {
-    export function fromObject(value: object | null, logger: Logger): Omit<Event, 'id'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<Event, 'id'> {
         logger.log('Event.fromObject', { value: value });
 
         if (value === null)

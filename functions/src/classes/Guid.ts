@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { HttpsError, type Logger } from 'firebase-function';
+import { HttpsError, type ILogger } from 'firebase-function';
 
 export class Guid {
     public constructor(
@@ -8,7 +8,7 @@ export class Guid {
 }
 
 export namespace Guid {
-    export function fromString(value: string, logger: Logger): Guid {
+    export function fromString(value: string, logger: ILogger): Guid {
         logger.log('guid.fromString', { value: value });
         const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
         if (!regex.test(value))

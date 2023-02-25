@@ -37,6 +37,12 @@
 			"\t\tdatabaseType: DatabaseType;",
 			"\t};",
 			"",
+			"\texport namespace Parameters {",
+			"\t\texport type Flatten = {",
+			"\t\t\tdatabaseType: DatabaseType.Value;",
+			"\t\t};",
+			"\t}",
+			"",
 			"\texport type ReturnType = void;",
 			"}",
 			""

@@ -3,10 +3,10 @@ import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationGetAllUnauthenticatedFunction } from '../src/functions/UserAuthenticationGetAllUnauthenticatedFunction';
 import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
 
 describe('userAuthenticationGetAllUnauthenticated', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, {
+    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
         functionsRegion: 'europe-west1',
         databaseUrl: firebaseConfig.databaseURL
     });
@@ -22,9 +22,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {
-            callKey: callKey
-        });
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
@@ -45,7 +43,6 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
 
     it('empty users', async() => {
         const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([]);
@@ -56,7 +53,6 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         await addUser(2, 'authenticated');
         await addUser(3, 'authenticated');
         const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([]);
@@ -67,7 +63,6 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         const user2 = await addUser(2, 'unauthenticated');
         const user3 = await addUser(3, 'unauthenticated');
         const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([
@@ -83,7 +78,6 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         await addUser(5, 'authenticated');
         await addUser(6, 'authenticated');
         const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([

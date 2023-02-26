@@ -1,8 +1,8 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HttpsError, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCallKey, getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
 export class UserAuthenticationGetAllUnauthenticatedFunction implements FirebaseFunction<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType> {
@@ -13,7 +13,6 @@ export class UserAuthenticationGetAllUnauthenticatedFunction implements Firebase
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<UserAuthenticationGetAllUnauthenticatedFunction.Parameters>(
             {
-                callKey: ParameterBuilder.value('string'),
                 type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard)
             },
             this.logger.nextIndent
@@ -24,8 +23,6 @@ export class UserAuthenticationGetAllUnauthenticatedFunction implements Firebase
 
     public async executeFunction(): Promise<UserAuthenticationGetAllUnauthenticatedFunction.ReturnType> {
         this.logger.log('UserAuthenticationGetAllUnauthenticatedFunction.executeFunction', {}, 'info');
-        if (this.parameters.callKey !== getCallKey(this.parameters.databaseType))
-            throw HttpsError('permission-denied', 'Call key is not valid for this function call.', this.logger);
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type);
         const snapshot = await reference.snapshot();
@@ -44,7 +41,6 @@ export class UserAuthenticationGetAllUnauthenticatedFunction implements Firebase
 
 export namespace UserAuthenticationGetAllUnauthenticatedFunction {
     export type Parameters = {
-        callKey: string;
         type: UserAuthenticationType;
     };
 

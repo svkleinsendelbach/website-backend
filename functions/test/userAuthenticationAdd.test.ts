@@ -3,10 +3,10 @@ import { expect, expectResult, FirebaseApp } from 'firebase-function/lib/src/tes
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationAddFunction } from '../src/functions/UserAuthenticationAddFunction';
 import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
 
 describe('userAuthenticationAdd', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, {
+    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
         functionsRegion: 'europe-west1',
         databaseUrl: firebaseConfig.databaseURL
     });
@@ -16,16 +16,13 @@ describe('userAuthenticationAdd', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {
-            callKey: callKey
-        });
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('add user', async() => {
         const result = await firebaseApp.functions.call<UserAuthenticationAddFunction.Parameters, UserAuthenticationAddFunction.ReturnType>('userAuthenticationAdd', {
-            callKey: callKey,
             type: 'websiteEditing',
             firstName: 'John',
             lastName: 'Doe'

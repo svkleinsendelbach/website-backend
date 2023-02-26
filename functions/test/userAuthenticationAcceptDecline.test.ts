@@ -3,10 +3,10 @@ import { expect, expectResult, FirebaseApp } from 'firebase-function/lib/src/tes
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationAcceptDeclineFunction } from '../src/functions/UserAuthenticationAcceptDeclineFunction';
 import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
 
 describe('userAuthenticationAcceptDecline', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, {
+    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
         functionsRegion: 'europe-west1',
         databaseUrl: firebaseConfig.databaseURL
     });
@@ -22,16 +22,13 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {
-            callKey: callKey
-        });
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('accept missing user', async() => {
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -46,7 +43,6 @@ describe('userAuthenticationAcceptDecline', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -66,7 +62,6 @@ describe('userAuthenticationAcceptDecline', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -81,7 +76,6 @@ describe('userAuthenticationAcceptDecline', () => {
 
     it('decline missing user', async() => {
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
@@ -96,7 +90,6 @@ describe('userAuthenticationAcceptDecline', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
@@ -116,7 +109,6 @@ describe('userAuthenticationAcceptDecline', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
-            callKey: callKey,
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'

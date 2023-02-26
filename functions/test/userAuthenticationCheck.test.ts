@@ -3,10 +3,10 @@ import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationCheckFunction } from '../src/functions/UserAuthenticationCheckFunction';
 import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
 
 describe('userAuthenticationCheck', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, {
+    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
         functionsRegion: 'europe-west1',
         databaseUrl: firebaseConfig.databaseURL
     });
@@ -16,16 +16,13 @@ describe('userAuthenticationCheck', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {
-            callKey: callKey
-        });
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('not authenticated', async() => {
         const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -42,7 +39,6 @@ describe('userAuthenticationCheck', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -59,7 +55,6 @@ describe('userAuthenticationCheck', () => {
             lastName: 'Doe'
         });
         const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction.Parameters, UserAuthenticationCheckFunction.ReturnType>('userAuthenticationCheck', {
-            callKey: callKey,
             type: 'websiteEditing'
         });
         expectResult(result).success;

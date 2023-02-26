@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import { DeleteAllDataFunction } from './functions/DeleteAllDataFunction';
 import { FirebaseFunction } from 'firebase-function';
-import { getCryptionKeys } from './privateKeys';
+import { getCallSecretKey, getCryptionKeys } from './privateKeys';
 import { UserAuthenticationAddFunction } from './functions/UserAuthenticationAddFunction';
 import { UserAuthenticationCheckFunction } from './functions/UserAuthenticationCheckFunction';
 import { UserAuthenticationAcceptDeclineFunction } from './functions/UserAuthenticationAcceptDeclineFunction';
@@ -9,12 +9,12 @@ import { UserAuthenticationGetAllUnauthenticatedFunction } from './functions/Use
 
 admin.initializeApp();
 
-export const deleteAllData = FirebaseFunction.create((data, auth, logger) => new DeleteAllDataFunction(data, auth, logger), getCryptionKeys);
+export const deleteAllData = FirebaseFunction.create((data, auth, logger) => new DeleteAllDataFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
-export const userAuthenticationAdd = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAddFunction(data, auth, logger), getCryptionKeys);
+export const userAuthenticationAdd = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAddFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
-export const userAuthenticationCheck = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationCheckFunction(data, auth, logger), getCryptionKeys);
+export const userAuthenticationCheck = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationCheckFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
-export const userAuthenticationAcceptDecline = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAcceptDeclineFunction(data, auth, logger), getCryptionKeys);
+export const userAuthenticationAcceptDecline = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAcceptDeclineFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
-export const userAuthenticationGetAllUnauthenticated = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationGetAllUnauthenticatedFunction(data, auth, logger), getCryptionKeys);
+export const userAuthenticationGetAllUnauthenticated = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationGetAllUnauthenticatedFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

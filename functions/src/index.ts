@@ -5,6 +5,7 @@ import { getCryptionKeys } from './privateKeys';
 import { UserAuthenticationAddFunction } from './functions/UserAuthenticationAddFunction';
 import { UserAuthenticationCheckFunction } from './functions/UserAuthenticationCheckFunction';
 import { UserAuthenticationAcceptDeclineFunction } from './functions/UserAuthenticationAcceptDeclineFunction';
+import { UserAuthenticationGetAllUnauthenticatedFunction } from './functions/UserAuthenticationGetAllUnauthenticatedFunction';
 
 admin.initializeApp();
 
@@ -15,3 +16,5 @@ export const userAuthenticationAdd = FirebaseFunction.create((data, auth, logger
 export const userAuthenticationCheck = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationCheckFunction(data, auth, logger), getCryptionKeys);
 
 export const userAuthenticationAcceptDecline = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAcceptDeclineFunction(data, auth, logger), getCryptionKeys);
+
+export const userAuthenticationGetAllUnauthenticated = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationGetAllUnauthenticatedFunction(data, auth, logger), getCryptionKeys);

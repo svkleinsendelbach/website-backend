@@ -12,6 +12,7 @@ import { NewsEditFunction } from './functions/NewsEditFunction';
 import { NewsGetSingleFunction } from './functions/NewsGetSingle';
 import { NewsGetFunction } from './functions/NewsGetFunction';
 import { NewsDisableFunction } from './functions/NewsDisableFunction';
+import { VerifyRecaptchaFunction } from './functions/VerifyRecaptchaFunction';
 
 admin.initializeApp();
 
@@ -36,3 +37,5 @@ export const newsGetSingle = FirebaseFunction.create((data, auth, logger) => new
 export const newsGet = FirebaseFunction.create((data, auth, logger) => new NewsGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const newsDisable = FirebaseFunction.create((data, auth, logger) => new NewsDisableFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const verifyRecaptcha = FirebaseFunction.create((data, auth, logger) => new VerifyRecaptchaFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

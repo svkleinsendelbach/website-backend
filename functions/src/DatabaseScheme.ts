@@ -1,12 +1,12 @@
 import { type CryptedScheme, type DatabaseSchemeType } from 'firebase-function';
-import { type AnpfiffTeamParameter } from './types/AnpfiffTeamParameter';
+import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameters';
 import { type Event, type EventGroupId } from './types/Event';
 import { type News } from './types/News';
 import { type UserAuthentication, type UserAuthenticationType } from './types/UserAuthentication';
 
 export type DatabaseScheme = DatabaseSchemeType<{
-    anpfiffTeamParameter: {
-        [Key in AnpfiffTeamParameter.Type]: AnpfiffTeamParameter
+    anpfiffInfoTeamParameters: {
+        [Key in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters
     };
     events: {
         [Key in EventGroupId]: {

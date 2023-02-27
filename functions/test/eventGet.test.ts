@@ -1,7 +1,7 @@
 import { FirebaseApp, expectResult } from 'firebase-function/lib/src/testUtils';
 import { Guid } from '../src/classes/Guid';
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type EventGetFunction } from '../src/functions/EventGet';
+import { type EventGetFunction } from '../src/functions/EventGetFunction';
 import { type Event } from '../src/types/Event';
 import { cryptionKeys, callSecretKey, firebaseConfig } from './privateKeys';
 

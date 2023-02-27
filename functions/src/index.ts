@@ -7,9 +7,10 @@ import { UserAuthenticationCheckFunction } from './functions/UserAuthenticationC
 import { UserAuthenticationAcceptDeclineFunction } from './functions/UserAuthenticationAcceptDeclineFunction';
 import { UserAuthenticationGetAllUnauthenticatedFunction } from './functions/UserAuthenticationGetAllUnauthenticatedFunction';
 import { EventEditFunction } from './functions/EventEditFunction';
-import { EventGetFunction } from './functions/EventGet';
+import { EventGetFunction } from './functions/EventGetFunction';
 import { NewsEditFunction } from './functions/NewsEditFunction';
 import { NewsGetSingleFunction } from './functions/NewsGetSingle';
+import { NewsGetFunction } from './functions/NewsGetFunction';
 
 admin.initializeApp();
 
@@ -30,3 +31,5 @@ export const eventGet = FirebaseFunction.create((data, auth, logger) => new Even
 export const newsEdit = FirebaseFunction.create((data, auth, logger) => new NewsEditFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const newsGetSingle = FirebaseFunction.create((data, auth, logger) => new NewsGetSingleFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const newsGet = FirebaseFunction.create((data, auth, logger) => new NewsGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

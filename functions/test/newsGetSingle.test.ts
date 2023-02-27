@@ -23,7 +23,7 @@ describe('newsGetSingle', () => {
             shortDescription: 'shortDescription',
             newsUrl: 'newsUrl',
             disabled: disabled,
-            thumbnailUrl: 'tumbnailUrl$'
+            thumbnailUrl: 'tumbnailUrl'
         };
         await firebaseApp.database.setEncrypted('news/news_id', news);
         return {

@@ -1,5 +1,5 @@
 import { type HtmlNode, type HtmlDom } from 'firebase-function';
-import { PersonParameters } from '../types/AnpfiffInfoPersonParameters';
+import { AnpfiffInfoPersonParameters } from '../types/AnpfiffInfoPersonParameters';
 import { type TeamSquad } from '../types/TeamSquad';
 
 export class TeamSquadParser {
@@ -61,7 +61,7 @@ export class TeamSquadParser {
             imageId: node.nthChild(1).nthChild(1).nthChild(0).attribute('src').regexGroup(/^\S+\/(?<id>\d+)\.(?:png|jpg)$/g, 'id').toInt(),
             firstName: firstName,
             lastName: lastName,
-            personParameters: PersonParameters.fromHtmlValue(node.nthChild(3).nthChild(1).attribute('href')),
+            personParameters: AnpfiffInfoPersonParameters.fromHtmlValue(node.nthChild(3).nthChild(1).attribute('href')),
             age: node.nthChild(5).nthChild(1).value.regexGroup(/^\((?<age>\d+)\)$/g, 'age').toInt(),
             countInSquad: node.nthChild(7).nthChild(1).value.regexGroup(/^(?<n>\d+)[\s\S]*$/g, 'n').toInt(),
             goals: node.nthChild(7).nthChild(3).value.regexGroup(/^(?<n>\d+)[\s\S]*$/g, 'n').toInt(),
@@ -78,7 +78,7 @@ export class TeamSquadParser {
                 return {
                     imageId: node.nthChild(1).nthChild(1).attribute('src').regexGroup(/^\S+\/(?<id>\d+)\.(?:png|jpg)$/g, 'id').toInt(),
                     name: node.nthChild(3).nthChild(1).nthChild(0).value.toString(),
-                    personParameters: PersonParameters.fromHtmlValue(node.nthChild(3).nthChild(1).attribute('href')),
+                    personParameters: AnpfiffInfoPersonParameters.fromHtmlValue(node.nthChild(3).nthChild(1).attribute('href')),
                     age: node.nthChild(3).nthChild(3).value.regexGroup(/^\s*\((?<age>\d+)\)\s*$/g, 'age').toInt()
                 };
             });
@@ -96,7 +96,7 @@ export class TeamSquadParser {
                     imageId: node.nthChild(1).nthChild(1).attribute('src').regexGroup(/^\S+\/(?<id>\d+)\.(?:png|jpg)$/g, 'id').toInt(),
                     function: aFunction,
                     name: name,
-                    personParameters: PersonParameters.fromHtmlValue(node.nthChild(3).nthChild(3).nthChild(1).attribute('href'))
+                    personParameters: AnpfiffInfoPersonParameters.fromHtmlValue(node.nthChild(3).nthChild(3).nthChild(1).attribute('href'))
                 };
             }) ?? [];
     }

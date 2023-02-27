@@ -15,6 +15,7 @@ import { NewsDisableFunction } from './functions/NewsDisableFunction';
 import { VerifyRecaptchaFunction } from './functions/VerifyRecaptchaFunction';
 import { SendMailContactFunction } from './functions/SendMailContactFunction';
 import { TeamSquadGetFunction } from './functions/TeamSquadGetFunction';
+import { GameInfoGetFunction } from './functions/GameInfoGetFunction';
 
 admin.initializeApp();
 
@@ -45,3 +46,5 @@ export const verifyRecaptcha = FirebaseFunction.create((data, auth, logger) => n
 export const sendMailContact = FirebaseFunction.create((data, auth, logger) => new SendMailContactFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const teamSquadGet = FirebaseFunction.create((data, auth, logger) => new TeamSquadGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const gameInfoGet = FirebaseFunction.create((data, auth, logger) => new GameInfoGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

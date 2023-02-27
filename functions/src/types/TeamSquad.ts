@@ -1,4 +1,4 @@
-import { type PersonParameters } from './AnpfiffInfoPersonParameters';
+import { type AnpfiffInfoPersonParameters } from './AnpfiffInfoPersonParameters';
 
 export type TeamSquad = {
     squad: {
@@ -11,14 +11,14 @@ export type TeamSquad = {
     coach: {
         imageId: number | null;
         name: string | null;
-        personParameters: PersonParameters | null;
+        personParameters: AnpfiffInfoPersonParameters | null;
         age: number | null;
     } | null;
     stab: Array<{
         imageId: number | null;
         function: string | null;
         name: string | null;
-        personParameters: PersonParameters | null;
+        personParameters: AnpfiffInfoPersonParameters | null;
     }>;
 };
 
@@ -27,7 +27,7 @@ export namespace TeamSquad {
         imageId: number | null;
         firstName: string | null;
         lastName: string | null;
-        personParameters: PersonParameters | null;
+        personParameters: AnpfiffInfoPersonParameters | null;
         age: number | null;
         countInSquad: number | null;
         goals: number | null;

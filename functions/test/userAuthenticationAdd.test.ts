@@ -3,7 +3,7 @@ import { expect, expectResult, FirebaseApp } from 'firebase-function/lib/src/tes
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationAddFunction } from '../src/functions/UserAuthenticationAddFunction';
 import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { callSecretKey, cryptionKeys, firebaseConfig } from './privateKeys';
 
 describe('userAuthenticationAdd', () => {
     const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
@@ -11,14 +11,9 @@ describe('userAuthenticationAdd', () => {
         databaseUrl: firebaseConfig.databaseURL
     });
 
-    beforeEach(async() => {
-        await firebaseApp.auth.signIn(testUser.email, testUser.password);
-    });
-
     afterEach(async() => {
         const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
         expectResult(result).success;
-        await firebaseApp.auth.signOut();
     });
 
     it('add user', async() => {

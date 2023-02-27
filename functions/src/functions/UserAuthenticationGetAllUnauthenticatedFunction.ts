@@ -26,7 +26,7 @@ export class UserAuthenticationGetAllUnauthenticatedFunction implements Firebase
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type);
         const snapshot = await reference.snapshot();
-        return snapshot.flatMap(snapshot => {
+        return snapshot.compactMap(snapshot => {
             const userAuthentication = snapshot.value(true);
             if (snapshot.key === null || userAuthentication.state !== 'unauthenticated')
                 return null;

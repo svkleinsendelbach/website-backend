@@ -60,4 +60,19 @@ export namespace News {
         disabled: boolean;
         thumbnailUrl: string;
     };
+
+    export function flatten(news: News): News.Flatten;
+    export function flatten(news: Omit<News, 'id'>): Omit<News.Flatten, 'id'>;
+    export function flatten(news: News | Omit<News, 'id'>): News.Flatten | Omit<News.Flatten, 'id'> {
+        return {
+            ...('id' in news ? { id: news.id } : {}),
+            title: news.title,
+            subtitle: news.subtitle,
+            date: news.date.toISOString(),
+            shortDescription: news.shortDescription,
+            newsUrl: news.newsUrl,
+            disabled: news.disabled,
+            thumbnailUrl: news.thumbnailUrl
+        };
+    }
 }

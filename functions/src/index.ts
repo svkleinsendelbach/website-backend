@@ -9,6 +9,7 @@ import { UserAuthenticationGetAllUnauthenticatedFunction } from './functions/Use
 import { EventEditFunction } from './functions/EventEditFunction';
 import { EventGetFunction } from './functions/EventGet';
 import { NewsEditFunction } from './functions/NewsEditFunction';
+import { NewsGetSingleFunction } from './functions/NewsGetSingle';
 
 admin.initializeApp();
 
@@ -27,3 +28,5 @@ export const eventEdit = FirebaseFunction.create((data, auth, logger) => new Eve
 export const eventGet = FirebaseFunction.create((data, auth, logger) => new EventGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const newsEdit = FirebaseFunction.create((data, auth, logger) => new NewsEditFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const newsGetSingle = FirebaseFunction.create((data, auth, logger) => new NewsGetSingleFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

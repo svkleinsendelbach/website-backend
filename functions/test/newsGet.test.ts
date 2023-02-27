@@ -4,7 +4,7 @@ import { type NewsGetFunction } from '../src/functions/NewsGetFunction';
 import { type News } from '../src/types/News';
 import { cryptionKeys, callSecretKey, firebaseConfig } from './privateKeys';
 
-describe('newsGetSingle', () => {
+describe('newsGet', () => {
     const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
         functionsRegion: 'europe-west1',
         databaseUrl: firebaseConfig.databaseURL

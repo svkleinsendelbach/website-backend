@@ -11,6 +11,7 @@ import { EventGetFunction } from './functions/EventGetFunction';
 import { NewsEditFunction } from './functions/NewsEditFunction';
 import { NewsGetSingleFunction } from './functions/NewsGetSingle';
 import { NewsGetFunction } from './functions/NewsGetFunction';
+import { NewsDisableFunction } from './functions/NewsDisableFunction';
 
 admin.initializeApp();
 
@@ -33,3 +34,5 @@ export const newsEdit = FirebaseFunction.create((data, auth, logger) => new News
 export const newsGetSingle = FirebaseFunction.create((data, auth, logger) => new NewsGetSingleFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const newsGet = FirebaseFunction.create((data, auth, logger) => new NewsGetFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const newsDisable = FirebaseFunction.create((data, auth, logger) => new NewsDisableFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

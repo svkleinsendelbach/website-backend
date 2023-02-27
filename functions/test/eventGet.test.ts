@@ -12,7 +12,7 @@ describe('eventGet', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
     });
 
@@ -41,7 +41,7 @@ describe('eventGet', () => {
             date: date4.toISOString(),
             title: 'event-4'
         });
-        const result = await firebaseApp.functions.call<EventGetFunction.Parameters, EventGetFunction.ReturnType>('eventGet', {
+        const result = await firebaseApp.functions.call<EventGetFunction>('eventGet', {
             groupIds: ['general', 'football-adults/first-team']
         });
         expectResult(result).success.to.be.deep.equal([

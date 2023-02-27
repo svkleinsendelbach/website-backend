@@ -1,4 +1,4 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
 import { type DatabaseScheme } from '../DatabaseScheme';
@@ -6,13 +6,13 @@ import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { News } from '../types/News';
 
-export class NewsEditFunction implements FirebaseFunction<NewsEditFunction.Parameters, NewsEditFunction.ReturnType> {
-    public readonly parameters: NewsEditFunction.Parameters & { databaseType: DatabaseType };
+export class NewsEditFunction implements FirebaseFunction<NewsEditFunctionType> {
+    public readonly parameters: FunctionType.Parameters<NewsEditFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('NewsEditFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<NewsEditFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<NewsEditFunctionType>>(
             {
                 editType: ParameterBuilder.guard('string', EditType.typeGuard),
                 newsId: ParameterBuilder.value('string'),
@@ -24,7 +24,7 @@ export class NewsEditFunction implements FirebaseFunction<NewsEditFunction.Param
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<NewsEditFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<NewsEditFunctionType>> {
         this.logger.log('NewsEditFunction.executeFunction', {}, 'info');
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
         const newsId = await this.getNewsId();
@@ -63,6 +63,7 @@ export class NewsEditFunction implements FirebaseFunction<NewsEditFunction.Param
                 alreadyUsedIds.push(Number.parseInt(i));
         });
         const suffix = this.getIdSuffix(alreadyUsedIds);
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         return this.parameters.newsId + suffix;
     }
 
@@ -78,20 +79,12 @@ export class NewsEditFunction implements FirebaseFunction<NewsEditFunction.Param
     }
 }
 
-export namespace NewsEditFunction {
-    export type Parameters = {
-        editType: EditType;
-        newsId: string;
-        news: Omit<News, 'id'> | undefined;
-    };
-
-    export namespace Parameters {
-        export type Flatten = {
-            editType: EditType;
-            newsId: string;
-            news: Omit<News.Flatten, 'id'> | undefined;
-        };
-    }
-
-    export type ReturnType = string;
-}
+export type NewsEditFunctionType = FunctionType<{
+    editType: EditType;
+    newsId: string;
+    news: Omit<News, 'id'> | undefined;
+}, string, {
+    editType: EditType;
+    newsId: string;
+    news: Omit<News.Flatten, 'id'> | undefined;
+}>;

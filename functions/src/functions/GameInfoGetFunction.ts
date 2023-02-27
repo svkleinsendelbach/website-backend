@@ -1,4 +1,4 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getCryptionKeys } from '../privateKeys';
 import { type BfvApiLiveticker, BfvLiveticker, type GameInfo } from '../types/GameInfo';
@@ -6,13 +6,13 @@ import DOMParser from 'dom-parser';
 import fetch from 'cross-fetch';
 import * as fontkit from 'fontkit';
 
-export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction.Parameters, GameInfoGetFunction.ReturnType> {
-    public readonly parameters: GameInfoGetFunction.Parameters & { databaseType: DatabaseType };
+export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunctionType> {
+    public readonly parameters: FunctionType.Parameters<GameInfoGetFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('GameInfoGetFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<GameInfoGetFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<GameInfoGetFunctionType>>(
             {
                 gameId: ParameterBuilder.value('string')
             },
@@ -22,7 +22,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<GameInfoGetFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<GameInfoGetFunctionType>> {
         this.logger.log('GameInfoGetFunction.executeFunction', {}, 'info');
         const gameInfo = await this.fetchGameInfoFromGamePage(this.parameters.gameId);
         const livetickerIds = await this.fetchLivetickerIdsFromGamePage(this.parameters.gameId);
@@ -147,13 +147,9 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
     }
 }
 
-export namespace GameInfoGetFunction {
-    export type Parameters = {
-        gameId: string;
-    };
-
-    export type ReturnType = GameInfo;
-}
+export type GameInfoGetFunctionType = FunctionType<{
+    gameId: string;
+}, GameInfo>;
 
 export type Nullable<T> = {
     [P in keyof T]: Nullable<T[P]> | null;

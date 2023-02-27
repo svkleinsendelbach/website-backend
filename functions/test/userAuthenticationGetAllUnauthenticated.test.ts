@@ -1,4 +1,4 @@
-import { Crypter, type ObjectValue } from 'firebase-function';
+import { Crypter, type FirebaseFunction, type ObjectValue } from 'firebase-function';
 import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
 import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
 import { type UserAuthenticationGetAllUnauthenticatedFunction } from '../src/functions/UserAuthenticationGetAllUnauthenticatedFunction';
@@ -22,12 +22,12 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
-    async function addUser(number: number, state: 'authenticated' | 'unauthenticated'): Promise<ObjectValue<UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>> {
+    async function addUser(number: number, state: 'authenticated' | 'unauthenticated'): Promise<ObjectValue<FirebaseFunction.ReturnType<UserAuthenticationGetAllUnauthenticatedFunction>>> {
         const user = {
             hashedUserId: `user_id_${number}`,
             firstName: `first_${number}`,
@@ -42,7 +42,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
     }
 
     it('empty users', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([]);
@@ -52,7 +52,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         await addUser(1, 'authenticated');
         await addUser(2, 'authenticated');
         await addUser(3, 'authenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([]);
@@ -62,7 +62,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         const user1 = await addUser(1, 'unauthenticated');
         const user2 = await addUser(2, 'unauthenticated');
         const user3 = await addUser(3, 'unauthenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([
@@ -77,7 +77,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         const user4 = await addUser(4, 'unauthenticated');
         await addUser(5, 'authenticated');
         await addUser(6, 'authenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction.Parameters, UserAuthenticationGetAllUnauthenticatedFunction.ReturnType>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
             type: 'websiteEditing'
         });
         expectResult(result).success.to.be.deep.equal([

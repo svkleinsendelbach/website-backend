@@ -1,16 +1,16 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { type News } from '../types/News';
 
-export class NewsGetFunction implements FirebaseFunction<NewsGetFunction.Parameters, NewsGetFunction.ReturnType> {
-    public readonly parameters: NewsGetFunction.Parameters & { databaseType: DatabaseType };
+export class NewsGetFunction implements FirebaseFunction<NewsGetFunctionType> {
+    public readonly parameters: FunctionType.Parameters<NewsGetFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('NewsGetFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<NewsGetFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<NewsGetFunctionType>>(
             {
                 numberNews: ParameterBuilder.optional(ParameterBuilder.value('number')),
                 alsoDisabled: ParameterBuilder.value('boolean')
@@ -21,7 +21,7 @@ export class NewsGetFunction implements FirebaseFunction<NewsGetFunction.Paramet
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<NewsGetFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<NewsGetFunctionType>> {
         this.logger.log('NewsGetFunction.executeFunction', {}, 'info');
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('news');
         const snapshot = await reference.snapshot();
@@ -31,7 +31,8 @@ export class NewsGetFunction implements FirebaseFunction<NewsGetFunction.Paramet
             if (snapshot.key === null)
                 return undefined;
             const news = snapshot.value(true);
-            if (!this.parameters.alsoDisabled && Boolean(news.disabled))
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (!this.parameters.alsoDisabled && news.disabled)
                 return undefined;
             return {
                 ...news,
@@ -54,14 +55,10 @@ export class NewsGetFunction implements FirebaseFunction<NewsGetFunction.Paramet
     }
 }
 
-export namespace NewsGetFunction {
-    export type Parameters = {
-        numberNews: number | undefined;
-        alsoDisabled: boolean;
-    };
-
-    export type ReturnType = {
-        news: News.Flatten[];
-        hasMore: boolean;
-    };
-}
+export type NewsGetFunctionType = FunctionType< {
+    numberNews: number | undefined;
+    alsoDisabled: boolean;
+}, {
+    news: News.Flatten[];
+    hasMore: boolean;
+}>;

@@ -1,17 +1,17 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
-export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.ReturnType> {
-    public readonly parameters: UserAuthenticationAcceptDeclineFunction.Parameters & { databaseType: DatabaseType };
+export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction<UserAuthenticationAcceptDeclineFunctionType> {
+    public readonly parameters: FunctionType.Parameters<UserAuthenticationAcceptDeclineFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('UserAuthenticationAcceptDeclineFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<UserAuthenticationAcceptDeclineFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationAcceptDeclineFunctionType>>(
             {
                 type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard),
                 hashedUserId: ParameterBuilder.value('string'),
@@ -23,7 +23,7 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<UserAuthenticationAcceptDeclineFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<UserAuthenticationAcceptDeclineFunctionType>> {
         this.logger.log('UserAuthenticationAcceptDeclineFunction.executeFunction', {}, 'info');
         await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type).child(this.parameters.hashedUserId);
@@ -42,12 +42,8 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
     }
 }
 
-export namespace UserAuthenticationAcceptDeclineFunction {
-    export type Parameters = {
-        type: UserAuthenticationType;
-        hashedUserId: string;
-        action: 'accept' | 'decline';
-    };
-
-    export type ReturnType = void;
-}
+export type UserAuthenticationAcceptDeclineFunctionType = FunctionType<{
+    type: UserAuthenticationType;
+    hashedUserId: string;
+    action: 'accept' | 'decline';
+}, void>;

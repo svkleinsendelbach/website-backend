@@ -9,7 +9,7 @@ describe('deleteAllData', () => {
     });
 
     it('no data in database', async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         const databaseValue = await firebaseApp.database.getOptional('');
         expect(databaseValue).to.be.equal(null);
@@ -17,7 +17,7 @@ describe('deleteAllData', () => {
 
     it('data in database', async() => {
         await firebaseApp.database.set<number>('v1/v2', 1234);
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         const databaseValue = await firebaseApp.database.getOptional('');
         expect(databaseValue).to.be.equal(null);

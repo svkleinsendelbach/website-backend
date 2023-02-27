@@ -1,16 +1,16 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, Crypter, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, Crypter, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
-export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthenticationAddFunction.Parameters, UserAuthenticationAddFunction.ReturnType> {
-    public readonly parameters: UserAuthenticationAddFunction.Parameters & { databaseType: DatabaseType };
+export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthenticationAddFunctionType> {
+    public readonly parameters: FunctionType.Parameters<UserAuthenticationAddFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('UserAuthenticationAddFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<UserAuthenticationAddFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationAddFunctionType>>(
             {
                 type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard),
                 firstName: ParameterBuilder.value('string'),
@@ -22,7 +22,7 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<UserAuthenticationAddFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<UserAuthenticationAddFunctionType>> {
         this.logger.log('UserAuthenticationAddFunction.executeFunction', {}, 'info');
         if (this.auth === undefined)
             throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', this.logger);
@@ -35,12 +35,8 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
     }
 }
 
-export namespace UserAuthenticationAddFunction {
-    export type Parameters = {
-        type: UserAuthenticationType;
-        firstName: string;
-        lastName: string;
-    };
-
-    export type ReturnType = void;
-}
+export type UserAuthenticationAddFunctionType = FunctionType<{
+    type: UserAuthenticationType;
+    firstName: string;
+    lastName: string;
+}, void>;

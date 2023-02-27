@@ -23,13 +23,13 @@ describe('newsDisable', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('disable news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsDisableFunction.Parameters, NewsDisableFunction.ReturnType>('newsDisable', {
+        const result = await firebaseApp.functions.call<NewsDisableFunction>('newsDisable', {
             editType: 'disable',
             newsId: 'news_id'
         });
@@ -48,7 +48,7 @@ describe('newsDisable', () => {
             thumbnailUrl: 'thumbnailUrl'
         };
         await firebaseApp.database.setEncrypted('news/news_id', news);
-        const result = await firebaseApp.functions.call<NewsDisableFunction.Parameters, NewsDisableFunction.ReturnType>('newsDisable', {
+        const result = await firebaseApp.functions.call<NewsDisableFunction>('newsDisable', {
             editType: 'disable',
             newsId: 'news_id'
         });
@@ -68,7 +68,7 @@ describe('newsDisable', () => {
             thumbnailUrl: 'thumbnailUrl'
         };
         await firebaseApp.database.setEncrypted('news/news_id', news);
-        const result = await firebaseApp.functions.call<NewsDisableFunction.Parameters, NewsDisableFunction.ReturnType>('newsDisable', {
+        const result = await firebaseApp.functions.call<NewsDisableFunction>('newsDisable', {
             editType: 'enable',
             newsId: 'news_id'
         });

@@ -1,16 +1,16 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { EventGroupId, type Event, type EventGroup } from '../types/Event';
 
-export class EventGetFunction implements FirebaseFunction<EventGetFunction.Parameters, EventGetFunction.ReturnType> {
-    public readonly parameters: EventGetFunction.Parameters & { databaseType: DatabaseType };
+export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> {
+    public readonly parameters: FunctionType.Parameters<EventGetFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('EventGetFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<EventGetFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<EventGetFunctionType>>(
             {
                 groupIds: ParameterBuilder.array(ParameterBuilder.guard('string', EventGroupId.typeGuard))
             },
@@ -20,7 +20,7 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunction.Param
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<EventGetFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<EventGetFunctionType>> {
         this.logger.log('EventGetFunction.executeFunction', {}, 'info');
         return (await Promise.all(this.parameters.groupIds.map(async id => await this.getEventGroup(id)))).flatMap(eventGroup => eventGroup ?? []);
     }
@@ -52,10 +52,6 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunction.Param
     }
 }
 
-export namespace EventGetFunction {
-    export type Parameters = {
-        groupIds: EventGroupId[];
-    };
-
-    export type ReturnType = EventGroup.Flatten[];
-}
+export type EventGetFunctionType = FunctionType<{
+    groupIds: EventGroupId[];
+}, EventGroup.Flatten[]>;

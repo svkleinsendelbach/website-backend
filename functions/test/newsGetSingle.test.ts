@@ -11,7 +11,7 @@ describe('newsGetSingle', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
     });
 
@@ -33,7 +33,7 @@ describe('newsGetSingle', () => {
     }
 
     it('get news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction.Parameters, NewsGetSingleFunction.ReturnType>('newsGetSingle', {
+        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
             newsId: 'news_id'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -44,7 +44,7 @@ describe('newsGetSingle', () => {
 
     it('get news disabled', async() => {
         await addNews(true);
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction.Parameters, NewsGetSingleFunction.ReturnType>('newsGetSingle', {
+        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
             newsId: 'news_id'
         });
         expectResult(result).failure.to.be.deep.equal({
@@ -55,7 +55,7 @@ describe('newsGetSingle', () => {
 
     it('get news', async() => {
         const news = await addNews(false);
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction.Parameters, NewsGetSingleFunction.ReturnType>('newsGetSingle', {
+        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
             newsId: 'news_id'
         });
         expectResult(result).success.to.be.deep.equal(news);

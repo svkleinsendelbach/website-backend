@@ -24,13 +24,13 @@ describe('eventEdit', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('remove event not existing', async() => {
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'remove',
             groupId: 'general',
             eventId: Guid.newGuid().guidString,
@@ -45,7 +45,7 @@ describe('eventEdit', () => {
             date: new Date().toISOString(),
             title: 'title'
         });
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'remove',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -56,7 +56,7 @@ describe('eventEdit', () => {
     });
 
     it('add event not given over', async() => {
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'add',
             groupId: 'general',
             eventId: Guid.newGuid().guidString,
@@ -71,7 +71,7 @@ describe('eventEdit', () => {
     it('add event not existing', async() => {
         const eventId = Guid.newGuid();
         const date = new Date();
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'add',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -95,7 +95,7 @@ describe('eventEdit', () => {
             title: 'title-1'
         });
         const date2 = new Date(date1.getTime() + 60000);
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'add',
             groupId: 'general',
             eventId: eventId.guidString,
@@ -111,7 +111,7 @@ describe('eventEdit', () => {
     });
 
     it('change event not given over', async() => {
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'change',
             groupId: 'general',
             eventId: Guid.newGuid().guidString,
@@ -124,7 +124,7 @@ describe('eventEdit', () => {
     });
 
     it('change event not existing', async() => {
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'change',
             groupId: 'general',
             eventId: Guid.newGuid().guidString,
@@ -147,7 +147,7 @@ describe('eventEdit', () => {
             title: 'title-1'
         });
         const date2 = new Date(date1.getTime() + 60000);
-        const result = await firebaseApp.functions.call<EventEditFunction.Parameters.Flatten, EventEditFunction.ReturnType>('eventEdit', {
+        const result = await firebaseApp.functions.call<EventEditFunction>('eventEdit', {
             editType: 'change',
             groupId: 'general',
             eventId: eventId.guidString,

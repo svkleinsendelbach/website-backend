@@ -23,13 +23,13 @@ describe('newsEdit', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('remove news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'remove',
             newsId: 'news_id',
             news: undefined
@@ -45,7 +45,7 @@ describe('newsEdit', () => {
             disabled: false,
             thumbnailUrl: 'thumbnailUrl'
         });
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'remove',
             newsId: 'news_id',
             news: undefined
@@ -55,7 +55,7 @@ describe('newsEdit', () => {
     });
 
     it('add news not given over', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'add',
             newsId: 'news_id',
             news: undefined
@@ -68,7 +68,7 @@ describe('newsEdit', () => {
 
     it('add news not existing', async() => {
         const date = new Date();
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'add',
             newsId: 'news_id',
             news: {
@@ -115,7 +115,7 @@ describe('newsEdit', () => {
             thumbnailUrl: 'thumbnailUrl-4'
         });
         const date3 = new Date(date1.getTime() + 60000);
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'add',
             newsId: 'news_id',
             news: {
@@ -144,7 +144,7 @@ describe('newsEdit', () => {
     });
 
     it('change news not given over', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'change',
             newsId: 'news_id',
             news: undefined
@@ -156,7 +156,7 @@ describe('newsEdit', () => {
     });
 
     it('change news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'change',
             newsId: 'news_id',
             news: {
@@ -182,7 +182,7 @@ describe('newsEdit', () => {
             thumbnailUrl: 'thumbnailUrl'
         });
         const date = new Date();
-        const result = await firebaseApp.functions.call<NewsEditFunction.Parameters.Flatten, NewsEditFunction.ReturnType>('newsEdit', {
+        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
             editType: 'change',
             newsId: 'news_id',
             news: {

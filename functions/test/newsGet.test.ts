@@ -11,7 +11,7 @@ describe('newsGet', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
     });
 
@@ -38,7 +38,7 @@ describe('newsGet', () => {
         const news5 = await addNews(5, true);
         const news1 = await addNews(1, false);
         const news2 = await addNews(2, true);
-        const result1 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result1 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: undefined,
             alsoDisabled: false
         });
@@ -46,7 +46,7 @@ describe('newsGet', () => {
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result2 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result2 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: undefined,
             alsoDisabled: true
         });
@@ -54,7 +54,7 @@ describe('newsGet', () => {
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result3 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result3 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 5,
             alsoDisabled: false
         });
@@ -62,7 +62,7 @@ describe('newsGet', () => {
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result4 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result4 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 5,
             alsoDisabled: true
         });
@@ -70,7 +70,7 @@ describe('newsGet', () => {
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result5 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result5 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 3,
             alsoDisabled: false
         });
@@ -78,7 +78,7 @@ describe('newsGet', () => {
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result6 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result6 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 3,
             alsoDisabled: true
         });
@@ -86,7 +86,7 @@ describe('newsGet', () => {
             hasMore: true,
             news: [news5, news4, news3]
         });
-        const result7 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result7 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 1,
             alsoDisabled: false
         });
@@ -94,7 +94,7 @@ describe('newsGet', () => {
             hasMore: true,
             news: [news4]
         });
-        const result8 = await firebaseApp.functions.call<NewsGetFunction.Parameters, NewsGetFunction.ReturnType>('newsGet', {
+        const result8 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
             numberNews: 1,
             alsoDisabled: true
         });

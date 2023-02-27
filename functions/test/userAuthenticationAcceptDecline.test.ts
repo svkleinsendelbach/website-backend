@@ -22,13 +22,13 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction.Parameters, DeleteAllDataFunction.ReturnType>('deleteAllData', {});
+        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
         expectResult(result).success;
         await firebaseApp.auth.signOut();
     });
 
     it('accept missing user', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -42,7 +42,7 @@ describe('userAuthenticationAcceptDecline', () => {
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -61,7 +61,7 @@ describe('userAuthenticationAcceptDecline', () => {
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
@@ -75,7 +75,7 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     it('decline missing user', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
@@ -89,7 +89,7 @@ describe('userAuthenticationAcceptDecline', () => {
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
@@ -108,7 +108,7 @@ describe('userAuthenticationAcceptDecline', () => {
             firstName: 'John',
             lastName: 'Doe'
         });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction.Parameters, UserAuthenticationAcceptDeclineFunction.Parameters>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'

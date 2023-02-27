@@ -11,7 +11,6 @@ export async function checkUserAuthentication(
     logger: ILogger
 ) {
     logger.log('checkUserAuthentication', { auth: auth, type: type, databaseType: databaseType });
-
     if (auth === undefined)
         throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
     const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(databaseType), getCryptionKeys(databaseType)).child('users').child('authentication').child(type).child(Crypter.sha512(auth.uid));

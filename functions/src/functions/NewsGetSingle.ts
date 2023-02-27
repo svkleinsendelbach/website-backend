@@ -1,16 +1,16 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { type News } from '../types/News';
 
-export class NewsGetSingleFunction implements FirebaseFunction<NewsGetSingleFunction.Parameters, NewsGetSingleFunction.ReturnType> {
-    public readonly parameters: NewsGetSingleFunction.Parameters & { databaseType: DatabaseType };
+export class NewsGetSingleFunction implements FirebaseFunction<NewsGetSingleFunctionType> {
+    public readonly parameters: FunctionType.Parameters<NewsGetSingleFunctionType> & { databaseType: DatabaseType };
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('NewsGetSingleFunction.constructor', { data: data, auth: auth }, 'notice');
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<NewsGetSingleFunction.Parameters>(
+        const parameterParser = new ParameterParser<FunctionType.Parameters<NewsGetSingleFunctionType>>(
             {
                 newsId: ParameterBuilder.value('string')
             },
@@ -20,7 +20,7 @@ export class NewsGetSingleFunction implements FirebaseFunction<NewsGetSingleFunc
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<NewsGetSingleFunction.ReturnType> {
+    public async executeFunction(): Promise<FunctionType.ReturnType<NewsGetSingleFunctionType>> {
         this.logger.log('NewsGetSingleFunction.executeFunction', {}, 'info');
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('news').child(this.parameters.newsId);
         const snapshot = await reference.snapshot();
@@ -36,10 +36,6 @@ export class NewsGetSingleFunction implements FirebaseFunction<NewsGetSingleFunc
     }
 }
 
-export namespace NewsGetSingleFunction {
-    export type Parameters = {
-        newsId: string;
-    };
-
-    export type ReturnType = News.Flatten;
-}
+export type NewsGetSingleFunctionType = FunctionType<{
+    newsId: string;
+}, News.Flatten>;

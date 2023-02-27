@@ -6,6 +6,7 @@ import { UserAuthenticationAddFunction } from './functions/UserAuthenticationAdd
 import { UserAuthenticationCheckFunction } from './functions/UserAuthenticationCheckFunction';
 import { UserAuthenticationAcceptDeclineFunction } from './functions/UserAuthenticationAcceptDeclineFunction';
 import { UserAuthenticationGetAllUnauthenticatedFunction } from './functions/UserAuthenticationGetAllUnauthenticatedFunction';
+import { EventEditFunction } from './functions/EventEditFunction';
 
 admin.initializeApp();
 
@@ -18,3 +19,5 @@ export const userAuthenticationCheck = FirebaseFunction.create((data, auth, logg
 export const userAuthenticationAcceptDecline = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationAcceptDeclineFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
 
 export const userAuthenticationGetAllUnauthenticated = FirebaseFunction.create((data, auth, logger) => new UserAuthenticationGetAllUnauthenticatedFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);
+
+export const eventEdit = FirebaseFunction.create((data, auth, logger) => new EventEditFunction(data, auth, logger), getCryptionKeys, getCallSecretKey);

@@ -67,6 +67,18 @@ export namespace Event {
         subtitle?: string;
         link?: string;
     };
+
+    export function flatten(event: Event): Event.Flatten;
+    export function flatten(event: Omit<Event, 'id'>): Omit<Event.Flatten, 'id'>;
+    export function flatten(event: Event | Omit<Event, 'id'>): Event.Flatten | Omit<Event.Flatten, 'id'> {
+        return {
+            ...('id' in event ? { id: event.id.guidString } : {}),
+            date: event.date.toISOString(),
+            title: event.title,
+            subtitle: event.subtitle,
+            link: event.link
+        };
+    }
 }
 
 export type EventGroup = {

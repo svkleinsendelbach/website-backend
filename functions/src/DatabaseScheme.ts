@@ -10,11 +10,11 @@ export type DatabaseScheme = DatabaseSchemeType<{
     };
     events: {
         [Key in EventGroupId]: {
-            [Key in string]: CryptedScheme<Event.Flatten>
+            [Key in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>
         }
     };
     news: {
-        [Key in string]: CryptedScheme<News.Flatten>
+        [Key in string]: CryptedScheme<Omit<News.Flatten, 'id'>>
     };
     users: {
         authentication: {

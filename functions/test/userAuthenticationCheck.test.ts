@@ -1,31 +1,21 @@
 import { Crypter } from 'firebase-function';
-import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type UserAuthenticationCheckFunction } from '../src/functions/UserAuthenticationCheckFunction';
-import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { cleanUpFirebase, firebaseApp } from './firebaseApp';
+import { testUser } from './privateKeys';
 
 describe('userAuthenticationCheck', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     beforeEach(async() => {
         await firebaseApp.auth.signIn(testUser.email, testUser.password);
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
-        await firebaseApp.auth.signOut();
+        await cleanUpFirebase();
     });
 
     it('not authenticated', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction>('userAuthenticationCheck', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             type: 'websiteEditing'
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'permission-denied',
             message: 'The function must be called while authenticated, not authenticated for websiteEditing.'
         });
@@ -33,15 +23,15 @@ describe('userAuthenticationCheck', () => {
 
     it('unauthenticated', async() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction>('userAuthenticationCheck', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             type: 'websiteEditing'
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'permission-denied',
             message: 'The function must be called while authenticated, unauthenticated for websiteEditing.'
         });
@@ -49,14 +39,14 @@ describe('userAuthenticationCheck', () => {
 
     it('authenticated', async() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationCheckFunction>('userAuthenticationCheck', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             type: 'websiteEditing'
         });
-        expectResult(result).success;
+        result.success;
     });
 });

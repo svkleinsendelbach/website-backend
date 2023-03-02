@@ -1,66 +1,48 @@
-import { Crypter } from 'firebase-function';
-import { FirebaseApp, expectResult, expect } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type NewsEditFunction } from '../src/functions/NewsEditFunction';
-import { type News } from '../src/types/News';
-import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { cryptionKeys, callSecretKey, testUser, firebaseConfig } from './privateKeys';
+import { expect } from 'firebase-function/lib/src/testUtils';
+import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsEdit', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     beforeEach(async() => {
-        await firebaseApp.auth.signIn(testUser.email, testUser.password);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
-            state: 'authenticated',
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-        });
+        await authenticateTestUser();
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
-        await firebaseApp.auth.signOut();
+        await cleanUpFirebase();
     });
 
     it('remove news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'remove',
             newsId: 'news_id',
             news: undefined
         });
-        expectResult(result).success.to.be.equal('news_id');
+        result.success.equal('news_id');
     });
 
     it('remove news existing', async() => {
-        await firebaseApp.database.setEncrypted<Omit<News.Flatten, 'id'>>('news/news_id', {
+        await firebaseApp.database.child('news').child('news_id').set({
             date: new Date().toISOString(),
             title: 'title',
             newsUrl: 'newsUrl',
             disabled: false,
             thumbnailUrl: 'thumbnailUrl'
-        });
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        }, true);
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'remove',
             newsId: 'news_id',
             news: undefined
         });
-        expectResult(result).success.to.be.equal('news_id');
-        expect(await firebaseApp.database.exists('news/news_id')).to.be.equal(false);
+        result.success.equal('news_id');
+        expect(await firebaseApp.database.child('news').child('news_id').exists()).to.be.equal(false);
     });
 
     it('add news not given over', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
             newsId: 'news_id',
             news: undefined
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'invalid-argument',
             message: 'No news in parameters to add / change.'
         });
@@ -68,7 +50,7 @@ describe('newsEdit', () => {
 
     it('add news not existing', async() => {
         const date = new Date();
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
             newsId: 'news_id',
             news: {
@@ -79,8 +61,8 @@ describe('newsEdit', () => {
                 thumbnailUrl: 'thumbnailUrl'
             }
         });
-        expectResult(result).success.to.be.equal('news_id');
-        expect(await firebaseApp.database.getDecrypted('news/news_id')).to.be.deep.equal({
+        result.success.equal('news_id');
+        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title',
             newsUrl: 'newsUrl',
@@ -91,31 +73,31 @@ describe('newsEdit', () => {
 
     it('add news existing', async() => {
         const date1 = new Date();
-        await firebaseApp.database.setEncrypted<Omit<News.Flatten, 'id'>>('news/news_id', {
+        await firebaseApp.database.child('news').child('news_id').set({
             date: date1.toISOString(),
             title: 'title-1',
             newsUrl: 'newsUrl-1',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-1'
-        });
+        }, true);
         const date2 = new Date(date1.getTime() + 30000);
-        await firebaseApp.database.setEncrypted<Omit<News.Flatten, 'id'>>('news/news_id_2', {
+        await firebaseApp.database.child('news').child('news_id_2').set({
             date: date2.toISOString(),
             title: 'title-2',
             newsUrl: 'newsUrl-2',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-2'
-        });
+        }, true);
         const date4 = new Date(date1.getTime() + 90000);
-        await firebaseApp.database.setEncrypted<Omit<News.Flatten, 'id'>>('news/news_id_4', {
+        await firebaseApp.database.child('news').child('news_id_4').set({
             date: date4.toISOString(),
             title: 'title-4',
             newsUrl: 'newsUrl-4',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-4'
-        });
+        }, true);
         const date3 = new Date(date1.getTime() + 60000);
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
             newsId: 'news_id',
             news: {
@@ -126,15 +108,15 @@ describe('newsEdit', () => {
                 thumbnailUrl: 'thumbnailUrl-3'
             }
         });
-        expectResult(result).success.to.be.equal('news_id_3');
-        expect(await firebaseApp.database.getDecrypted('news/news_id')).to.be.deep.equal({
+        result.success.equal('news_id_3');
+        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
             date: date1.toISOString(),
             title: 'title-1',
             newsUrl: 'newsUrl-1',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-1'
         });
-        expect(await firebaseApp.database.getDecrypted('news/news_id_3')).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id_3').get(true)).to.be.deep.equal({
             date: date3.toISOString(),
             title: 'title-3',
             newsUrl: 'newsUrl-3',
@@ -144,19 +126,19 @@ describe('newsEdit', () => {
     });
 
     it('change news not given over', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
             newsId: 'news_id',
             news: undefined
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'invalid-argument',
             message: 'No news in parameters to add / change.'
         });
     });
 
     it('change news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
             newsId: 'news_id',
             news: {
@@ -167,22 +149,22 @@ describe('newsEdit', () => {
                 thumbnailUrl: 'thumbnailUrl'
             }
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'invalid-argument',
             message: 'Couldn\'t change not existing news.'
         });
     });
 
     it('change news existsting', async() => {
-        await firebaseApp.database.setEncrypted<Omit<News.Flatten, 'id'>>('news/news_id', {
+        await firebaseApp.database.child('news').child('news_id').set({
             date: new Date().toISOString(),
             title: 'title',
             newsUrl: 'newsUrls',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl'
-        });
+        }, true);
         const date = new Date();
-        const result = await firebaseApp.functions.call<NewsEditFunction>('newsEdit', {
+        const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
             newsId: 'news_id',
             news: {
@@ -193,8 +175,8 @@ describe('newsEdit', () => {
                 thumbnailUrl: 'thumbnailUrl2'
             }
         });
-        expectResult(result).success.to.be.equal('news_id');
-        expect(await firebaseApp.database.getDecrypted('news/news_id')).to.be.deep.equal({
+        result.success.equal('news_id');
+        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title2',
             newsUrl: 'newsUrls2',

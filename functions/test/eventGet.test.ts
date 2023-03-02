@@ -1,50 +1,40 @@
-import { FirebaseApp, expectResult } from 'firebase-function/lib/src/testUtils';
 import { Guid } from '../src/classes/Guid';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type EventGetFunction } from '../src/functions/EventGetFunction';
-import { type Event } from '../src/types/Event';
-import { cryptionKeys, callSecretKey, firebaseConfig } from './privateKeys';
+import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('eventGet', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
+        await cleanUpFirebase();
     });
 
     it('get events', async() => {
         const date1 = new Date(new Date().getTime() + 50000);
         const eventId1 = Guid.newGuid();
-        await firebaseApp.database.setEncrypted<Omit<Event.Flatten, 'id'>>(`events/general/${eventId1.guidString}`, {
+        await firebaseApp.database.child('events').child('general').child(eventId1.guidString).set({
             date: date1.toISOString(),
             title: 'event-1'
-        });
+        }, true);
         const date2 = new Date(new Date().getTime() + 30000);
         const eventId2 = Guid.newGuid();
-        await firebaseApp.database.setEncrypted<Omit<Event.Flatten, 'id'>>(`events/general/${eventId2.guidString}`, {
+        await firebaseApp.database.child('events').child('general').child(eventId2.guidString).set({
             date: date2.toISOString(),
             title: 'event-2'
-        });
+        }, true);
         const date3 = new Date(new Date().getTime() + 20000);
         const eventId3 = Guid.newGuid();
-        await firebaseApp.database.setEncrypted<Omit<Event.Flatten, 'id'>>(`events/football-adults/first-team/${eventId3.guidString}`, {
+        await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId3.guidString).set({
             date: date3.toISOString(),
             title: 'event-3'
-        });
+        }, true);
         const date4 = new Date(new Date().getTime() - 30000);
         const eventId4 = Guid.newGuid();
-        await firebaseApp.database.setEncrypted<Omit<Event.Flatten, 'id'>>(`events/football-adults/first-team/${eventId4.guidString}`, {
+        await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId4.guidString).set({
             date: date4.toISOString(),
             title: 'event-4'
-        });
-        const result = await firebaseApp.functions.call<EventGetFunction>('eventGet', {
+        }, true);
+        const result = await firebaseApp.functions.function('event').function('get').call({
             groupIds: ['general', 'football-adults/first-team']
         });
-        expectResult(result).success.to.be.deep.equal([
+        result.success.equal([
             {
                 groupId: 'general',
                 events: [

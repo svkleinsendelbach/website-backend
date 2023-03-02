@@ -1,54 +1,37 @@
-import { Crypter } from 'firebase-function';
-import { expect, expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type UserAuthenticationAcceptDeclineFunction } from '../src/functions/UserAuthenticationAcceptDeclineFunction';
-import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { expect } from 'firebase-function/lib/src/testUtils';
+import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('userAuthenticationAcceptDecline', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     beforeEach(async() => {
-        await firebaseApp.auth.signIn(testUser.email, testUser.password);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
-            state: 'authenticated',
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-        });
+        await authenticateTestUser();
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
-        await firebaseApp.auth.signOut();
+        await cleanUpFirebase();
     });
 
     it('accept missing user', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
         });
-        expectResult(result).success;
+        result.success;
     });
 
     it('accept authenticated user', async() => {
-        await firebaseApp.database.setEncrypted<UserAuthentication>('users/authentication/websiteEditing/user_id', {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
         });
-        expectResult(result).success;
-        expect(await firebaseApp.database.getDecrypted<UserAuthentication>('users/authentication/websiteEditing/user_id')).to.be.deep.equal({
+        result.success;
+        expect(await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').get(true)).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -56,18 +39,18 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     it('accept unauthenticated user', async() => {
-        await firebaseApp.database.setEncrypted<UserAuthentication>('users/authentication/websiteEditing/user_id', {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'accept'
         });
-        expectResult(result).success;
-        expect(await firebaseApp.database.getDecrypted<UserAuthentication>('users/authentication/websiteEditing/user_id')).to.be.deep.equal({
+        result.success;
+        expect(await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').get(true)).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -75,27 +58,27 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     it('decline missing user', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
         });
-        expectResult(result).success;
+        result.success;
     });
 
     it('decline authenticated user', async() => {
-        await firebaseApp.database.setEncrypted<UserAuthentication>('users/authentication/websiteEditing/user_id', {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
         });
-        expectResult(result).success;
-        expect(await firebaseApp.database.getDecrypted<UserAuthentication>('users/authentication/websiteEditing/user_id')).to.be.deep.equal({
+        result.success;
+        expect(await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').get(true)).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -103,17 +86,17 @@ describe('userAuthenticationAcceptDecline', () => {
     });
 
     it('decline unauthenticated user', async() => {
-        await firebaseApp.database.setEncrypted<UserAuthentication>('users/authentication/websiteEditing/user_id', {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        });
-        const result = await firebaseApp.functions.call<UserAuthenticationAcceptDeclineFunction>('userAuthenticationAcceptDecline', {
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             type: 'websiteEditing',
             hashedUserId: 'user_id',
             action: 'decline'
         });
-        expectResult(result).success;
-        expect(await firebaseApp.database.exists('users/authentication/websiteEditing/user_id')).to.be.equal(false);
+        result.success;
+        expect(await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child('user_id').exists()).to.be.equal(false);
     });
 });

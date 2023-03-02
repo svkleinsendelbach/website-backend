@@ -1,18 +1,9 @@
-import { FirebaseApp, expectResult } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type NewsGetFunction } from '../src/functions/NewsGetFunction';
 import { type News } from '../src/types/News';
-import { cryptionKeys, callSecretKey, firebaseConfig } from './privateKeys';
+import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsGet', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
+        await cleanUpFirebase();
     });
 
     async function addNews(number: number, disabled: boolean): Promise<News.Flatten> {
@@ -25,7 +16,7 @@ describe('newsGet', () => {
             disabled: disabled,
             thumbnailUrl: `tumbnailUrl-${number}`
         };
-        await firebaseApp.database.setEncrypted(`news/news_id_${number}`, news);
+        await firebaseApp.database.child('news').child(`news_id_${number}`).set(news, true);
         return {
             id: `news_id_${number}`,
             ...news
@@ -38,67 +29,67 @@ describe('newsGet', () => {
         const news5 = await addNews(5, true);
         const news1 = await addNews(1, false);
         const news2 = await addNews(2, true);
-        const result1 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result1 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: undefined,
             alsoDisabled: false
         });
-        expectResult(result1).success.to.be.deep.equal({
+        result1.success.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result2 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result2 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: undefined,
             alsoDisabled: true
         });
-        expectResult(result2).success.to.be.deep.equal({
+        result2.success.equal({
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result3 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result3 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 5,
             alsoDisabled: false
         });
-        expectResult(result3).success.to.be.deep.equal({
+        result3.success.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result4 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result4 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 5,
             alsoDisabled: true
         });
-        expectResult(result4).success.to.be.deep.equal({
+        result4.success.equal({
             hasMore: false,
             news: [news5, news4, news3, news2, news1]
         });
-        const result5 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result5 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 3,
             alsoDisabled: false
         });
-        expectResult(result5).success.to.be.deep.equal({
+        result5.success.equal({
             hasMore: false,
             news: [news4, news3, news1]
         });
-        const result6 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result6 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 3,
             alsoDisabled: true
         });
-        expectResult(result6).success.to.be.deep.equal({
+        result6.success.equal({
             hasMore: true,
             news: [news5, news4, news3]
         });
-        const result7 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result7 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 1,
             alsoDisabled: false
         });
-        expectResult(result7).success.to.be.deep.equal({
+        result7.success.equal({
             hasMore: true,
             news: [news4]
         });
-        const result8 = await firebaseApp.functions.call<NewsGetFunction>('newsGet', {
+        const result8 = await firebaseApp.functions.function('news').function('get').call({
             numberNews: 1,
             alsoDisabled: true
         });
-        expectResult(result8).success.to.be.deep.equal({
+        result8.success.equal({
             hasMore: true,
             news: [news5]
         });

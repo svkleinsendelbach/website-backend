@@ -1,18 +1,9 @@
-import { FirebaseApp, expectResult } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type NewsGetSingleFunction } from '../src/functions/NewsGetSingle';
 import { type News } from '../src/types/News';
-import { cryptionKeys, callSecretKey, firebaseConfig } from './privateKeys';
+import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsGetSingle', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
+        await cleanUpFirebase();
     });
 
     async function addNews(disabled: boolean): Promise<News.Flatten> {
@@ -25,7 +16,7 @@ describe('newsGetSingle', () => {
             disabled: disabled,
             thumbnailUrl: 'tumbnailUrl'
         };
-        await firebaseApp.database.setEncrypted('news/news_id', news);
+        await firebaseApp.database.child('news').child('news_id').set(news, true);
         return {
             id: 'news_id',
             ...news
@@ -33,10 +24,10 @@ describe('newsGetSingle', () => {
     }
 
     it('get news not existing', async() => {
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
+        const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'not-found',
             message: 'News with specified id not found.'
         });
@@ -44,10 +35,10 @@ describe('newsGetSingle', () => {
 
     it('get news disabled', async() => {
         await addNews(true);
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
+        const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'
         });
-        expectResult(result).failure.to.be.deep.equal({
+        result.failure.equal({
             code: 'unavailable',
             message: 'News with specified id is disabled.'
         });
@@ -55,9 +46,9 @@ describe('newsGetSingle', () => {
 
     it('get news', async() => {
         const news = await addNews(false);
-        const result = await firebaseApp.functions.call<NewsGetSingleFunction>('newsGetSingle', {
+        const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'
         });
-        expectResult(result).success.to.be.deep.equal(news);
+        result.success.equal(news);
     });
 });

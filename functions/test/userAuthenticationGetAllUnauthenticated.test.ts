@@ -1,71 +1,55 @@
-import { Crypter, type FirebaseFunction, type ObjectValue } from 'firebase-function';
-import { expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type UserAuthenticationGetAllUnauthenticatedFunction } from '../src/functions/UserAuthenticationGetAllUnauthenticatedFunction';
-import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { type FunctionType, type ObjectValue } from 'firebase-function';
+import { type UserAuthenticationGetAllUnauthenticatedFunctionType } from '../src/functions/UserAuthenticationGetAllUnauthenticatedFunction';
+import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('userAuthenticationGetAllUnauthenticated', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     beforeEach(async() => {
-        await firebaseApp.auth.signIn(testUser.email, testUser.password);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.setEncrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`, {
-            state: 'authenticated',
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-        });
+        await authenticateTestUser();
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
-        await firebaseApp.auth.signOut();
+        await cleanUpFirebase();
     });
 
-    async function addUser(number: number, state: 'authenticated' | 'unauthenticated'): Promise<ObjectValue<FirebaseFunction.ReturnType<UserAuthenticationGetAllUnauthenticatedFunction>>> {
+    async function addUser(number: number, state: 'authenticated' | 'unauthenticated'): Promise<ObjectValue<FunctionType.ReturnType<UserAuthenticationGetAllUnauthenticatedFunctionType>>> {
         const user = {
             hashedUserId: `user_id_${number}`,
             firstName: `first_${number}`,
             lastName: `last_${number}`
         };
-        await firebaseApp.database.setEncrypted(`users/authentication/websiteEditing/user_id_${number}`, {
+        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(`user_id_${number}`).set({
             state: state,
             firstName: user.firstName,
             lastName: user.lastName
-        });
+        }, true);
         return user;
     }
 
     it('empty users', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
             type: 'websiteEditing'
         });
-        expectResult(result).success.to.be.deep.equal([]);
+        result.success.equal([]);
     });
 
     it('no unauthenticated users', async() => {
         await addUser(1, 'authenticated');
         await addUser(2, 'authenticated');
         await addUser(3, 'authenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
             type: 'websiteEditing'
         });
-        expectResult(result).success.to.be.deep.equal([]);
+        result.success.equal([]);
     });
 
     it('only unauthenticated users', async() => {
         const user1 = await addUser(1, 'unauthenticated');
         const user2 = await addUser(2, 'unauthenticated');
         const user3 = await addUser(3, 'unauthenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
             type: 'websiteEditing'
         });
-        expectResult(result).success.to.be.deep.equal([
+        result.success.equal([
             user1, user2, user3
         ]);
     });
@@ -77,10 +61,10 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
         const user4 = await addUser(4, 'unauthenticated');
         await addUser(5, 'authenticated');
         await addUser(6, 'authenticated');
-        const result = await firebaseApp.functions.call<UserAuthenticationGetAllUnauthenticatedFunction>('userAuthenticationGetAllUnauthenticated', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
             type: 'websiteEditing'
         });
-        expectResult(result).success.to.be.deep.equal([
+        result.success.equal([
             user1, user3, user4
         ]);
     });

@@ -1,35 +1,26 @@
 import { Crypter } from 'firebase-function';
-import { expect, expectResult, FirebaseApp } from 'firebase-function/lib/src/testUtils';
-import { type DeleteAllDataFunction } from '../src/functions/DeleteAllDataFunction';
-import { type UserAuthenticationAddFunction } from '../src/functions/UserAuthenticationAddFunction';
-import { type UserAuthentication } from '../src/types/UserAuthentication';
-import { callSecretKey, cryptionKeys, firebaseConfig, testUser } from './privateKeys';
+import { expect } from 'firebase-function/lib/src/testUtils';
+import { cleanUpFirebase, firebaseApp } from './firebaseApp';
+import { testUser } from './privateKeys';
 
 describe('userAuthenticationAdd', () => {
-    const firebaseApp = new FirebaseApp(firebaseConfig, cryptionKeys, callSecretKey, {
-        functionsRegion: 'europe-west1',
-        databaseUrl: firebaseConfig.databaseURL
-    });
-
     beforeEach(async() => {
         await firebaseApp.auth.signIn(testUser.email, testUser.password);
     });
 
     afterEach(async() => {
-        const result = await firebaseApp.functions.call<DeleteAllDataFunction>('deleteAllData', {});
-        expectResult(result).success;
-        await firebaseApp.auth.signOut();
+        await cleanUpFirebase();
     });
 
     it('add user', async() => {
-        const result = await firebaseApp.functions.call<UserAuthenticationAddFunction>('userAuthenticationAdd', {
+        const result = await firebaseApp.functions.function('userAuthentication').function('add').call({
             type: 'websiteEditing',
             firstName: 'John',
             lastName: 'Doe'
         });
-        expectResult(result).success;
+        result.success;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const databaseValue = await firebaseApp.database.getDecrypted<UserAuthentication>(`users/authentication/websiteEditing/${Crypter.sha512(firebaseApp.auth.currentUser!.uid)}`);
+        const databaseValue = await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true);
         expect(databaseValue).to.be.deep.equal({
             state: 'unauthenticated',
             firstName: 'John',

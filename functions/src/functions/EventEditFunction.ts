@@ -54,6 +54,6 @@ export type EventEditFunctionType = FunctionType<{
 }, void, {
     editType: EditType;
     groupId: EventGroupId;
-    eventId: Guid;
+    eventId: string;
     event: Omit<Event.Flatten, 'id'> | undefined;
 }>;

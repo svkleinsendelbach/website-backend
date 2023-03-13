@@ -12,7 +12,7 @@ export class UserAuthenticationCheckFunction implements FirebaseFunction<UserAut
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationCheckFunctionType>>(
             {
-                type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard)
+                authenicationTypes: ParameterBuilder.array(ParameterBuilder.guard('string', UserAuthenticationType.typeGuard))
             },
             this.logger.nextIndent
         );
@@ -22,10 +22,10 @@ export class UserAuthenticationCheckFunction implements FirebaseFunction<UserAut
 
     public async executeFunction(): Promise<FunctionType.ReturnType<UserAuthenticationCheckFunctionType>> {
         this.logger.log('UserAuthenticationCheckFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, this.parameters.type, this.parameters.databaseType, this.logger.nextIndent);
+        await checkUserAuthentication(this.auth, this.parameters.authenicationTypes, this.parameters.databaseType, this.logger.nextIndent);
     }
 }
 
 export type UserAuthenticationCheckFunctionType = FunctionType<{
-    type: UserAuthenticationType;
+    authenicationTypes: UserAuthenticationType[];
 }, void>;

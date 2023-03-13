@@ -3,50 +3,79 @@ import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { testUser } from './privateKeys';
 
 describe('userAuthenticationCheck', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
         await firebaseApp.auth.signIn(testUser.email, testUser.password);
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('not authenticated', async() => {
+    it('not authenticated', async () => {
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
-            type: 'websiteEditing'
+            authenicationTypes: ['editEvents', 'editNews']
         });
         result.failure.equal({
             code: 'permission-denied',
-            message: 'The function must be called while authenticated, not authenticated for websiteEditing.'
+            message: 'The function must be called while authenticated, not authenticated for editEvents.'
         });
     });
 
-    it('unauthenticated', async() => {
+    it('unauthenticated', async () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
         }, true);
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
-            type: 'websiteEditing'
+            authenicationTypes: ['editEvents']
         });
         result.failure.equal({
             code: 'permission-denied',
-            message: 'The function must be called while authenticated, unauthenticated for websiteEditing.'
+            message: 'The function must be called while authenticated, unauthenticated for editEvents.'
         });
     });
 
-    it('authenticated', async() => {
+    it('authenticated', async () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         }, true);
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
-            type: 'websiteEditing'
+            authenicationTypes: ['editEvents']
         });
         result.success;
+    });
+
+    it('not authenticated', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+            state: 'unauthenticated',
+            firstName: 'John',
+            lastName: 'Doe'
+        }, true);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+            state: 'authenticated',
+            firstName: 'John',
+            lastName: 'Doe'
+        }, true);
+        const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
+            authenicationTypes: ['editEvents', 'editNews', 'authenticateUser']
+        });
+        try {
+            result.failure.equal({
+                code: 'permission-denied',
+                message: 'The function must be called while authenticated, unauthenticated for editEvents.'
+            });
+        } catch {
+            result.failure.equal({
+                code: 'permission-denied',
+                message: 'The function must be called while authenticated, not authenticated for authenticateUser.'
+            });
+        }
     });
 });

@@ -23,7 +23,7 @@ export class NewsDisableFunction implements FirebaseFunction<NewsDisableFunction
 
     public async executeFunction(): Promise<FunctionType.ReturnType<NewsDisableFunctionType>> {
         this.logger.log('NewsDisableFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger.nextIndent);
+        await checkUserAuthentication(this.auth, 'editNews', this.parameters.databaseType, this.logger.nextIndent);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('news').child(this.parameters.newsId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)

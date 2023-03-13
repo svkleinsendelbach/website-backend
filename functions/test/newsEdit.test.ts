@@ -2,15 +2,15 @@ import { expect } from 'firebase-function/lib/src/testUtils';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsEdit', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
         await authenticateTestUser();
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('remove news not existing', async() => {
+    it('remove news not existing', async () => {
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'remove',
             newsId: 'news_id',
@@ -19,7 +19,7 @@ describe('newsEdit', () => {
         result.success.equal('news_id');
     });
 
-    it('remove news existing', async() => {
+    it('remove news existing', async () => {
         await firebaseApp.database.child('news').child('news_id').set({
             date: new Date().toISOString(),
             title: 'title',
@@ -36,7 +36,7 @@ describe('newsEdit', () => {
         expect(await firebaseApp.database.child('news').child('news_id').exists()).to.be.equal(false);
     });
 
-    it('add news not given over', async() => {
+    it('add news not given over', async () => {
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
             newsId: 'news_id',
@@ -48,7 +48,7 @@ describe('newsEdit', () => {
         });
     });
 
-    it('add news not existing', async() => {
+    it('add news not existing', async () => {
         const date = new Date();
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
@@ -71,7 +71,7 @@ describe('newsEdit', () => {
         });
     });
 
-    it('add news existing', async() => {
+    it('add news existing', async () => {
         const date1 = new Date();
         await firebaseApp.database.child('news').child('news_id').set({
             date: date1.toISOString(),
@@ -125,7 +125,7 @@ describe('newsEdit', () => {
         });
     });
 
-    it('change news not given over', async() => {
+    it('change news not given over', async () => {
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
             newsId: 'news_id',
@@ -137,7 +137,7 @@ describe('newsEdit', () => {
         });
     });
 
-    it('change news not existing', async() => {
+    it('change news not existing', async () => {
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
             newsId: 'news_id',
@@ -155,7 +155,7 @@ describe('newsEdit', () => {
         });
     });
 
-    it('change news existsting', async() => {
+    it('change news existsting', async () => {
         await firebaseApp.database.child('news').child('news_id').set({
             date: new Date().toISOString(),
             title: 'title',

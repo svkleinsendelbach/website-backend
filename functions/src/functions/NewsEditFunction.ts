@@ -26,7 +26,7 @@ export class NewsEditFunction implements FirebaseFunction<NewsEditFunctionType> 
 
     public async executeFunction(): Promise<FunctionType.ReturnType<NewsEditFunctionType>> {
         this.logger.log('NewsEditFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
+        await checkUserAuthentication(this.auth, 'editNews', this.parameters.databaseType, this.logger);
         const newsId = await this.getNewsId();
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('news').child(newsId);
         const snapshot = await reference.snapshot();

@@ -13,7 +13,7 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationAcceptDeclineFunctionType>>(
             {
-                type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard),
+                authenticationTypes: ParameterBuilder.array(ParameterBuilder.guard('string', UserAuthenticationType.typeGuard)),
                 hashedUserId: ParameterBuilder.value('string'),
                 action: ParameterBuilder.guard('string', (value: string): value is 'accept' | 'decline' => value === 'accept' || value === 'decline')
             },
@@ -25,8 +25,12 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
 
     public async executeFunction(): Promise<FunctionType.ReturnType<UserAuthenticationAcceptDeclineFunctionType>> {
         this.logger.log('UserAuthenticationAcceptDeclineFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type).child(this.parameters.hashedUserId);
+        await checkUserAuthentication(this.auth, 'authenticateUser', this.parameters.databaseType, this.logger);
+        await Promise.all(this.parameters.authenticationTypes.map(async authenticationType => await this.acceptDeclineSingleAuthenticationType(authenticationType)));
+    }
+
+    private async acceptDeclineSingleAuthenticationType(authenticationType: UserAuthenticationType) {
+        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(authenticationType).child(this.parameters.hashedUserId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             return;
@@ -43,7 +47,7 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
 }
 
 export type UserAuthenticationAcceptDeclineFunctionType = FunctionType<{
-    type: UserAuthenticationType;
+    authenticationTypes: UserAuthenticationType[];
     hashedUserId: string;
     action: 'accept' | 'decline';
 }, void>;

@@ -1,10 +1,10 @@
-# Website of SV Kleinsendelbach e.V. - Backend
+# Firebase Api of SV Kleinsendelbach e.V.
 
-This repository contains the backend for the `SV Kleinsendelbach e.v.` website. It's used to edit / get events and news, handle authentication, etc.
+This repository contains the firebase api of `SV Kleinsendelbach e.v.`. It's used to edit / get events and news, handle authentication, etc.
 
 ## Table of Contents
 
-- [Website of SV Kleinsendelbach e.V. - Backend](#website-of-sv-kleinsendelbach-ev---backend)
+- [Firebase Api of SV Kleinsendelbach e.V.](#firebase-api-of-sv-kleinsendelbach-ev)
     - [Table of Contents](#table-of-contents)
     - [Bug report and feature request](#bug-report-and-feature-request)
     - [Usage](#usage)
@@ -15,12 +15,12 @@ This repository contains the backend for the `SV Kleinsendelbach e.v.` website. 
 
 ## Bug report and feature request
 
-- To report a bug of this api, create a new issue at [Github Issues](https://github.com/svkleinsendelbach/website-backend/issues) and choose `Bug report`.
-- To request a new feature for this api, also create a new issue at [Github Issues](https://github.com/svkleinsendelbach/website-backend/issues) and choose `Feature request`.
+- To report a bug of this api, create a new issue at [Github Issues](https://github.com/svkleinsendelbach/firebase-api/issues) and choose `Bug report`.
+- To request a new feature for this api, also create a new issue at [Github Issues](https://github.com/svkleinsendelbach/firebase-api/issues) and choose `Feature request`.
 
 ## Usage
 
-To use this api, read the [API Schema](https://svkleinsendelbach.github.io/website-backend/api-schema.html).
+To use this api, read the [API Schema](https://svkleinsendelbach.github.io/firebase-api/api-schema.html).
 
 ## Development
 

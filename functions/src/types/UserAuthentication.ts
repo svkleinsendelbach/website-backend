@@ -1,8 +1,8 @@
-export type UserAuthenticationType = 'websiteEditing';
+export type UserAuthenticationType = 'editEvents' | 'editNews' | 'authenticateUser';
 
 export namespace UserAuthenticationType {
     export function typeGuard(value: string): value is UserAuthenticationType {
-        return ['websiteEditing'].includes(value);
+        return ['editEvents', 'editNews', 'authenticateUser'].includes(value);
     }
 }
 

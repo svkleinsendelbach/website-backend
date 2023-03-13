@@ -1,12 +1,12 @@
-import { Guid } from '../src/classes/Guid';
+import { Guid } from '../src/types/Guid';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('eventGet', () => {
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('get events', async() => {
+    it('get events', async () => {
         const date1 = new Date(new Date().getTime() + 50000);
         const eventId1 = Guid.newGuid();
         await firebaseApp.database.child('events').child('general').child(eventId1.guidString).set({

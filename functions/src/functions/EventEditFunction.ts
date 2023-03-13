@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
-import { Guid } from '../classes/Guid';
+import { Guid } from '../types/Guid';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
 import { EditType } from '../types/EditType';
@@ -28,7 +28,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
 
     public async executeFunction(): Promise<FunctionType.ReturnType<EventEditFunctionType>> {
         this.logger.log('EventEditFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, 'websiteEditing', this.parameters.databaseType, this.logger);
+        await checkUserAuthentication(this.auth, 'editEvents', this.parameters.databaseType, this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {

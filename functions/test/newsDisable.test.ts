@@ -3,15 +3,15 @@ import { type News } from '../src/types/News';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsDisable', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
         await authenticateTestUser();
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('disable news not existing', async() => {
+    it('disable news not existing', async () => {
         const result = await firebaseApp.functions.function('news').function('disable').call({
             editType: 'disable',
             newsId: 'news_id'
@@ -22,7 +22,7 @@ describe('newsDisable', () => {
         });
     });
 
-    it('disable news', async() => {
+    it('disable news', async () => {
         const news: Omit<News.Flatten, 'id'> = {
             date: new Date().toISOString(),
             title: 'title',
@@ -42,7 +42,7 @@ describe('newsDisable', () => {
         });
     });
 
-    it('enable news', async() => {
+    it('enable news', async () => {
         const news: Omit<News.Flatten, 'id'> = {
             date: new Date().toISOString(),
             title: 'title',

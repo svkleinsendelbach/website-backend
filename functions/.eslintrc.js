@@ -56,7 +56,8 @@ module.exports = {
       '@typescript-eslint/no-confusing-void-expression': 'off',
       '@typescript-eslint/consistent-type-assertions': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
-      '@typescript-eslint/consistent-type-definitions': 'off'
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/space-before-function-paren': 'off'
     }
   }
   

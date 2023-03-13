@@ -1,17 +1,17 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
-import { Guid } from '../src/classes/Guid';
+import { Guid } from '../src/types/Guid';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('eventEdit', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
         await authenticateTestUser();
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('remove event not existing', async() => {
+    it('remove event not existing', async () => {
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
             groupId: 'general',
@@ -21,7 +21,7 @@ describe('eventEdit', () => {
         result.success;
     });
 
-    it('remove event existing', async() => {
+    it('remove event existing', async () => {
         const eventId = Guid.newGuid();
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: new Date().toISOString(),
@@ -37,7 +37,7 @@ describe('eventEdit', () => {
         expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).exists()).to.be.equal(false);
     });
 
-    it('add event not given over', async() => {
+    it('add event not given over', async () => {
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'add',
             groupId: 'general',
@@ -50,7 +50,7 @@ describe('eventEdit', () => {
         });
     });
 
-    it('add event not existing', async() => {
+    it('add event not existing', async () => {
         const eventId = Guid.newGuid();
         const date = new Date();
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -69,7 +69,7 @@ describe('eventEdit', () => {
         });
     });
 
-    it('add event existing', async() => {
+    it('add event existing', async () => {
         const eventId = Guid.newGuid();
         const date1 = new Date();
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
@@ -92,7 +92,7 @@ describe('eventEdit', () => {
         });
     });
 
-    it('change event not given over', async() => {
+    it('change event not given over', async () => {
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'change',
             groupId: 'general',
@@ -105,7 +105,7 @@ describe('eventEdit', () => {
         });
     });
 
-    it('change event not existing', async() => {
+    it('change event not existing', async () => {
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'change',
             groupId: 'general',
@@ -121,7 +121,7 @@ describe('eventEdit', () => {
         });
     });
 
-    it('change event existing', async() => {
+    it('change event existing', async () => {
         const eventId = Guid.newGuid();
         const date1 = new Date();
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({

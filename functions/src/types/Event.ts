@@ -1,5 +1,5 @@
 import { HttpsError, type ILogger } from 'firebase-function';
-import { type Guid } from '../classes/Guid';
+import { type Guid } from './Guid';
 
 export type EventGroupId =
     'general' |

@@ -6,17 +6,31 @@ import { type UserAuthenticationType } from './types/UserAuthentication';
 
 export async function checkUserAuthentication(
     auth: AuthData | undefined,
-    type: UserAuthenticationType,
+    authenticationTypes: UserAuthenticationType | UserAuthenticationType[],
     databaseType: DatabaseType,
     logger: ILogger
 ) {
-    logger.log('checkUserAuthentication', { auth: auth, type: type, databaseType: databaseType });
+    logger.log('checkUserAuthentication', { auth: auth, authenticationTypes: authenticationTypes, databaseType: databaseType });
     if (auth === undefined)
         throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
-    const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(databaseType), getCryptionKeys(databaseType)).child('users').child('authentication').child(type).child(Crypter.sha512(auth.uid));
+    if (typeof authenticationTypes === 'string') {
+        await checkSingleUserAuthenticationType(auth, authenticationTypes, databaseType, logger.nextIndent);
+    } else {
+        await Promise.all(authenticationTypes.map(async authenticationType => await checkSingleUserAuthenticationType(auth, authenticationType, databaseType, logger.nextIndent)));
+    }
+}
+
+async function checkSingleUserAuthenticationType(
+    auth: AuthData,
+    authenticationType: UserAuthenticationType,
+    databaseType: DatabaseType,
+    logger: ILogger
+) {
+    logger.log('checkUserAuthentication', { auth: auth, authenticationType: authenticationType, databaseType: databaseType });
+    const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(databaseType), getCryptionKeys(databaseType)).child('users').child('authentication').child(authenticationType).child(Crypter.sha512(auth.uid));
     const snapshot = await reference.snapshot();
     if (!snapshot.exists)
-        throw HttpsError('permission-denied', `The function must be called while authenticated, not authenticated for ${type}.`, logger);
+        throw HttpsError('permission-denied', `The function must be called while authenticated, not authenticated for ${authenticationType}.`, logger);
     if (snapshot.value(true).state === 'unauthenticated')
-        throw HttpsError('permission-denied', `The function must be called while authenticated, unauthenticated for ${type}.`, logger);
+        throw HttpsError('permission-denied', `The function must be called while authenticated, unauthenticated for ${authenticationType}.`, logger);
 }

@@ -2,7 +2,7 @@ import { type News } from '../src/types/News';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsGetSingle', () => {
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
@@ -23,7 +23,7 @@ describe('newsGetSingle', () => {
         };
     }
 
-    it('get news not existing', async() => {
+    it('get news not existing', async () => {
         const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'
         });
@@ -33,7 +33,7 @@ describe('newsGetSingle', () => {
         });
     });
 
-    it('get news disabled', async() => {
+    it('get news disabled', async () => {
         await addNews(true);
         const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'
@@ -44,7 +44,7 @@ describe('newsGetSingle', () => {
         });
     });
 
-    it('get news', async() => {
+    it('get news', async () => {
         const news = await addNews(false);
         const result = await firebaseApp.functions.function('news').function('getSingle').call({
             newsId: 'news_id'

@@ -2,7 +2,7 @@ import { type News } from '../src/types/News';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('newsGet', () => {
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
@@ -23,7 +23,7 @@ describe('newsGet', () => {
         };
     }
 
-    it('get news', async() => {
+    it('get news', async () => {
         const news3 = await addNews(3, false);
         const news4 = await addNews(4, false);
         const news5 = await addNews(5, true);

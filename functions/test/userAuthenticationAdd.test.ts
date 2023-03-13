@@ -4,24 +4,29 @@ import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { testUser } from './privateKeys';
 
 describe('userAuthenticationAdd', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
         await firebaseApp.auth.signIn(testUser.email, testUser.password);
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         await cleanUpFirebase();
     });
 
-    it('add user', async() => {
+    it('add user', async () => {
         const result = await firebaseApp.functions.function('userAuthentication').function('add').call({
-            type: 'websiteEditing',
+            authenticationTypes: ['editEvents', 'editNews'],
             firstName: 'John',
             lastName: 'Doe'
         });
         result.success;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const databaseValue = await firebaseApp.database.child('users').child('authentication').child('websiteEditing').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true);
-        expect(databaseValue).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true)).to.be.deep.equal({
+            state: 'unauthenticated',
+            firstName: 'John',
+            lastName: 'Doe'
+        });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true)).to.be.deep.equal({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'

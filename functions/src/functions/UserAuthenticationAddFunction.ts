@@ -12,7 +12,7 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
         const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationAddFunctionType>>(
             {
-                type: ParameterBuilder.guard('string', UserAuthenticationType.typeGuard),
+                authenticationTypes: ParameterBuilder.array(ParameterBuilder.guard('string', UserAuthenticationType.typeGuard)),
                 firstName: ParameterBuilder.value('string'),
                 lastName: ParameterBuilder.value('string')
             },
@@ -26,17 +26,20 @@ export class UserAuthenticationAddFunction implements FirebaseFunction<UserAuthe
         this.logger.log('UserAuthenticationAddFunction.executeFunction', {}, 'info');
         if (this.auth === undefined)
             throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(this.parameters.type).child(Crypter.sha512(this.auth.uid));
-        await reference.set({
-            state: 'unauthenticated',
-            firstName: this.parameters.firstName,
-            lastName: this.parameters.lastName
-        }, true);
+        await Promise.all(this.parameters.authenticationTypes.map(async authenticationType => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(authenticationType).child(Crypter.sha512(this.auth!.uid));
+            await reference.set({
+                state: 'unauthenticated',
+                firstName: this.parameters.firstName,
+                lastName: this.parameters.lastName
+            }, true);
+        }));
     }
 }
 
 export type UserAuthenticationAddFunctionType = FunctionType<{
-    type: UserAuthenticationType;
+    authenticationTypes: UserAuthenticationType[];
     firstName: string;
     lastName: string;
 }, void>;

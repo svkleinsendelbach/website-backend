@@ -17,10 +17,12 @@ import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
+import { SearchEntityFunction, type SearchEntityFunctionType } from './functions/SearchEntityFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<typeof VerifyRecaptchaFunction, VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
     deleteAllData: FirebaseFunctionDescriptor.create<typeof DeleteAllDataFunction, DeleteAllDataFunctionType>(DeleteAllDataFunction),
+    searchEntity: FirebaseFunctionDescriptor.create<typeof SearchEntityFunction, SearchEntityFunctionType>(SearchEntityFunction),
     news: {
         get: FirebaseFunctionDescriptor.create<typeof NewsGetFunction, NewsGetFunctionType>(NewsGetFunction),
         edit: FirebaseFunctionDescriptor.create<typeof NewsEditFunction, NewsEditFunctionType>(NewsEditFunction),

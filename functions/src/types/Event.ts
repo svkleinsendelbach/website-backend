@@ -1,5 +1,5 @@
 import { HttpsError, type ILogger } from 'firebase-function';
-import { type Guid } from './Guid';
+import { Guid } from './Guid';
 
 export type EventGroupId =
     'general' |
@@ -74,6 +74,18 @@ export namespace Event {
         return {
             ...('id' in event ? { id: event.id.guidString } : {}),
             date: event.date.toISOString(),
+            title: event.title,
+            subtitle: event.subtitle,
+            link: event.link
+        };
+    }
+
+    export function concrete(event: Event.Flatten): Event;
+    export function concrete(event: Omit<Event.Flatten, 'id'>): Omit<Event, 'id'>;
+    export function concrete(event: Event.Flatten | Omit<Event.Flatten, 'id'>): Event | Omit<Event, 'id'> {
+        return {
+            ...('id' in event ? { id: new Guid(event.id) } : {}),
+            date: new Date(event.date),
             title: event.title,
             subtitle: event.subtitle,
             link: event.link

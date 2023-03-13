@@ -75,4 +75,19 @@ export namespace News {
             thumbnailUrl: news.thumbnailUrl
         };
     }
+
+    export function concrete(news: News.Flatten): News;
+    export function concrete(news: Omit<News.Flatten, 'id'>): Omit<News, 'id'>;
+    export function concrete(news: News.Flatten | Omit<News.Flatten, 'id'>): News | Omit<News, 'id'> {
+        return {
+            ...('id' in news ? { id: news.id } : {}),
+            title: news.title,
+            subtitle: news.subtitle,
+            date: new Date(news.date),
+            shortDescription: news.shortDescription,
+            newsUrl: news.newsUrl,
+            disabled: news.disabled,
+            thumbnailUrl: news.thumbnailUrl
+        };
+    }
 }

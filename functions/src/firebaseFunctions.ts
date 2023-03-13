@@ -15,6 +15,8 @@ import { VerifyRecaptchaFunction, type VerifyRecaptchaFunctionType } from './fun
 import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
+import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
+import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<typeof VerifyRecaptchaFunction, VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -28,6 +30,10 @@ export const firebaseFunctions = {
     event: {
         get: FirebaseFunctionDescriptor.create<typeof EventGetFunction, EventGetFunctionType>(EventGetFunction),
         edit: FirebaseFunctionDescriptor.create<typeof EventEditFunction, EventEditFunctionType>(EventEditFunction)
+    },
+    report: {
+        get: FirebaseFunctionDescriptor.create<typeof ReportGetFunction, ReportGetFunctionType>(ReportGetFunction),
+        edit: FirebaseFunctionDescriptor.create<typeof ReportEditFunction, ReportEditFunctionType>(ReportEditFunction)
     },
     bfvData: {
         gameInfo: FirebaseFunctionDescriptor.create<typeof GameInfoGetFunction, GameInfoGetFunctionType>(GameInfoGetFunction),

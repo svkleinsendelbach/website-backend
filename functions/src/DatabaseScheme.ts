@@ -2,6 +2,7 @@ import { type CryptedScheme, type DatabaseSchemeType } from 'firebase-function';
 import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameters';
 import { type Event, type EventGroupId } from './types/Event';
 import { type News } from './types/News';
+import { type NotificationType } from './types/Notification';
 import { type Report, type ReportGroupId } from './types/Report';
 import { type UserAuthentication, type UserAuthenticationType } from './types/UserAuthentication';
 
@@ -28,5 +29,10 @@ export type DatabaseScheme = DatabaseSchemeType<{
                 [Key in string]: CryptedScheme<UserAuthentication>
             };
         };
+    };
+    notification: {
+        [Key in NotificationType]: {
+            [Key in string]: string
+        }
     };
 }>;

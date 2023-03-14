@@ -1,4 +1,3 @@
-
 import { FirebaseFunctionDescriptor, type FirebaseFunctionsType } from 'firebase-function';
 import { DeleteAllDataFunction, type DeleteAllDataFunctionType } from './functions/DeleteAllDataFunction';
 import { UserAuthenticationAddFunction, type UserAuthenticationAddFunctionType } from './functions/UserAuthenticationAddFunction';
@@ -18,6 +17,8 @@ import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/G
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
 import { SearchEntityFunction, type SearchEntityFunctionType } from './functions/SearchEntityFunction';
+import { NotificationRegisterFunction, type NotificationRegisterFunctionType } from './functions/NotificationRegisterFunction';
+import { NotificationPushFunction, type NotificationPushFunctionType } from './functions/NotificationPushFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -49,5 +50,9 @@ export const firebaseFunctions = {
         check: FirebaseFunctionDescriptor.create<UserAuthenticationCheckFunctionType>(UserAuthenticationCheckFunction),
         acceptDecline: FirebaseFunctionDescriptor.create<UserAuthenticationAcceptDeclineFunctionType>(UserAuthenticationAcceptDeclineFunction),
         getAllUnauthenticated: FirebaseFunctionDescriptor.create<UserAuthenticationGetAllUnauthenticatedFunctionType>(UserAuthenticationGetAllUnauthenticatedFunction)
+    },
+    notification: {
+        register: FirebaseFunctionDescriptor.create<NotificationRegisterFunctionType>(NotificationRegisterFunction),
+        push: FirebaseFunctionDescriptor.create<NotificationPushFunctionType>(NotificationPushFunction)
     }
 } satisfies FirebaseFunctionsType;

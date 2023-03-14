@@ -2,7 +2,7 @@ import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilde
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import nodemailer from 'nodemailer';
 import type Mail from 'nodemailer/lib/mailer';
-import { getCryptionKeys, sendContactMailAccount } from '../privateKeys';
+import { getPrivateKeys, sendContactMailAccount } from '../privateKeys';
 
 export class SendMailContactFunction implements FirebaseFunction<SendMailContactFunctionType> {
     public readonly parameters: FunctionType.Parameters<SendMailContactFunctionType> & { databaseType: DatabaseType };
@@ -17,7 +17,7 @@ export class SendMailContactFunction implements FirebaseFunction<SendMailContact
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('SendMailContactFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<SendMailContactFunctionType>>(
             {
                 senderName: ParameterBuilder.value('string'),

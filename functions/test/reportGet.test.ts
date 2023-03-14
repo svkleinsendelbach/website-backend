@@ -14,7 +14,7 @@ describe('reportGet', () => {
             createDate: new Date(new Date().getTime() + number * 100000).toISOString()
         };
         const reportId = Guid.newGuid();
-        await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set(report, true);
+        await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set(report, 'encrypt');
         return {
             id: reportId.guidString,
             ...report

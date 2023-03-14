@@ -3,7 +3,7 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
 import { Guid } from '../types/Guid';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
 
@@ -12,7 +12,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('EventEditFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<EventEditFunctionType>>(
             {
                 editType: ParameterBuilder.guard('string', EditType.typeGuard),
@@ -29,7 +29,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
     public async executeFunction(): Promise<FunctionType.ReturnType<EventEditFunctionType>> {
         this.logger.log('EventEditFunction.executeFunction', {}, 'info');
         await checkUserAuthentication(this.auth, 'editEvents', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
+        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {
             if (snapshot.exists)
@@ -41,7 +41,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
                 throw HttpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
             if (this.parameters.editType === 'change' && !snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
-            await reference.set(Event.flatten(this.parameters.event), true);
+            await reference.set(Event.flatten(this.parameters.event), 'encrypt');
         }
     }
 }

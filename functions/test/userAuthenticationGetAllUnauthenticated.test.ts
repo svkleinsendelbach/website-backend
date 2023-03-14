@@ -22,7 +22,7 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
             state: state,
             firstName: user.firstName,
             lastName: user.lastName
-        }, true);
+        }, 'encrypt');
         return user;
     }
 

@@ -1,6 +1,6 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getCryptionKeys, recaptchaSecretKey } from '../privateKeys';
+import { getPrivateKeys, recaptchaSecretKey } from '../privateKeys';
 import fetch from 'cross-fetch';
 
 export class VerifyRecaptchaFunction implements FirebaseFunction<VerifyRecaptchaFunctionType> {
@@ -8,7 +8,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<VerifyRecaptcha
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('VerifyRecaptchaFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<VerifyRecaptchaFunctionType>>(
             {
                 token: ParameterBuilder.value('string')

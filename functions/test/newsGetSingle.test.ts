@@ -16,7 +16,7 @@ describe('newsGetSingle', () => {
             disabled: disabled,
             thumbnailUrl: 'tumbnailUrl'
         };
-        await firebaseApp.database.child('news').child('news_id').set(news, true);
+        await firebaseApp.database.child('news').child('news_id').set(news, 'encrypt');
         return {
             id: 'news_id',
             ...news

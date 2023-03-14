@@ -20,13 +20,13 @@ describe('userAuthenticationAdd', () => {
         });
         result.success;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'

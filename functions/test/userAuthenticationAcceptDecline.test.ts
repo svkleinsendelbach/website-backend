@@ -24,24 +24,24 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews'],
             hashedUserId: 'user_id',
             action: 'accept'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -53,24 +53,24 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews'],
             hashedUserId: 'user_id',
             action: 'accept'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -82,24 +82,24 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews', 'authenticateUser'],
             hashedUserId: 'user_id',
             action: 'accept'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -120,24 +120,24 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews'],
             hashedUserId: 'user_id',
             action: 'decline'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         });
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
@@ -149,12 +149,12 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews'],
             hashedUserId: 'user_id',
@@ -170,19 +170,19 @@ describe('userAuthenticationAcceptDecline', () => {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         await firebaseApp.database.child('users').child('authentication').child('editNews').child('user_id').set({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('acceptDecline').call({
             authenticationTypes: ['editEvents', 'editNews', 'authenticateUser'],
             hashedUserId: 'user_id',
             action: 'decline'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editEvents').child('user_id').get('decrypt')).to.be.deep.equal({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'

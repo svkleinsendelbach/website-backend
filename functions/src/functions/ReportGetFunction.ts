@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { ReportGroupId, type Report } from '../types/Report';
 
 export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType> {
@@ -9,7 +9,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('ReportGetFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<ReportGetFunctionType>>(
             {
                 groupId: ParameterBuilder.guard('string', ReportGroupId.typeGuard),
@@ -23,7 +23,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
 
     public async executeFunction(): Promise<FunctionType.ReturnType<ReportGetFunctionType>> {
         this.logger.log('ReportGetFunction.executeFunction', {}, 'info');
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('reports').child(this.parameters.groupId);
+        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(this.parameters.groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return { reports: [], hasMore: false };
@@ -31,7 +31,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
             if (snapshot.key === null)
                 return undefined;
             return {
-                ...snapshot.value(true),
+                ...snapshot.value('decrypt'),
                 id: snapshot.key
             };
         });

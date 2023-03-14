@@ -16,7 +16,7 @@ describe('searchEntity', () => {
             subtitle: subtitle
         };
         const eventId = Guid.newGuid();
-        await firebaseApp.database.child('events').child(groupId).child(eventId.guidString).set(event, true);
+        await firebaseApp.database.child('events').child(groupId).child(eventId.guidString).set(event, 'encrypt');
         return {
             id: eventId.guidString,
             ...event
@@ -34,7 +34,7 @@ describe('searchEntity', () => {
             thumbnailUrl: ''
         };
         const newsId = Guid.newGuid();
-        await firebaseApp.database.child('news').child(newsId.guidString).set(news, true);
+        await firebaseApp.database.child('news').child(newsId.guidString).set(news, 'encrypt');
         return {
             id: newsId.guidString,
             ...news
@@ -48,7 +48,7 @@ describe('searchEntity', () => {
             createDate: new Date().toISOString()
         };
         const reportId = Guid.newGuid();
-        await firebaseApp.database.child('reports').child(groupId).child(reportId.guidString).set(report, true);
+        await firebaseApp.database.child('reports').child(groupId).child(reportId.guidString).set(report, 'encrypt');
         return {
             id: reportId.guidString,
             ...report

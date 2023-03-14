@@ -2,7 +2,7 @@ import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilde
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
 export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction<UserAuthenticationAcceptDeclineFunctionType> {
@@ -10,7 +10,7 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('UserAuthenticationAcceptDeclineFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationAcceptDeclineFunctionType>>(
             {
                 authenticationTypes: ParameterBuilder.array(ParameterBuilder.guard('string', UserAuthenticationType.typeGuard)),
@@ -30,16 +30,16 @@ export class UserAuthenticationAcceptDeclineFunction implements FirebaseFunction
     }
 
     private async acceptDeclineSingleAuthenticationType(authenticationType: UserAuthenticationType) {
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('users').child('authentication').child(authenticationType).child(this.parameters.hashedUserId);
+        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('users').child('authentication').child(authenticationType).child(this.parameters.hashedUserId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             return;
-        const userAuthentication = snapshot.value(true);
+        const userAuthentication = snapshot.value('decrypt');
         if (userAuthentication.state === 'authenticated')
             return;
         if (this.parameters.action === 'accept') {
             userAuthentication.state = 'authenticated';
-            await reference.set(userAuthentication, true);
+            await reference.set(userAuthentication, 'encrypt');
         } else {
             await reference.remove();
         }

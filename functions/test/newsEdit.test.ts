@@ -26,7 +26,7 @@ describe('newsEdit', () => {
             newsUrl: 'newsUrl',
             disabled: false,
             thumbnailUrl: 'thumbnailUrl'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'remove',
             newsId: 'news_id',
@@ -62,7 +62,7 @@ describe('newsEdit', () => {
             }
         });
         result.success.equal('news_id');
-        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id').get('decrypt')).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title',
             newsUrl: 'newsUrl',
@@ -79,7 +79,7 @@ describe('newsEdit', () => {
             newsUrl: 'newsUrl-1',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-1'
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(date1.getTime() + 30000);
         await firebaseApp.database.child('news').child('news_id_2').set({
             date: date2.toISOString(),
@@ -87,7 +87,7 @@ describe('newsEdit', () => {
             newsUrl: 'newsUrl-2',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-2'
-        }, true);
+        }, 'encrypt');
         const date4 = new Date(date1.getTime() + 90000);
         await firebaseApp.database.child('news').child('news_id_4').set({
             date: date4.toISOString(),
@@ -95,7 +95,7 @@ describe('newsEdit', () => {
             newsUrl: 'newsUrl-4',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-4'
-        }, true);
+        }, 'encrypt');
         const date3 = new Date(date1.getTime() + 60000);
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'add',
@@ -109,14 +109,14 @@ describe('newsEdit', () => {
             }
         });
         result.success.equal('news_id_3');
-        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id').get('decrypt')).to.be.deep.equal({
             date: date1.toISOString(),
             title: 'title-1',
             newsUrl: 'newsUrl-1',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl-1'
         });
-        expect(await firebaseApp.database.child('news').child('news_id_3').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id_3').get('decrypt')).to.be.deep.equal({
             date: date3.toISOString(),
             title: 'title-3',
             newsUrl: 'newsUrl-3',
@@ -162,7 +162,7 @@ describe('newsEdit', () => {
             newsUrl: 'newsUrls',
             disabled: true,
             thumbnailUrl: 'thumbnailUrl'
-        }, true);
+        }, 'encrypt');
         const date = new Date();
         const result = await firebaseApp.functions.function('news').function('edit').call({
             editType: 'change',
@@ -176,7 +176,7 @@ describe('newsEdit', () => {
             }
         });
         result.success.equal('news_id');
-        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id').get('decrypt')).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title2',
             newsUrl: 'newsUrls2',

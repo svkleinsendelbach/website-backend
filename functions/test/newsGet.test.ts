@@ -16,7 +16,7 @@ describe('newsGet', () => {
             disabled: disabled,
             thumbnailUrl: `tumbnailUrl-${number}`
         };
-        await firebaseApp.database.child('news').child(`news_id_${number}`).set(news, true);
+        await firebaseApp.database.child('news').child(`news_id_${number}`).set(news, 'encrypt');
         return {
             id: `news_id_${number}`,
             ...news

@@ -27,7 +27,7 @@ describe('userAuthenticationCheck', () => {
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             authenicationTypes: ['editEvents']
         });
@@ -43,7 +43,7 @@ describe('userAuthenticationCheck', () => {
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             authenicationTypes: ['editEvents']
         });
@@ -56,13 +56,13 @@ describe('userAuthenticationCheck', () => {
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
             authenicationTypes: ['editEvents', 'editNews', 'authenticateUser']
         });

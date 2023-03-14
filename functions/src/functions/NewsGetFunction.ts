@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { type News } from '../types/News';
 
 export class NewsGetFunction implements FirebaseFunction<NewsGetFunctionType> {
@@ -9,7 +9,7 @@ export class NewsGetFunction implements FirebaseFunction<NewsGetFunctionType> {
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('NewsGetFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<NewsGetFunctionType>>(
             {
                 numberNews: ParameterBuilder.optional(ParameterBuilder.value('number')),
@@ -23,14 +23,14 @@ export class NewsGetFunction implements FirebaseFunction<NewsGetFunctionType> {
 
     public async executeFunction(): Promise<FunctionType.ReturnType<NewsGetFunctionType>> {
         this.logger.log('NewsGetFunction.executeFunction', {}, 'info');
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('news');
+        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('news');
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return { news: [], hasMore: false };
         const allNews = snapshot.compactMap<News.Flatten>(snapshot => {
             if (snapshot.key === null)
                 return undefined;
-            const news = snapshot.value(true);
+            const news = snapshot.value('decrypt');
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (!this.parameters.alsoDisabled && news.disabled)
                 return undefined;

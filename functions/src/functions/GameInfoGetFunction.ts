@@ -1,6 +1,6 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getCryptionKeys } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { type BfvApiLiveticker, BfvLiveticker, type GameInfo } from '../types/GameInfo';
 import DOMParser from 'dom-parser';
 import fetch from 'cross-fetch';
@@ -11,7 +11,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('GameInfoGetFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<GameInfoGetFunctionType>>(
             {
                 gameId: ParameterBuilder.value('string')

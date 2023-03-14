@@ -20,34 +20,34 @@ import { ReportGetFunction, type ReportGetFunctionType } from './functions/Repor
 import { SearchEntityFunction, type SearchEntityFunctionType } from './functions/SearchEntityFunction';
 
 export const firebaseFunctions = {
-    verifyRecaptcha: FirebaseFunctionDescriptor.create<typeof VerifyRecaptchaFunction, VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
-    deleteAllData: FirebaseFunctionDescriptor.create<typeof DeleteAllDataFunction, DeleteAllDataFunctionType>(DeleteAllDataFunction),
-    searchEntity: FirebaseFunctionDescriptor.create<typeof SearchEntityFunction, SearchEntityFunctionType>(SearchEntityFunction),
+    verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
+    deleteAllData: FirebaseFunctionDescriptor.create<DeleteAllDataFunctionType>(DeleteAllDataFunction),
+    searchEntity: FirebaseFunctionDescriptor.create<SearchEntityFunctionType>(SearchEntityFunction),
     news: {
-        get: FirebaseFunctionDescriptor.create<typeof NewsGetFunction, NewsGetFunctionType>(NewsGetFunction),
-        edit: FirebaseFunctionDescriptor.create<typeof NewsEditFunction, NewsEditFunctionType>(NewsEditFunction),
-        disable: FirebaseFunctionDescriptor.create<typeof NewsDisableFunction, NewsDisableFunctionType>(NewsDisableFunction),
-        getSingle: FirebaseFunctionDescriptor.create<typeof NewsGetSingleFunction, NewsGetSingleFunctionType>(NewsGetSingleFunction)
+        get: FirebaseFunctionDescriptor.create<NewsGetFunctionType>(NewsGetFunction),
+        edit: FirebaseFunctionDescriptor.create<NewsEditFunctionType>(NewsEditFunction),
+        disable: FirebaseFunctionDescriptor.create<NewsDisableFunctionType>(NewsDisableFunction),
+        getSingle: FirebaseFunctionDescriptor.create<NewsGetSingleFunctionType>(NewsGetSingleFunction)
     },
     event: {
-        get: FirebaseFunctionDescriptor.create<typeof EventGetFunction, EventGetFunctionType>(EventGetFunction),
-        edit: FirebaseFunctionDescriptor.create<typeof EventEditFunction, EventEditFunctionType>(EventEditFunction)
+        get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),
+        edit: FirebaseFunctionDescriptor.create<EventEditFunctionType>(EventEditFunction)
     },
     report: {
-        get: FirebaseFunctionDescriptor.create<typeof ReportGetFunction, ReportGetFunctionType>(ReportGetFunction),
-        edit: FirebaseFunctionDescriptor.create<typeof ReportEditFunction, ReportEditFunctionType>(ReportEditFunction)
+        get: FirebaseFunctionDescriptor.create<ReportGetFunctionType>(ReportGetFunction),
+        edit: FirebaseFunctionDescriptor.create<ReportEditFunctionType>(ReportEditFunction)
     },
     bfvData: {
-        gameInfo: FirebaseFunctionDescriptor.create<typeof GameInfoGetFunction, GameInfoGetFunctionType>(GameInfoGetFunction),
-        teamSquad: FirebaseFunctionDescriptor.create<typeof TeamSquadGetFunction, TeamSquadGetFunctionType>(TeamSquadGetFunction)
+        gameInfo: FirebaseFunctionDescriptor.create<GameInfoGetFunctionType>(GameInfoGetFunction),
+        teamSquad: FirebaseFunctionDescriptor.create<TeamSquadGetFunctionType>(TeamSquadGetFunction)
     },
     sendMail: {
-        contact: FirebaseFunctionDescriptor.create<typeof SendMailContactFunction, SendMailContactFunctionType>(SendMailContactFunction)
+        contact: FirebaseFunctionDescriptor.create<SendMailContactFunctionType>(SendMailContactFunction)
     },
     userAuthentication: {
-        add: FirebaseFunctionDescriptor.create<typeof UserAuthenticationAddFunction, UserAuthenticationAddFunctionType>(UserAuthenticationAddFunction),
-        check: FirebaseFunctionDescriptor.create<typeof UserAuthenticationCheckFunction, UserAuthenticationCheckFunctionType>(UserAuthenticationCheckFunction),
-        acceptDecline: FirebaseFunctionDescriptor.create<typeof UserAuthenticationAcceptDeclineFunction, UserAuthenticationAcceptDeclineFunctionType>(UserAuthenticationAcceptDeclineFunction),
-        getAllUnauthenticated: FirebaseFunctionDescriptor.create<typeof UserAuthenticationGetAllUnauthenticatedFunction, UserAuthenticationGetAllUnauthenticatedFunctionType>(UserAuthenticationGetAllUnauthenticatedFunction)
+        add: FirebaseFunctionDescriptor.create<UserAuthenticationAddFunctionType>(UserAuthenticationAddFunction),
+        check: FirebaseFunctionDescriptor.create<UserAuthenticationCheckFunctionType>(UserAuthenticationCheckFunction),
+        acceptDecline: FirebaseFunctionDescriptor.create<UserAuthenticationAcceptDeclineFunctionType>(UserAuthenticationAcceptDeclineFunction),
+        getAllUnauthenticated: FirebaseFunctionDescriptor.create<UserAuthenticationGetAllUnauthenticatedFunctionType>(UserAuthenticationGetAllUnauthenticatedFunction)
     }
 } satisfies FirebaseFunctionsType;

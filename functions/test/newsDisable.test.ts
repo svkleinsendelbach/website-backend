@@ -30,13 +30,13 @@ describe('newsDisable', () => {
             disabled: false,
             thumbnailUrl: 'thumbnailUrl'
         };
-        await firebaseApp.database.child('news').child('news_id').set(news, true);
+        await firebaseApp.database.child('news').child('news_id').set(news, 'encrypt');
         const result = await firebaseApp.functions.function('news').function('disable').call({
             editType: 'disable',
             newsId: 'news_id'
         });
         result.success;
-        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id').get('decrypt')).to.be.deep.equal({
             ...news,
             disabled: true
         });
@@ -50,13 +50,13 @@ describe('newsDisable', () => {
             disabled: true,
             thumbnailUrl: 'thumbnailUrl'
         };
-        await firebaseApp.database.child('news').child('news_id').set(news, true);
+        await firebaseApp.database.child('news').child('news_id').set(news, 'encrypt');
         const result = await firebaseApp.functions.function('news').function('disable').call({
             editType: 'enable',
             newsId: 'news_id'
         });
         result.success;
-        expect(await firebaseApp.database.child('news').child('news_id').get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('news').child('news_id').get('decrypt')).to.be.deep.equal({
             ...news,
             disabled: false
         });

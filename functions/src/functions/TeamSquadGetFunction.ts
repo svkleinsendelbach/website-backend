@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, WebsiteFetcher, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { TeamSquadParser } from '../parsers/TeamSquadParser';
-import { getCryptionKeys } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { AnpfiffInfoTeamParameters } from '../types/AnpfiffInfoTeamParameters';
 import { type TeamSquad } from '../types/TeamSquad';
 
@@ -10,7 +10,7 @@ export class TeamSquadGetFunction implements FirebaseFunction<TeamSquadGetFuncti
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('TeamSquadGetFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<TeamSquadGetFunctionType>>(
             {
                 type: ParameterBuilder.guard('string', AnpfiffInfoTeamParameters.Type.typeGuard)

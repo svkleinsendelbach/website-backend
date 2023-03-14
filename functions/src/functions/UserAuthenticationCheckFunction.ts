@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserAuthentication } from '../checkUserAuthentication';
-import { getCryptionKeys } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { UserAuthenticationType } from '../types/UserAuthentication';
 
 export class UserAuthenticationCheckFunction implements FirebaseFunction<UserAuthenticationCheckFunctionType> {
@@ -9,7 +9,7 @@ export class UserAuthenticationCheckFunction implements FirebaseFunction<UserAut
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('UserAuthenticationCheckFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<UserAuthenticationCheckFunctionType>>(
             {
                 authenicationTypes: ParameterBuilder.array(ParameterBuilder.guard('string', UserAuthenticationType.typeGuard))

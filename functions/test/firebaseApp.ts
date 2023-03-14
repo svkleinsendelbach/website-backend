@@ -22,7 +22,7 @@ async function authenticateUser(authenticationType: UserAuthenticationType) {
         state: 'authenticated',
         firstName: testUser.firstName,
         lastName: testUser.lastName
-    }, true);
+    }, 'encrypt');
 }
 
 export async function cleanUpFirebase() {

@@ -26,7 +26,7 @@ describe('eventEdit', () => {
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: new Date().toISOString(),
             title: 'title'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
             groupId: 'general',
@@ -63,7 +63,7 @@ describe('eventEdit', () => {
             }
         });
         result.success;
-        expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get('decrypt')).to.be.deep.equal({
             date: date.toISOString(),
             title: 'title'
         });
@@ -75,7 +75,7 @@ describe('eventEdit', () => {
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.toISOString(),
             title: 'title-1'
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(date1.getTime() + 60000);
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'add',
@@ -127,7 +127,7 @@ describe('eventEdit', () => {
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.toISOString(),
             title: 'title-1'
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(date1.getTime() + 60000);
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'change',
@@ -139,7 +139,7 @@ describe('eventEdit', () => {
             }
         });
         result.success;
-        expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get('decrypt')).to.be.deep.equal({
             date: date2.toISOString(),
             title: 'title-2'
         });

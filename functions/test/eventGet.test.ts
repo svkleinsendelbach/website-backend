@@ -12,25 +12,25 @@ describe('eventGet', () => {
         await firebaseApp.database.child('events').child('general').child(eventId1.guidString).set({
             date: date1.toISOString(),
             title: 'event-1'
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(new Date().getTime() + 30000);
         const eventId2 = Guid.newGuid();
         await firebaseApp.database.child('events').child('general').child(eventId2.guidString).set({
             date: date2.toISOString(),
             title: 'event-2'
-        }, true);
+        }, 'encrypt');
         const date3 = new Date(new Date().getTime() + 20000);
         const eventId3 = Guid.newGuid();
         await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId3.guidString).set({
             date: date3.toISOString(),
             title: 'event-3'
-        }, true);
+        }, 'encrypt');
         const date4 = new Date(new Date().getTime() - 30000);
         const eventId4 = Guid.newGuid();
         await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId4.guidString).set({
             date: date4.toISOString(),
             title: 'event-4'
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('get').call({
             groupIds: ['general', 'football-adults/first-team']
         });

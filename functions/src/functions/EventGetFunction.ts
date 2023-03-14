@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from '../privateKeys';
+import { getPrivateKeys } from '../privateKeys';
 import { EventGroupId, type Event, type EventGroup } from '../types/Event';
 
 export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> {
@@ -9,7 +9,7 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
 
     public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
         this.logger.log('EventGetFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getCryptionKeys, this.logger.nextIndent);
+        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
         const parameterParser = new ParameterParser<FunctionType.Parameters<EventGetFunctionType>>(
             {
                 groupIds: ParameterBuilder.array(ParameterBuilder.guard('string', EventGroupId.typeGuard))
@@ -26,14 +26,14 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
     }
 
     private async getEventGroup(groupId: EventGroupId): Promise<EventGroup.Flatten | undefined> {
-        const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(this.parameters.databaseType), getCryptionKeys(this.parameters.databaseType)).child('events').child(groupId);
+        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return undefined;
         const events = snapshot.compactMap<Event.Flatten>(snapshot => {
             if (snapshot.key === null)
                 return undefined;
-            const event = snapshot.value(true);
+            const event = snapshot.value('decrypt');
             const date = new Date(event.date);
             if (date < new Date())
                 return undefined;

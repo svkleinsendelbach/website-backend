@@ -27,7 +27,7 @@ describe('reportEdit', () => {
             title: 'title',
             message: 'message',
             createDate: new Date().toISOString()
-        }, true);
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
             groupId: 'general',
@@ -65,7 +65,7 @@ describe('reportEdit', () => {
             }
         });
         result.success;
-        expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
             title: 'title',
             message: 'message',
             createDate: date.toISOString()
@@ -79,7 +79,7 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             createDate: date1.toISOString()
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(date1.getTime() + 60000);
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
@@ -136,7 +136,7 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             createDate: date1.toISOString()
-        }, true);
+        }, 'encrypt');
         const date2 = new Date(date1.getTime() + 60000);
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
@@ -149,7 +149,7 @@ describe('reportEdit', () => {
             }
         });
         result.success;
-        expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get(true)).to.be.deep.equal({
+        expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
             title: 'title-2',
             message: 'message-2',
             createDate: date2.toISOString()

@@ -1,7 +1,7 @@
 import { type DatabaseType, HttpsError, type ILogger, DatabaseReference, Crypter } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from './DatabaseScheme';
-import { getCryptionKeys, getDatabaseUrl } from './privateKeys';
+import { getPrivateKeys } from './privateKeys';
 import { type UserAuthenticationType } from './types/UserAuthentication';
 
 export async function checkUserAuthentication(
@@ -26,11 +26,11 @@ async function checkSingleUserAuthenticationType(
     databaseType: DatabaseType,
     logger: ILogger
 ) {
-    logger.log('checkUserAuthentication', { auth: auth, authenticationType: authenticationType, databaseType: databaseType });
-    const reference = DatabaseReference.base<DatabaseScheme>(getDatabaseUrl(databaseType), getCryptionKeys(databaseType)).child('users').child('authentication').child(authenticationType).child(Crypter.sha512(auth.uid));
+    logger.log('checkSingleUserAuthenticationType', { auth: auth, authenticationType: authenticationType, databaseType: databaseType });
+    const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(databaseType)).child('users').child('authentication').child(authenticationType).child(Crypter.sha512(auth.uid));
     const snapshot = await reference.snapshot();
     if (!snapshot.exists)
         throw HttpsError('permission-denied', `The function must be called while authenticated, not authenticated for ${authenticationType}.`, logger);
-    if (snapshot.value(true).state === 'unauthenticated')
+    if (snapshot.value('decrypt').state === 'unauthenticated')
         throw HttpsError('permission-denied', `The function must be called while authenticated, unauthenticated for ${authenticationType}.`, logger);
 }

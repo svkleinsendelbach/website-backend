@@ -42,9 +42,9 @@ module.exports = {
         requireLast: true
       }
     }],
+    '@typescript-eslint/space-before-function-paren': ['error', 'never'],
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-redeclare': 'off',
-    '@typescript-eslint/space-before-function-paren': ['error', 'never'],
     '@typescript-eslint/no-invalid-void-type': 'off',
     'n/handle-callback-err': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',

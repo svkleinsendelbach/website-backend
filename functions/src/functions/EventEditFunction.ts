@@ -17,6 +17,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
             {
                 editType: ParameterBuilder.guard('string', EditType.typeGuard),
                 groupId: ParameterBuilder.guard('string', EventGroupId.typeGuard),
+                previousGroupId: ParameterBuilder.optional(ParameterBuilder.guard('string', EventGroupId.typeGuard)),
                 eventId: ParameterBuilder.build('string', Guid.fromString),
                 event: ParameterBuilder.optional(ParameterBuilder.build('object', Event.fromObject))
             },
@@ -39,8 +40,15 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
                 throw HttpsError('invalid-argument', 'No event in parameters to add / change.', this.logger);
             if (this.parameters.editType === 'add' && snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
-            if (this.parameters.editType === 'change' && !snapshot.exists)
-                throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
+            if (this.parameters.editType === 'change') {
+                if (this.parameters.previousGroupId === undefined)
+                    throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
+                const previousReference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(this.parameters.previousGroupId).child(this.parameters.eventId.guidString);
+                const previousSnapshot = await previousReference.snapshot();
+                if (!previousSnapshot.exists)
+                    throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
+                await previousReference.remove();
+            }
             await reference.set(Event.flatten(this.parameters.event), 'encrypt');
         }
     }
@@ -49,11 +57,13 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
 export type EventEditFunctionType = FunctionType<{
     editType: EditType;
     groupId: EventGroupId;
+    previousGroupId: EventGroupId | undefined;
     eventId: Guid;
     event: Omit<Event, 'id'> | undefined;
 }, void, {
     editType: EditType;
     groupId: EventGroupId;
+    previousGroupId: EventGroupId | undefined;
     eventId: string;
     event: Omit<Event.Flatten, 'id'> | undefined;
 }>;

@@ -6,10 +6,6 @@ import { UserAuthenticationAcceptDeclineFunction, type UserAuthenticationAcceptD
 import { UserAuthenticationGetAllUnauthenticatedFunction, type UserAuthenticationGetAllUnauthenticatedFunctionType } from './functions/UserAuthenticationGetAllUnauthenticatedFunction';
 import { EventEditFunction, type EventEditFunctionType } from './functions/EventEditFunction';
 import { EventGetFunction, type EventGetFunctionType } from './functions/EventGetFunction';
-import { NewsEditFunction, type NewsEditFunctionType } from './functions/NewsEditFunction';
-import { NewsGetSingleFunction, type NewsGetSingleFunctionType } from './functions/NewsGetSingle';
-import { NewsGetFunction, type NewsGetFunctionType } from './functions/NewsGetFunction';
-import { NewsDisableFunction, type NewsDisableFunctionType } from './functions/NewsDisableFunction';
 import { VerifyRecaptchaFunction, type VerifyRecaptchaFunctionType } from './functions/VerifyRecaptchaFunction';
 import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
@@ -25,12 +21,6 @@ export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
     deleteAllData: FirebaseFunctionDescriptor.create<DeleteAllDataFunctionType>(DeleteAllDataFunction),
     searchEntity: FirebaseFunctionDescriptor.create<SearchEntityFunctionType>(SearchEntityFunction),
-    news: {
-        get: FirebaseFunctionDescriptor.create<NewsGetFunctionType>(NewsGetFunction),
-        edit: FirebaseFunctionDescriptor.create<NewsEditFunctionType>(NewsEditFunction),
-        disable: FirebaseFunctionDescriptor.create<NewsDisableFunctionType>(NewsDisableFunction),
-        getSingle: FirebaseFunctionDescriptor.create<NewsGetSingleFunctionType>(NewsGetSingleFunction)
-    },
     event: {
         get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),
         edit: FirebaseFunctionDescriptor.create<EventEditFunctionType>(EventEditFunction)

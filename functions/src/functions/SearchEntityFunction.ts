@@ -3,7 +3,6 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { type Event } from '../types/Event';
-import { type News } from '../types/News';
 import { type Report } from '../types/Report';
 import { type TypedSearchEntity, SearchEntityType } from '../types/SearchEntitiy';
 
@@ -29,8 +28,6 @@ export class SearchEntityFunction implements FirebaseFunction<SearchEntityFuncti
         const entities: Array<Promise<Array<TypedSearchEntity.Flatten<SearchEntityType>>>> = [];
         if (this.parameters.searchEntityTypes.includes('events'))
             entities.push(this.searchEvents());
-        if (this.parameters.searchEntityTypes.includes('news'))
-            entities.push(this.searchNews());
         if (this.parameters.searchEntityTypes.includes('reports'))
             entities.push(this.searchReports());
         return (await Promise.all(entities)).flatMap(entities => entities);
@@ -54,27 +51,6 @@ export class SearchEntityFunction implements FirebaseFunction<SearchEntityFuncti
                     };
                 return null;
             });
-        });
-    }
-
-    private async searchNews(): Promise<Array<{ type: 'news'; value: News.Flatten }>> {
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('news');
-        const snapshot = await reference.snapshot();
-        return snapshot.compactMap(snapshot => {
-            if (snapshot.key === null)
-                return null;
-            const news = snapshot.value('decrypt');
-            if (news.disabled)
-                return null;
-            if (this.searchInStrings([news.title, news.subtitle, news.shortDescription]))
-                return {
-                    type: 'news',
-                    value: {
-                        ...news,
-                        id: snapshot.key
-                    }
-                };
-            return null;
         });
     }
 

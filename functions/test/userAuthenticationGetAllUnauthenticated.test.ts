@@ -35,20 +35,20 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
 
     it('no unauthenticated users', async () => {
         await addUser(1, 'editEvents', 'authenticated');
-        await addUser(2, 'editNews', 'authenticated');
+        await addUser(2, 'editReports', 'authenticated');
         await addUser(3, 'editEvents', 'authenticated');
         const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
-            authenticationTypes: ['editEvents', 'editNews']
+            authenticationTypes: ['editEvents', 'editReports']
         });
         result.success.equal([]);
     });
 
     it('only unauthenticated users', async () => {
         const user1 = await addUser(1, 'editEvents', 'unauthenticated');
-        const user2 = await addUser(2, 'editNews', 'unauthenticated');
+        const user2 = await addUser(2, 'editReports', 'unauthenticated');
         const user3 = await addUser(3, 'editEvents', 'unauthenticated');
         const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
-            authenticationTypes: ['editEvents', 'editNews']
+            authenticationTypes: ['editEvents', 'editReports']
         });
         result.success.unsorted([
             user1, user2, user3
@@ -57,13 +57,13 @@ describe('userAuthenticationGetAllUnauthenticated', () => {
 
     it('authenticated and unauthenticated users', async () => {
         const user1 = await addUser(1, 'editEvents', 'unauthenticated');
-        await addUser(2, 'editNews', 'authenticated');
+        await addUser(2, 'editReports', 'authenticated');
         const user3 = await addUser(3, 'editEvents', 'unauthenticated');
-        const user4 = await addUser(4, 'editNews', 'unauthenticated');
+        const user4 = await addUser(4, 'editReports', 'unauthenticated');
         await addUser(5, 'editEvents', 'authenticated');
-        await addUser(6, 'editNews', 'authenticated');
+        await addUser(6, 'editReports', 'authenticated');
         const result = await firebaseApp.functions.function('userAuthentication').function('getAllUnauthenticated').call({
-            authenticationTypes: ['editEvents', 'editNews']
+            authenticationTypes: ['editEvents', 'editReports']
         });
         result.success.unsorted([
             user1, user3, user4

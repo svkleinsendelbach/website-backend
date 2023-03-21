@@ -13,7 +13,7 @@ describe('userAuthenticationCheck', () => {
 
     it('not authenticated', async () => {
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
-            authenicationTypes: ['editEvents', 'editNews']
+            authenicationTypes: ['editEvents', 'editReports']
         });
         result.failure.equal({
             code: 'permission-denied',
@@ -58,13 +58,13 @@ describe('userAuthenticationCheck', () => {
             lastName: 'Doe'
         }, 'encrypt');
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child('authentication').child('editReports').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
             state: 'authenticated',
             firstName: 'John',
             lastName: 'Doe'
         }, 'encrypt');
         const result = await firebaseApp.functions.function('userAuthentication').function('check').call({
-            authenicationTypes: ['editEvents', 'editNews', 'authenticateUser']
+            authenicationTypes: ['editEvents', 'editReports', 'authenticateUser']
         });
         try {
             result.failure.equal({

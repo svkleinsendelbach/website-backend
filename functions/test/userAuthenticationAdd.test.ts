@@ -14,7 +14,7 @@ describe('userAuthenticationAdd', () => {
 
     it('add user', async () => {
         const result = await firebaseApp.functions.function('userAuthentication').function('add').call({
-            authenticationTypes: ['editEvents', 'editNews'],
+            authenticationTypes: ['editEvents', 'editReports'],
             firstName: 'John',
             lastName: 'Doe'
         });
@@ -26,7 +26,7 @@ describe('userAuthenticationAdd', () => {
             lastName: 'Doe'
         });
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        expect(await firebaseApp.database.child('users').child('authentication').child('editNews').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child('authentication').child('editReports').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
             state: 'unauthenticated',
             firstName: 'John',
             lastName: 'Doe'

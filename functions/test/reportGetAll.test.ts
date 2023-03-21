@@ -9,6 +9,7 @@ describe('reportGetAll', () => {
 
     async function addReport(number: number, groupId: ReportGroupId): Promise<Report.Flatten & { groupId: ReportGroupId }> {
         const report: Omit<Report.Flatten, 'id'> = {
+            title: `title-${number}`,
             message: `message-${number}`,
             createDate: new Date(new Date().getTime() + number * 100000).toISOString()
         };

@@ -12,7 +12,7 @@ export const firebaseApp = new FirebaseApp<typeof firebaseFunctions, DatabaseSch
 
 export async function authenticateTestUser() {
     await firebaseApp.auth.signIn(testUser.email, testUser.password);
-    const authenticationTypes: UserAuthenticationType[] = ['editEvents', 'editNews', 'editReports', 'authenticateUser', 'notification'];
+    const authenticationTypes: UserAuthenticationType[] = ['editEvents', 'editReports', 'authenticateUser', 'notification'];
     await Promise.all(authenticationTypes.map(async authenticationType => await authenticateUser(authenticationType)));
 }
 

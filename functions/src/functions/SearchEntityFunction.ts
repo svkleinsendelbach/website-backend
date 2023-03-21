@@ -86,7 +86,7 @@ export class SearchEntityFunction implements FirebaseFunction<SearchEntityFuncti
                 if (snapshot.key === null)
                     return null;
                 const report = snapshot.value('decrypt');
-                if (this.searchInStrings([report.title, report.message]))
+                if (this.searchInStrings([report.message]))
                     return {
                         type: 'reports',
                         value: {

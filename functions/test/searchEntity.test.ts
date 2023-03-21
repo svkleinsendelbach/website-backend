@@ -43,7 +43,6 @@ describe('searchEntity', () => {
 
     async function addReport(groupId: ReportGroupId, title: string, message: string): Promise<Report.Flatten> {
         const report: Omit<Report.Flatten, 'id'> = {
-            title: title,
             message: message,
             createDate: new Date().toISOString()
         };

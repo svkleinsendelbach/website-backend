@@ -19,6 +19,7 @@ import { ReportGetFunction, type ReportGetFunctionType } from './functions/Repor
 import { SearchEntityFunction, type SearchEntityFunctionType } from './functions/SearchEntityFunction';
 import { NotificationRegisterFunction, type NotificationRegisterFunctionType } from './functions/NotificationRegisterFunction';
 import { NotificationPushFunction, type NotificationPushFunctionType } from './functions/NotificationPushFunction';
+import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -36,6 +37,7 @@ export const firebaseFunctions = {
     },
     report: {
         get: FirebaseFunctionDescriptor.create<ReportGetFunctionType>(ReportGetFunction),
+        getAll: FirebaseFunctionDescriptor.create<ReportGetAllFunctionType>(ReportGetAllFunction),
         edit: FirebaseFunctionDescriptor.create<ReportEditFunctionType>(ReportEditFunction)
     },
     bfvData: {

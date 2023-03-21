@@ -9,7 +9,6 @@ describe('reportGet', () => {
 
     async function addReport(number: number): Promise<Report.Flatten> {
         const report: Omit<Report.Flatten, 'id'> = {
-            title: `title-${number}`,
             message: `message-${number}`,
             createDate: new Date(new Date().getTime() + number * 100000).toISOString()
         };

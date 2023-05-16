@@ -4,6 +4,8 @@ import { type Event, type EventGroupId } from './types/Event';
 import { type NotificationType } from './types/Notification';
 import { type Report, type ReportGroupId } from './types/Report';
 import { type UserAuthentication, type UserAuthenticationType } from './types/UserAuthentication';
+import { type OccupancyLocation } from './types/OccupancyLocation';
+import { type OccupancyAssignment } from './types/OccupancyAssignment';
 
 export type DatabaseScheme = DatabaseSchemeType<{
     anpfiffInfoTeamParameters: {
@@ -30,5 +32,13 @@ export type DatabaseScheme = DatabaseSchemeType<{
         [Key in NotificationType]: {
             [Key in string]: string
         }
+    };
+    occupancy: {
+        locations: {
+            [Key in string]: CryptedScheme<Omit<OccupancyLocation.Flatten, 'id'>>
+        };
+        assignments: {
+            [Key in string]: CryptedScheme<Omit<OccupancyAssignment.Flatten, 'id'>>
+        };
     };
 }>;

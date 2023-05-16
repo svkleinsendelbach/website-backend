@@ -10,7 +10,7 @@
 			"export class $1Function implements FirebaseFunction<$1FunctionType> {",
 			"\tpublic readonly parameters: FunctionType.Parameters<$1FunctionType> & { databaseType: DatabaseType };",
 			"",
-			"\tpublic constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {",
+			"\tpublic constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {",
 			"\t\tthis.logger.log('$1Function.constructor', { data: data, auth: auth }, 'notice');",
 			"\t\tconst parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);",
 			"\t\tconst parameterParser = new ParameterParser<FunctionType.Parameters<$1FunctionType>>(",

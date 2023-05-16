@@ -16,6 +16,9 @@ import { SearchEntityFunction, type SearchEntityFunctionType } from './functions
 import { NotificationRegisterFunction, type NotificationRegisterFunctionType } from './functions/NotificationRegisterFunction';
 import { NotificationPushFunction, type NotificationPushFunctionType } from './functions/NotificationPushFunction';
 import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
+import { OccupancyLocationEditFunction, type OccupancyLocationEditFunctionType } from './functions/OccupancyLocationEditFunction';
+import { OccupancyAssignmentEditFunction, type OccupancyAssignmentEditFunctionType } from './functions/OccupancyAssignmentEditFuncion';
+import { type OccupancyAssignmentGetFunctionType, OccupancyAssignmentGetFunction } from './functions/OccupancyAssignmentGetFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -46,5 +49,14 @@ export const firebaseFunctions = {
     notification: {
         register: FirebaseFunctionDescriptor.create<NotificationRegisterFunctionType>(NotificationRegisterFunction),
         push: FirebaseFunctionDescriptor.create<NotificationPushFunctionType>(NotificationPushFunction)
+    },
+    occupancy: {
+        location: {
+            edit: FirebaseFunctionDescriptor.create<OccupancyLocationEditFunctionType>(OccupancyLocationEditFunction)
+        },
+        assignment: {
+            edit: FirebaseFunctionDescriptor.create<OccupancyAssignmentEditFunctionType>(OccupancyAssignmentEditFunction),
+            get: FirebaseFunctionDescriptor.create<OccupancyAssignmentGetFunctionType>(OccupancyAssignmentGetFunction)
+        }
     }
 } satisfies FirebaseFunctionsType;

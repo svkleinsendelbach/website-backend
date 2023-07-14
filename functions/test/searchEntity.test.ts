@@ -1,6 +1,7 @@
 import { type EventGroupId, type Event } from '../src/types/Event';
 import { Guid } from '../src/types/Guid';
 import { type ReportGroupId, type Report } from '../src/types/Report';
+import { UtcDate } from '../src/types/UtcDate';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('searchEntity', () => {
@@ -10,7 +11,7 @@ describe('searchEntity', () => {
 
     async function addEvent(groupId: EventGroupId, title: string, subtitle: string | undefined): Promise<Event.Flatten> {
         const event: Omit<Event.Flatten, 'id'> = {
-            date: new Date().toISOString(),
+            date: UtcDate.now.encoded,
             title: title,
             subtitle: subtitle
         };
@@ -26,7 +27,7 @@ describe('searchEntity', () => {
         const report: Omit<Report.Flatten, 'id'> = {
             title: title,
             message: message,
-            createDate: new Date().toISOString()
+            createDate: UtcDate.now.encoded
         };
         const reportId = Guid.newGuid();
         await firebaseApp.database.child('reports').child(groupId).child(reportId.guidString).set(report, 'encrypt');

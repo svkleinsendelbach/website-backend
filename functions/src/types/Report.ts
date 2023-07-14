@@ -1,5 +1,6 @@
 import { HttpsError, type ILogger } from 'firebase-function';
 import { Guid } from './Guid';
+import { UtcDate } from './UtcDate';
 
 export type ReportGroupId =
     'general' |
@@ -43,7 +44,7 @@ export type Report = {
     title: string;
     message: string;
     imageUrl?: string;
-    createDate: Date;
+    createDate: UtcDate;
 };
 
 export namespace Report {
@@ -69,7 +70,7 @@ export namespace Report {
             title: value.title,
             message: value.message,
             imageUrl: 'imageUrl' in value ? value.imageUrl as string : undefined,
-            createDate: new Date(value.createDate)
+            createDate: UtcDate.decode(value.createDate)
         };
     }
 
@@ -89,7 +90,7 @@ export namespace Report {
             title: report.title,
             message: report.message,
             imageUrl: report.imageUrl,
-            createDate: report.createDate.toISOString()
+            createDate: report.createDate.encoded
         };
     }
 
@@ -101,7 +102,7 @@ export namespace Report {
             title: report.title,
             message: report.message,
             imageUrl: report.imageUrl,
-            createDate: new Date(report.createDate)
+            createDate: UtcDate.decode(report.createDate)
         };
     }
 }

@@ -1,6 +1,7 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
 import { Guid } from '../src/types/Guid';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
+import { UtcDate } from '../src/types/UtcDate';
 
 describe('occupancyAssignmentEdit', () => {
     beforeEach(async () => {
@@ -23,10 +24,10 @@ describe('occupancyAssignmentEdit', () => {
     it('remove assignment existing', async () => {
         const assignmentId = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId.guidString).set({
-            locationId: Guid.newGuid().guidString,
+            locationIds: [Guid.newGuid().guidString],
             title: 'klmoi',
-            startDate: new Date().toISOString(),
-            endDate: new Date().toISOString()
+            startDate: UtcDate.now.encoded,
+            endDate: UtcDate.now.encoded
         }, 'encrypt');
         const result = await firebaseApp.functions.function('occupancy').function('assignment').function('edit').call({
             editType: 'remove',
@@ -52,43 +53,43 @@ describe('occupancyAssignmentEdit', () => {
     it('add assignment not existing', async () => {
         const assignmentId = Guid.newGuid();
         const locationId = Guid.newGuid();
-        const startDate = new Date();
-        const endDate = new Date();
+        const startDate = UtcDate.now;
+        const endDate = UtcDate.now;
         const result = await firebaseApp.functions.function('occupancy').function('assignment').function('edit').call({
             editType: 'add',
             assignmentId: assignmentId.guidString,
             assignment: {
-                locationId: locationId.guidString,
+                locationIds: [locationId.guidString],
                 title: 'klmoi',
-                startDate: startDate.toISOString(),
-                endDate: endDate.toISOString()
+                startDate: startDate.encoded,
+                endDate: endDate.encoded
             }
         });
         result.success;
         expect(await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId.guidString).get('decrypt')).to.be.deep.equal({
-            locationId: locationId.guidString,
+            locationIds: [locationId.guidString],
             title: 'klmoi',
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: startDate.encoded,
+            endDate: endDate.encoded
         });
     });
 
     it('add assignment existing', async () => {
         const assignmentId = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId.guidString).set({
-            locationId: Guid.newGuid().guidString,
+            locationIds: [Guid.newGuid().guidString],
             title: 'vadsfd',
-            startDate: new Date().toISOString(),
-            endDate: new Date().toISOString()
+            startDate: UtcDate.now.encoded,
+            endDate: UtcDate.now.encoded
         }, 'encrypt');
         const result = await firebaseApp.functions.function('occupancy').function('assignment').function('edit').call({
             editType: 'add',
             assignmentId: assignmentId.guidString,
             assignment: {
-                locationId: Guid.newGuid().guidString,
+                locationIds: [Guid.newGuid().guidString],
                 title: 'klmoi',
-                startDate: new Date().toISOString(),
-                endDate: new Date().toISOString()
+                startDate: UtcDate.now.encoded,
+                endDate: UtcDate.now.encoded
             }
         });
         result.failure.equal({
@@ -114,10 +115,10 @@ describe('occupancyAssignmentEdit', () => {
             editType: 'change',
             assignmentId: Guid.newGuid().guidString,
             assignment: {
-                locationId: Guid.newGuid().guidString,
+                locationIds: [Guid.newGuid().guidString],
                 title: 'klmoi',
-                startDate: new Date().toISOString(),
-                endDate: new Date().toISOString()
+                startDate: UtcDate.now.encoded,
+                endDate: UtcDate.now.encoded
             }
         });
         result.failure.equal({
@@ -129,30 +130,31 @@ describe('occupancyAssignmentEdit', () => {
     it('change event existing', async () => {
         const assignmentId = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId.guidString).set({
-            locationId: Guid.newGuid().guidString,
+            locationIds: [Guid.newGuid().guidString],
             title: 'vasgf',
-            startDate: new Date().toISOString(),
-            endDate: new Date().toISOString()
+            startDate: UtcDate.now.encoded,
+            endDate: UtcDate.now.encoded
         }, 'encrypt');
-        const locationId = Guid.newGuid();
-        const startDate = new Date();
-        const endDate = new Date();
+        const locationId1 = Guid.newGuid();
+        const locationId2 = Guid.newGuid();
+        const startDate = UtcDate.now;
+        const endDate = UtcDate.now;
         const result = await firebaseApp.functions.function('occupancy').function('assignment').function('edit').call({
             editType: 'change',
             assignmentId: assignmentId.guidString,
             assignment: {
-                locationId: locationId.guidString,
+                locationIds: [locationId1.guidString, locationId2.guidString],
                 title: 'klmoi',
-                startDate: startDate.toISOString(),
-                endDate: endDate.toISOString()
+                startDate: startDate.encoded,
+                endDate: endDate.encoded
             }
         });
         result.success;
         expect(await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId.guidString).get('decrypt')).to.be.deep.equal({
-            locationId: locationId.guidString,
+            locationIds: [locationId1.guidString, locationId2.guidString],
             title: 'klmoi',
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: startDate.encoded,
+            endDate: endDate.encoded
         });
     });
 });

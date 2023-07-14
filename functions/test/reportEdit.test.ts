@@ -1,6 +1,7 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
 import { Guid } from '../src/types/Guid';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
+import { UtcDate } from '../src/types/UtcDate';
 
 describe('reportEdit', () => {
     beforeEach(async () => {
@@ -27,7 +28,7 @@ describe('reportEdit', () => {
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title',
             message: 'message',
-            createDate: new Date().toISOString()
+            createDate: UtcDate.now.encoded
         }, 'encrypt');
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
@@ -56,7 +57,7 @@ describe('reportEdit', () => {
 
     it('add report not existing', async () => {
         const reportId = Guid.newGuid();
-        const date = new Date();
+        const date = UtcDate.now;
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
             groupId: 'general',
@@ -65,26 +66,26 @@ describe('reportEdit', () => {
             report: {
                 title: 'title',
                 message: 'message',
-                createDate: date.toISOString()
+                createDate: date.encoded
             }
         });
         result.success;
         expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
             title: 'title',
             message: 'message',
-            createDate: date.toISOString()
+            createDate: date.encoded
         });
     });
 
     it('add report existing', async () => {
         const reportId = Guid.newGuid();
-        const date1 = new Date();
+        const date1 = UtcDate.now;
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.toISOString()
+            createDate: date1.encoded
         }, 'encrypt');
-        const date2 = new Date(date1.getTime() + 60000);
+        const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
             groupId: 'general',
@@ -94,7 +95,7 @@ describe('reportEdit', () => {
                 title: 'title-2',
                 message: 'message-2',
                 imageUrl: 'image-url-2',
-                createDate: date2.toISOString()
+                createDate: date2.encoded
             }
         });
         result.failure.equal({
@@ -119,7 +120,7 @@ describe('reportEdit', () => {
 
     it('change report not existing', async () => {
         const reportId = Guid.newGuid();
-        const date = new Date();
+        const date = UtcDate.now;
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
             groupId: 'general',
@@ -129,7 +130,7 @@ describe('reportEdit', () => {
                 title: 'title',
                 message: 'message',
                 imageUrl: 'image-url',
-                createDate: date.toISOString()
+                createDate: date.encoded
             }
         });
         result.failure.equal({
@@ -140,13 +141,13 @@ describe('reportEdit', () => {
 
     it('change report existing', async () => {
         const reportId = Guid.newGuid();
-        const date1 = new Date();
+        const date1 = UtcDate.now;
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.toISOString()
+            createDate: date1.encoded
         }, 'encrypt');
-        const date2 = new Date(date1.getTime() + 60000);
+        const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
             groupId: 'general',
@@ -156,7 +157,7 @@ describe('reportEdit', () => {
                 title: 'title-2',
                 message: 'message-2',
                 imageUrl: 'image-url-2',
-                createDate: date2.toISOString()
+                createDate: date2.encoded
             }
         });
         result.success;
@@ -164,20 +165,20 @@ describe('reportEdit', () => {
             title: 'title-2',
             message: 'message-2',
             imageUrl: 'image-url-2',
-            createDate: date2.toISOString()
+            createDate: date2.encoded
         });
     });
 
     it('change report previous group id undefined', async () => {
         const reportId = Guid.newGuid();
-        const date1 = new Date();
+        const date1 = UtcDate.now;
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
             imageUrl: undefined,
-            createDate: date1.toISOString()
+            createDate: date1.encoded
         }, 'encrypt');
-        const date2 = new Date(date1.getTime() + 60000);
+        const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
             groupId: 'football-adults/first-team/game-report',
@@ -187,7 +188,7 @@ describe('reportEdit', () => {
                 title: 'title-2',
                 message: 'message-2',
                 imageUrl: 'image-url-2',
-                createDate: date2.toISOString()
+                createDate: date2.encoded
             }
         });
         result.failure.equal({
@@ -198,13 +199,13 @@ describe('reportEdit', () => {
 
     it('change report group id', async () => {
         const reportId = Guid.newGuid();
-        const date1 = new Date();
+        const date1 = UtcDate.now;
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.toISOString()
+            createDate: date1.encoded
         }, 'encrypt');
-        const date2 = new Date(date1.getTime() + 60000);
+        const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
             groupId: 'football-adults/first-team/game-report',
@@ -214,7 +215,7 @@ describe('reportEdit', () => {
                 title: 'title-2',
                 message: 'message-2',
                 imageUrl: 'image-url-2',
-                createDate: date2.toISOString()
+                createDate: date2.encoded
             }
         });
         result.success;
@@ -223,7 +224,7 @@ describe('reportEdit', () => {
             title: 'title-2',
             message: 'message-2',
             imageUrl: 'image-url-2',
-            createDate: date2.toISOString()
+            createDate: date2.encoded
         });
     });
 });

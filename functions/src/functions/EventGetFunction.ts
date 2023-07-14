@@ -3,6 +3,7 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EventGroupId, type Event, type EventGroup } from '../types/Event';
+import { UtcDate } from '../types/UtcDate';
 
 export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<EventGetFunctionType> & { databaseType: DatabaseType };
@@ -34,8 +35,8 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
             if (snapshot.key === null)
                 return undefined;
             const event = snapshot.value('decrypt');
-            const date = new Date(event.date);
-            if (date < new Date())
+            const date = UtcDate.decode(event.date);
+            if (date.compare(UtcDate.now) === 'less')
                 return undefined;
             return {
                 ...event,
@@ -44,7 +45,7 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
         });
         if (events.length === 0)
             return undefined;
-        events.sort((a, b) => new Date(a.date) < new Date(b.date) ? -1 : 1);
+        events.sort((a, b) => UtcDate.decode(a.date).compare(UtcDate.decode(b.date)) === 'less' ? -1 : 1);
         return {
             groupId: groupId,
             events: events

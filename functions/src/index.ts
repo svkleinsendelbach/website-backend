@@ -5,4 +5,4 @@ import { getPrivateKeys } from './privateKeys';
 
 admin.initializeApp();
 
-export = createFirebaseFunctions(firebaseFunctions, getPrivateKeys);
+export = createFirebaseFunctions(getPrivateKeys, {}, firebaseFunctions);

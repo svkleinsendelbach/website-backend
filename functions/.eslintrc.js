@@ -2,15 +2,11 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true
+    node: true,
+    mocha: true
   },
   extends: [
-    'standard-with-typescript',
-    'eslint:recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:import/typescript',
-    'plugin:@typescript-eslint/recommended'
+    'eslint:recommended'
   ],
   parser: '@typescript-eslint/parser',
   overrides: [
@@ -26,8 +22,7 @@ module.exports = {
     '/coverage/**/*'
   ],
   plugins: [
-    '@typescript-eslint',
-    'import'
+    '@typescript-eslint'
   ],
   rules: {
     '@typescript-eslint/semi': ['error', 'always'],
@@ -57,7 +52,9 @@ module.exports = {
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/consistent-type-definitions': 'off',
-    '@typescript-eslint/space-before-function-paren': 'off'
+    '@typescript-eslint/space-before-function-paren': 'off',
+    'no-unused-vars': 'off',
+    'no-redeclare': 'off'
   }
 }
   

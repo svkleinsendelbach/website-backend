@@ -3,6 +3,7 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { ReportGroupId, type Report } from '../types/Report';
+import { UtcDate } from '../types/UtcDate';
 
 export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<ReportGetFunctionType> & { databaseType: DatabaseType };
@@ -35,7 +36,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
                 id: snapshot.key
             };
         });
-        reports.sort((a, b) => new Date(a.createDate) > new Date(b.createDate) ? -1 : 1);
+        reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
         if (this.parameters.numberReports === undefined)
             return { reports: reports, hasMore: false };
         const reportsToReturn: Report.Flatten[] = [];

@@ -1,5 +1,6 @@
 import { HttpsError, type ILogger } from 'firebase-function';
 import { Guid } from './Guid';
+import { UtcDate } from './UtcDate';
 
 export type EventGroupId =
     'general' |
@@ -27,7 +28,7 @@ export namespace EventGroupId {
 
 export type Event = {
     id: Guid;
-    date: Date;
+    date: UtcDate;
     title: string;
     subtitle?: string;
     link?: string;
@@ -53,7 +54,7 @@ export namespace Event {
             throw HttpsError('internal', 'Couldn\'t get link for event.', logger);
 
         return {
-            date: new Date(value.date),
+            date: UtcDate.decode(value.date),
             title: value.title,
             subtitle: 'subtitle' in value ? value.subtitle as string : undefined,
             link: 'link' in value ? value.link as string : undefined
@@ -73,7 +74,7 @@ export namespace Event {
     export function flatten(event: Event | Omit<Event, 'id'>): Event.Flatten | Omit<Event.Flatten, 'id'> {
         return {
             ...('id' in event ? { id: event.id.guidString } : {}),
-            date: event.date.toISOString(),
+            date: event.date.encoded,
             title: event.title,
             subtitle: event.subtitle,
             link: event.link
@@ -85,7 +86,7 @@ export namespace Event {
     export function concrete(event: Event.Flatten | Omit<Event.Flatten, 'id'>): Event | Omit<Event, 'id'> {
         return {
             ...('id' in event ? { id: new Guid(event.id) } : {}),
-            date: new Date(event.date),
+            date: UtcDate.decode(event.date),
             title: event.title,
             subtitle: event.subtitle,
             link: event.link

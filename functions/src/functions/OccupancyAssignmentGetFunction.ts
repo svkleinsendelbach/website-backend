@@ -4,6 +4,7 @@ import { getPrivateKeys } from '../privateKeys';
 import { type OccupancyLocation } from '../types/OccupancyLocation';
 import { type OccupancyAssignment } from '../types/OccupancyAssignment';
 import { type DatabaseScheme } from '../DatabaseScheme';
+import { UtcDate } from '../types/UtcDate';
 
 export class OccupancyAssignmentGetFunction implements FirebaseFunction<OccupancyAssignmentGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<OccupancyAssignmentGetFunctionType> & { databaseType: DatabaseType };
@@ -19,7 +20,7 @@ export class OccupancyAssignmentGetFunction implements FirebaseFunction<Occupanc
     public async executeFunction(): Promise<FunctionType.ReturnType<OccupancyAssignmentGetFunctionType>> {
         this.logger.log('OccupancyAssignmentGetFunction.executeFunction', {}, 'info');
         const [locations, assignments] = await Promise.all([this.getLocations(), this.getAssignments()]);
-        assignments.sort((a, b) => new Date(a.startDate) < new Date(b.startDate) ? -1 : 1);
+        assignments.sort((a, b) => UtcDate.decode(a.startDate).compare(UtcDate.decode(b.startDate)) === 'less' ? -1 : 1);
         return {
             locations: locations,
             assignments: assignments

@@ -3,6 +3,7 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { ReportGroupId, type Report } from '../types/Report';
+import { UtcDate } from '../types/UtcDate';
 
 export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFunctionType> {
     public readonly parameters: FunctionType.Parameters<ReportGetAllFunctionType> & { databaseType: DatabaseType };
@@ -18,7 +19,7 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
     public async executeFunction(): Promise<FunctionType.ReturnType<ReportGetAllFunctionType>> {
         this.logger.log('ReportGetAllFunction.executeFunction', {}, 'info');
         const reports = (await Promise.all(ReportGroupId.all.map(async groupId => await this.getReports(groupId)))).flatMap(reports => reports);
-        reports.sort((a, b) => new Date(a.createDate) > new Date(b.createDate) ? -1 : 1);
+        reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
         return reports;
     }
 

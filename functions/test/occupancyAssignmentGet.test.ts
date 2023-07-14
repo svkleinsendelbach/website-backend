@@ -1,4 +1,5 @@
 import { Guid } from '../src/types/Guid';
+import { UtcDate } from '../src/types/UtcDate';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('occupancyAssignmentGet', () => {
@@ -17,38 +18,38 @@ describe('occupancyAssignmentGet', () => {
             name: 'location 2',
             color: '#A842BB'
         }, 'encrypt');
-        const endDate = new Date(new Date().getTime() + 100000);
-        const date1 = new Date(new Date().getTime() + 50000);
+        const endDate = UtcDate.now.advanced({ minute: 100 });
+        const date1 = UtcDate.now.advanced({ minute: 50 });
         const assignmentId1 = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId1.guidString).set({
-            locationId: locationId1.guidString,
+            locationIds: [locationId1.guidString],
             title: 'assignment 1',
-            startDate: date1.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: date1.encoded,
+            endDate: endDate.encoded
         }, 'encrypt');
-        const date2 = new Date(new Date().getTime() + 30000);
+        const date2 = UtcDate.now.advanced({ minute: 30 });
         const assignmentId2 = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId2.guidString).set({
-            locationId: locationId2.guidString,
+            locationIds: [locationId2.guidString],
             title: 'assignment 2',
-            startDate: date2.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: date2.encoded,
+            endDate: endDate.encoded
         }, 'encrypt');
-        const date3 = new Date(new Date().getTime() + 20000);
+        const date3 = UtcDate.now.advanced({ minute: 20 });
         const assignmentId3 = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId3.guidString).set({
-            locationId: locationId2.guidString,
+            locationIds: [locationId2.guidString],
             title: 'assignment 3',
-            startDate: date3.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: date3.encoded,
+            endDate: endDate.encoded
         }, 'encrypt');
-        const date4 = new Date(new Date().getTime() - 30000);
+        const date4 = UtcDate.now.advanced({ minute: -30 });
         const assignmentId4 = Guid.newGuid();
         await firebaseApp.database.child('occupancy').child('assignments').child(assignmentId4.guidString).set({
-            locationId: locationId1.guidString,
+            locationIds: [locationId1.guidString, locationId2.guidString],
             title: 'assignment 4',
-            startDate: date4.toISOString(),
-            endDate: endDate.toISOString()
+            startDate: date4.encoded,
+            endDate: endDate.encoded
         }, 'encrypt');
         const result = await firebaseApp.functions.function('occupancy').function('assignment').function('get').call({});
         result.success.equal({
@@ -65,31 +66,31 @@ describe('occupancyAssignmentGet', () => {
             assignments: [
                 {
                     id: assignmentId4.guidString,
-                    locationId: locationId1.guidString,
+                    locationIds: [locationId1.guidString, locationId2.guidString],
                     title: 'assignment 4',
-                    startDate: date4.toISOString(),
-                    endDate: endDate.toISOString()
+                    startDate: date4.encoded,
+                    endDate: endDate.encoded
                 },
                 {
                     id: assignmentId3.guidString,
-                    locationId: locationId2.guidString,
+                    locationIds: [locationId2.guidString],
                     title: 'assignment 3',
-                    startDate: date3.toISOString(),
-                    endDate: endDate.toISOString()
+                    startDate: date3.encoded,
+                    endDate: endDate.encoded
                 },
                 {
                     id: assignmentId2.guidString,
-                    locationId: locationId2.guidString,
+                    locationIds: [locationId2.guidString],
                     title: 'assignment 2',
-                    startDate: date2.toISOString(),
-                    endDate: endDate.toISOString()
+                    startDate: date2.encoded,
+                    endDate: endDate.encoded
                 },
                 {
                     id: assignmentId1.guidString,
-                    locationId: locationId1.guidString,
+                    locationIds: [locationId1.guidString],
                     title: 'assignment 1',
-                    startDate: date1.toISOString(),
-                    endDate: endDate.toISOString()
+                    startDate: date1.encoded,
+                    endDate: endDate.encoded
                 }
             ]
         });

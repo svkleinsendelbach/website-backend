@@ -1,12 +1,13 @@
 import { type ILogger, HttpsError } from 'firebase-function';
 import { Guid } from './Guid';
+import { UtcDate } from './UtcDate';
 
 export type OccupancyAssignment = {
     id: Guid;
-    locationId: Guid;
+    locationIds: Guid[];
     title: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: UtcDate;
+    endDate: UtcDate;
 };
 
 export namespace OccupancyAssignment {
@@ -16,8 +17,13 @@ export namespace OccupancyAssignment {
         if (value === null)
             throw HttpsError('internal', 'Couldn\'t get occupancy assignment from null.', logger);
 
-        if (!('locationId' in value) || typeof value.locationId !== 'string')
-            throw HttpsError('internal', 'Couldn\'t get location id for occupancy assignment.', logger);
+        if (!('locationIds' in value) || !Array.isArray(value.locationIds))
+            throw HttpsError('internal', 'Couldn\'t get location ids for occupancy assignment.', logger);
+        const locationIds = value.locationIds.map((value: unknown) => {
+            if (typeof value !== 'string')
+                throw HttpsError('internal', 'Couldn\'t get location id for occupancy assignment.', logger);
+            return Guid.fromString(value, logger.nextIndent);
+        });
 
         if (!('title' in value) || typeof value.title !== 'string')
             throw HttpsError('internal', 'Couldn\'t get title for occupancy assignment.', logger);
@@ -29,16 +35,16 @@ export namespace OccupancyAssignment {
             throw HttpsError('internal', 'Couldn\'t get end date for occupancy assignment.', logger);
 
         return {
-            locationId: Guid.fromString(value.locationId, logger.nextIndent),
+            locationIds: locationIds,
             title: value.title,
-            startDate: new Date(value.startDate),
-            endDate: new Date(value.endDate)
+            startDate: UtcDate.decode(value.startDate),
+            endDate: UtcDate.decode(value.endDate)
         };
     }
 
     export type Flatten = {
         id: string;
-        locationId: string;
+        locationIds: string[];
         title: string;
         startDate: string;
         endDate: string;
@@ -49,10 +55,10 @@ export namespace OccupancyAssignment {
     export function flatten(assignment: OccupancyAssignment | Omit<OccupancyAssignment, 'id'>): OccupancyAssignment.Flatten | Omit<OccupancyAssignment.Flatten, 'id'> {
         return {
             ...('id' in assignment ? { id: assignment.id.guidString } : {}),
-            locationId: assignment.locationId.guidString,
+            locationIds: assignment.locationIds.map(id => id.guidString),
             title: assignment.title,
-            startDate: assignment.startDate.toISOString(),
-            endDate: assignment.endDate.toISOString()
+            startDate: assignment.startDate.encoded,
+            endDate: assignment.endDate.encoded
         };
     }
 
@@ -61,10 +67,10 @@ export namespace OccupancyAssignment {
     export function concrete(assignment: OccupancyAssignment.Flatten | Omit<OccupancyAssignment.Flatten, 'id'>): OccupancyAssignment | Omit<OccupancyAssignment, 'id'> {
         return {
             ...('id' in assignment ? { id: new Guid(assignment.id) } : {}),
-            locationId: new Guid(assignment.locationId),
+            locationIds: assignment.locationIds.map(id => new Guid(id)),
             title: assignment.title,
-            startDate: new Date(assignment.startDate),
-            endDate: new Date(assignment.endDate)
+            startDate: UtcDate.decode(assignment.startDate),
+            endDate: UtcDate.decode(assignment.endDate)
         };
     }
 }

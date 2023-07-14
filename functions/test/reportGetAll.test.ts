@@ -1,5 +1,6 @@
 import { Guid } from '../src/types/Guid';
 import { type ReportGroupId, type Report } from '../src/types/Report';
+import { UtcDate } from '../src/types/UtcDate';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('reportGetAll', () => {
@@ -11,7 +12,7 @@ describe('reportGetAll', () => {
         const report: Omit<Report.Flatten, 'id'> = {
             title: `title-${number}`,
             message: `message-${number}`,
-            createDate: new Date(new Date().getTime() + number * 100000).toISOString()
+            createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded
         };
         const reportId = Guid.newGuid();
         await firebaseApp.database.child('reports').child(groupId).child(reportId.guidString).set(report, 'encrypt');

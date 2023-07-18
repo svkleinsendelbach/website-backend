@@ -27,7 +27,8 @@ describe('eventEdit', () => {
         const eventId = Guid.newGuid();
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: UtcDate.now.encoded,
-            title: 'title'
+            title: 'title',
+            isImportant: false
         }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
@@ -64,13 +65,15 @@ describe('eventEdit', () => {
             eventId: eventId.guidString,
             event: {
                 date: date.encoded,
-                title: 'title'
+                title: 'title',
+                isImportant: true
             }
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get('decrypt')).to.be.deep.equal({
             date: date.encoded,
-            title: 'title'
+            title: 'title',
+            isImportant: true
         });
     });
 
@@ -79,7 +82,8 @@ describe('eventEdit', () => {
         const date1 = UtcDate.now;
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.encoded,
-            title: 'title-1'
+            title: 'title-1',
+            isImportant: false
         }, 'encrypt');
         const date2 = UtcDate.now.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -89,7 +93,8 @@ describe('eventEdit', () => {
             eventId: eventId.guidString,
             event: {
                 date: date2.encoded,
-                title: 'title-2'
+                title: 'title-2',
+                isImportant: false
             }
         });
         result.failure.equal({
@@ -120,7 +125,8 @@ describe('eventEdit', () => {
             eventId: Guid.newGuid().guidString,
             event: {
                 date: UtcDate.now.encoded,
-                title: 'title'
+                title: 'title',
+                isImportant: false
             }
         });
         result.failure.equal({
@@ -134,7 +140,8 @@ describe('eventEdit', () => {
         const date1 = UtcDate.now;
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.encoded,
-            title: 'title-1'
+            title: 'title-1',
+            isImportant: false
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -144,13 +151,15 @@ describe('eventEdit', () => {
             eventId: eventId.guidString,
             event: {
                 date: date2.encoded,
-                title: 'title-2'
+                title: 'title-2',
+                isImportant: false
             }
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).get('decrypt')).to.be.deep.equal({
             date: date2.encoded,
-            title: 'title-2'
+            title: 'title-2',
+            isImportant: false
         });
     });
 
@@ -159,7 +168,8 @@ describe('eventEdit', () => {
         const date1 = UtcDate.now;
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.encoded,
-            title: 'title-1'
+            title: 'title-1',
+            isImportant: false
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -169,7 +179,8 @@ describe('eventEdit', () => {
             eventId: eventId.guidString,
             event: {
                 date: date2.encoded,
-                title: 'title-2'
+                title: 'title-2',
+                isImportant: false
             }
         });
         result.failure.equal({
@@ -183,7 +194,8 @@ describe('eventEdit', () => {
         const date1 = UtcDate.now;
         await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
             date: date1.encoded,
-            title: 'title-1'
+            title: 'title-1',
+            isImportant: false
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -193,14 +205,16 @@ describe('eventEdit', () => {
             eventId: eventId.guidString,
             event: {
                 date: date2.encoded,
-                title: 'title-2'
+                title: 'title-2',
+                isImportant: false
             }
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).exists()).to.be.equal(false);
         expect(await firebaseApp.database.child('events').child('dancing').child(eventId.guidString).get('decrypt')).to.be.deep.equal({
             date: date2.encoded,
-            title: 'title-2'
+            title: 'title-2',
+            isImportant: false
         });
     });
 });

@@ -17,6 +17,7 @@ export type GameInfo = {
     livetickers: Array<{
         id: string;
     } & BfvLiveticker>;
+    report: GameInfo.Report | undefined;
 };
 
 export namespace GameInfo {
@@ -24,6 +25,11 @@ export namespace GameInfo {
         id: string;
         name: string;
         imageId: string;
+    };
+
+    export type Report = { 
+        title: string; 
+        paragraphs: { text: string; link: string | undefined }[][];
     };
 }
 export type BfvLiveticker = {

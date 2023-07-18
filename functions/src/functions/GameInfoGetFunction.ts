@@ -5,6 +5,7 @@ import { type BfvApiLiveticker, BfvLiveticker, type GameInfo } from '../types/Ga
 import DOMParser from 'dom-parser';
 import fetch from 'cross-fetch';
 import * as fontkit from 'fontkit';
+import { UtcDate } from '../types/UtcDate';
 
 export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<GameInfoGetFunctionType> & { databaseType: DatabaseType };
@@ -44,6 +45,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
         const url = `https://www.bfv.de/spiele/${gameId}`;
         const html = await (await fetch(url)).text();
         const dom = new HtmlDom(new DOMParser().parseFromString(html));
+        const gameReport = this.getGameReport(dom);
         const node = dom.nodesByClass('bfv-matchdata-stage').at(0).nthChild(1).nthChild(1);
         const homeTeamId = node.nthChild(5).nthChild(1).nthChild(3).nodesByClass('bfv-matchdata-result__team--team0').at(0).nodesByClass('bfv-matchdata-result__team-link').at(0).attribute('href').regexGroup(/^https:\/\/www\.bfv\.de\/mannschaften(?:\/\S+?)?\/(?<id>\S+?)$/g, 'id').toString();
         const awayTeamId = node.nthChild(5).nthChild(1).nthChild(3).nodesByClass('bfv-matchdata-result__team--team1').at(0).nodesByClass('bfv-matchdata-result__team-link').at(0).attribute('href').regexGroup(/^https:\/\/www\.bfv\.de\/mannschaften(?:\/\S+?)?\/(?<id>\S+?)$/g, 'id').toString();
@@ -53,12 +55,14 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
         const awayImageId = node.nthChild(5).nthChild(1).nthChild(3).nodesByClass('bfv-matchdata-result__team--team1').at(0).nodesByClass('bfv-matchdata-result__team-icon').at(0).nodesByTag('img').at(0).attribute('src').regexGroup(/^\/\/service-prod\.bfv\.de\/export\.media\?action=getLogo&format=7&id=(?<id>\S+?)$/g, 'id').toString();
         if (homeImageId === null || awayImageId === null)
             throw HttpsError('not-found', 'Couldn\'t get ids for home and away team images.', this.logger);
-        const dateValue = node.nthChild(3).nthChild(5).nthChild(3).value;
-        const date1 = dateValue.regexGroup(/^\s*(?<date>\d{2})\.\d{2}\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
-        const date2 = dateValue.regexGroup(/^\s*\d{2}\.(?<date>\d{2})\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
-        const date3 = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.(?<date>\d{4})\s+\/\d{2}:\d{2} Uhr\s*$/g, 'date').toString();
-        const date4 = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/(?<time>\d{2}:\d{2}) Uhr\s*$/g, 'time').toString();
-        const date = date1 === null || date2 === null || date3 === null || date4 === null ? null : `${date3}-${date2}-${date1}T${date4}:00.000Z`;
+        const gameDay = node.nthChild(3).nthChild(3).value.regexGroup(/^(?<day>\d+?)\. Spieltag$/g, 'day').toInt();
+        const dateValue = node.nthChild(3).nthChild(gameDay !== null ? 5 : 3).nthChild(3).value;
+        const day = dateValue.regexGroup(/^\s*(?<day>\d{2})\.\d{2}\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'day').toInt();
+        const month = dateValue.regexGroup(/^\s*\d{2}\.(?<month>\d{2})\.\d{4}\s+\/\d{2}:\d{2} Uhr\s*$/g, 'month').toInt();
+        const year = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.(?<year>\d{4})\s+\/\d{2}:\d{2} Uhr\s*$/g, 'year').toInt();
+        const hour = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/(?<hour>\d{2}):\d{2} Uhr\s*$/g, 'hour').toInt();
+        const minute = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/\d{2}:(?<minute>\d{2}) Uhr\s*$/g, 'minute').toInt();
+        const date = year === null || month === null || day === null || hour === null || minute === null? null : new UtcDate(year, month, day, hour, minute, 'Europe/Berlin');
         const adressValue = dom.nodesByClass('bfv-game-info').at(0).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(3).value;
         const adress1 = adressValue.regexGroup(/^[\S\s]+?\|(?<street>[\S\s]+?)\|[\S\s]+?$/g, 'street').toString();
         const adress2 = adressValue.regexGroup(/^[\S\s]+?\|[\S\s]+?\|(?<city>[\S\s]+?)$/g, 'city').toString();
@@ -69,13 +73,13 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
             competition: {
                 name: node.nthChild(3).nthChild(1).nthChild(1).value.toString(),
                 link: node.nthChild(3).nthChild(1).attribute('href').toString(),
-                gameDay: node.nthChild(3).nthChild(3).value.regexGroup(/^(?<day>\d+?)\. Spieltag$/g, 'day').toInt()
+                gameDay: gameDay ?? 1
             },
             result: {
                 home: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString()),
                 away: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString())
             },
-            date: date,
+            date: date?.encoded ?? null,
             homeTeam: {
                 name: title.regexGroup(/^Spiel (?<name>[\S\s]+?) gegen [\S\s]+?&nbsp;\| BFV$/g, 'name').toString(),
                 id: homeTeamId,
@@ -87,8 +91,25 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
                 imageId: awayImageId
             },
             adress: adress ?? undefined,
-            adressDescription: adressValue.regexGroup(/^(?<description>[\S\s]+?)\|[\S\s]+?\|[\S\s]+?$/g, 'description').toString() ?? undefined
+            adressDescription: adressValue.regexGroup(/^(?<description>[\S\s]+?)\|[\S\s]+?\|[\S\s]+?$/g, 'description').toString() ?? undefined,
+            report: gameReport
         });
+    }
+
+    private getGameReport(dom: HtmlDom): GameInfo.Report | undefined {
+        const node = dom.nodeById('tab-spieldetailreiter-spielverlauf').nthChild(1).nthChild(1).nthChild(3).nthChild(1).nthChild(1).nthChild(3);
+        const title = node.nthChild(1).text?.trim() ?? null;
+        const paragraphs = node.nthChild(3).children.compactMap(node => {
+            const paragraph = node.children.compactMap(node => {
+                if (node.text === null || node.text === '')
+                    return undefined;
+                return { text: node.text, link: node.attribute('href').toString() ?? undefined };
+            });
+            if (paragraph === null || paragraph.length === 0)
+                return undefined;
+            return paragraph;
+        });
+        return title === null || paragraphs === null ? undefined : { title: title, paragraphs: paragraphs };
     }
 
     private async mapResult(rawResult: string | null, fontId: string | null): Promise<number | undefined> {

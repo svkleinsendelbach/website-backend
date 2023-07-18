@@ -1,11 +1,18 @@
 export class UtcDate {
-    private constructor(
+    public constructor(
         private readonly year: number,
         private readonly month: number,
         private readonly day: number,
         private readonly hour: number,
-        private readonly minute: number
-    ) {}
+        private readonly minute: number,
+        timezone?: 'Europe/Berlin'
+    ) {
+        if (timezone !== undefined) {
+            const date = new Date(this.year, this.month, this.day, this.hour, this.minute);
+            const offset = date.getUTCHours() - new Date(date.toLocaleString('en-US', { timeZone: timezone })).getUTCHours();
+            this.hour += offset;
+        }
+    }
 
     public static fromDate(date: Date): UtcDate {
         return new UtcDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes());

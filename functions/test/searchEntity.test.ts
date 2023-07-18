@@ -13,7 +13,8 @@ describe('searchEntity', () => {
         const event: Omit<Event.Flatten, 'id'> = {
             date: UtcDate.now.encoded,
             title: title,
-            subtitle: subtitle
+            subtitle: subtitle,
+            isImportant: false
         };
         const eventId = Guid.newGuid();
         await firebaseApp.database.child('events').child(groupId).child(eventId.guidString).set(event, 'encrypt');

@@ -30,6 +30,7 @@ export type Event = {
     id: Guid;
     date: UtcDate;
     title: string;
+    isImportant: boolean;
     subtitle?: string;
     link?: string;
 };
@@ -47,6 +48,9 @@ export namespace Event {
         if (!('title' in value) || typeof value.title !== 'string')
             throw HttpsError('internal', 'Couldn\'t get title for event.', logger);
 
+        if (!('isImportant' in value) || typeof value.isImportant !== 'boolean')
+            throw HttpsError('internal', 'Couldn\'t get is important for event.', logger);
+
         if ('subtitle' in value && (typeof value.subtitle !== 'string' && value.subtitle !== undefined))
             throw HttpsError('internal', 'Couldn\'t get subtitle for event.', logger);
 
@@ -56,6 +60,7 @@ export namespace Event {
         return {
             date: UtcDate.decode(value.date),
             title: value.title,
+            isImportant: value.isImportant,
             subtitle: 'subtitle' in value ? value.subtitle as string : undefined,
             link: 'link' in value ? value.link as string : undefined
         };
@@ -65,6 +70,7 @@ export namespace Event {
         id: string;
         date: string;
         title: string;
+        isImportant: boolean;
         subtitle?: string;
         link?: string;
     };
@@ -76,6 +82,7 @@ export namespace Event {
             ...('id' in event ? { id: event.id.guidString } : {}),
             date: event.date.encoded,
             title: event.title,
+            isImportant: event.isImportant,
             subtitle: event.subtitle,
             link: event.link
         };
@@ -88,6 +95,7 @@ export namespace Event {
             ...('id' in event ? { id: new Guid(event.id) } : {}),
             date: UtcDate.decode(event.date),
             title: event.title,
+            isImportant: event.isImportant,
             subtitle: event.subtitle,
             link: event.link
         };

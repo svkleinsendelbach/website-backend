@@ -6,6 +6,8 @@ import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
+import { UtcDate } from '../types/UtcDate';
+import { baseDatabaseReference } from '../utils';
 
 export class EventEditFunction implements FirebaseFunction<EventEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<EventEditFunctionType> & { databaseType: DatabaseType };
@@ -51,6 +53,14 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
             }
             await reference.set(Event.flatten(this.parameters.event), 'encrypt');
         }
+
+        const currentDate = UtcDate.now.setted({ hour: 0, minute: 0 });
+        if (this.parameters.previousGroupId !== undefined) {
+            const changesReference = baseDatabaseReference(this.parameters.databaseType).child('events').child(this.parameters.previousGroupId).child('changes').child(currentDate.encoded).child(this.parameters.eventId.guidString);
+            await changesReference.set(this.parameters.eventId.guidString);
+        }
+        const changesReference = baseDatabaseReference(this.parameters.databaseType).child('events').child(this.parameters.groupId).child('changes').child(currentDate.encoded).child(this.parameters.eventId.guidString);
+        await changesReference.set(this.parameters.eventId.guidString);
     }
 }
 

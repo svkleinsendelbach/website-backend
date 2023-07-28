@@ -13,14 +13,17 @@ describe('reportEdit', () => {
     });
 
     it('remove report not existing', async () => {
+        const reportId = Guid.newGuid();
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            reportId: Guid.newGuid().guidString,
+            reportId: reportId.guidString,
             report: undefined
         });
         result.success;
+        const changes = await firebaseApp.database.child('reports').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(reportId.guidString)).to.be.equal(true);
     });
 
     it('remove report existing', async () => {
@@ -34,11 +37,13 @@ describe('reportEdit', () => {
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            reportId: Guid.newGuid().guidString,
+            reportId: reportId.guidString,
             report: undefined
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(reportId.guidString).exists()).to.be.equal(false);
+        const changes = await firebaseApp.database.child('reports').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(reportId.guidString)).to.be.equal(true);
     });
 
     it('add report not given over', async () => {
@@ -75,6 +80,8 @@ describe('reportEdit', () => {
             message: 'message',
             createDate: date.encoded
         });
+        const changes = await firebaseApp.database.child('reports').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(reportId.guidString)).to.be.equal(true);
     });
 
     it('add report existing', async () => {
@@ -167,6 +174,8 @@ describe('reportEdit', () => {
             imageUrl: 'image-url-2',
             createDate: date2.encoded
         });
+        const changes = await firebaseApp.database.child('reports').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(reportId.guidString)).to.be.equal(true);
     });
 
     it('change report previous group id undefined', async () => {
@@ -226,5 +235,9 @@ describe('reportEdit', () => {
             imageUrl: 'image-url-2',
             createDate: date2.encoded
         });
+        const changes1 = await firebaseApp.database.child('reports').child('football-adults/first-team/game-report').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes1).includes(reportId.guidString)).to.be.equal(true);
+        const changes2 = await firebaseApp.database.child('reports').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes2).includes(reportId.guidString)).to.be.equal(true);
     });
 });

@@ -16,27 +16,15 @@ export type ReportGroupId =
     'dancing';
 
 export namespace ReportGroupId {
-    export function typeGuard(value: string): value is ReportGroupId {
-        return [
-            'general', 'football-adults/general', 'football-adults/first-team/game-report', 'football-adults/second-team/game-report', 'football-youth/general',
-            'football-youth/c-youth/game-report', 'football-youth/e-youth/game-report', 'football-youth/f-youth/game-report', 'football-youth/g-youth/game-report',
-            'gymnastics', 'dancing'
-        ].includes(value);
-    }
-
     export const all: ReportGroupId[] = [
-        'general',
-        'football-adults/general',
-        'football-adults/first-team/game-report',
-        'football-adults/second-team/game-report',
-        'football-youth/general',
-        'football-youth/c-youth/game-report',
-        'football-youth/e-youth/game-report',
-        'football-youth/f-youth/game-report',
-        'football-youth/g-youth/game-report',
-        'gymnastics',
-        'dancing'
+        'general', 'football-adults/general', 'football-adults/first-team/game-report', 'football-adults/second-team/game-report', 'football-youth/general',
+        'football-youth/c-youth/game-report', 'football-youth/e-youth/game-report', 'football-youth/f-youth/game-report', 'football-youth/g-youth/game-report',
+        'gymnastics', 'dancing'
     ];
+
+    export function typeGuard(value: string): value is ReportGroupId {
+        return (ReportGroupId.all as string[]).includes(value);
+    }
 }
 
 export type Report = {

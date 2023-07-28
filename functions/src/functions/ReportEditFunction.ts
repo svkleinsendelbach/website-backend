@@ -6,6 +6,8 @@ import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Guid } from '../types/Guid';
 import { Report, ReportGroupId } from '../types/Report';
+import { UtcDate } from '../types/UtcDate';
+import { baseDatabaseReference } from '../utils';
 
 export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<ReportEditFunctionType> & { databaseType: DatabaseType };
@@ -51,6 +53,14 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
             }
             await reference.set(Report.flatten(this.parameters.report), 'encrypt');
         }
+
+        const currentDate = UtcDate.now.setted({ hour: 0, minute: 0 });
+        if (this.parameters.previousGroupId !== undefined) {
+            const changesReference = baseDatabaseReference(this.parameters.databaseType).child('reports').child(this.parameters.previousGroupId).child('changes').child(currentDate.encoded).child(this.parameters.reportId.guidString);
+            await changesReference.set(this.parameters.reportId.guidString);
+        }
+        const changesReference = baseDatabaseReference(this.parameters.databaseType).child('reports').child(this.parameters.groupId).child('changes').child(currentDate.encoded).child(this.parameters.reportId.guidString);
+        await changesReference.set(this.parameters.reportId.guidString);
     }
 }
 

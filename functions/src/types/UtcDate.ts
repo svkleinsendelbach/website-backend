@@ -1,10 +1,10 @@
 export class UtcDate {
     public constructor(
-        private readonly year: number,
-        private readonly month: number,
-        private readonly day: number,
-        private readonly hour: number,
-        private readonly minute: number,
+        public readonly year: number,
+        public readonly month: number,
+        public readonly day: number,
+        public readonly hour: number,
+        public readonly minute: number,
         timezone?: 'Europe/Berlin'
     ) {
         if (timezone !== undefined) {
@@ -15,7 +15,7 @@ export class UtcDate {
     }
 
     public static fromDate(date: Date): UtcDate {
-        return new UtcDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes());
+        return new UtcDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes());
     }
 
     public static fromIsoDate(date: string): UtcDate {
@@ -49,8 +49,18 @@ export class UtcDate {
         return `${year}-${month}-${day}-${hour}-${minute}`;
     }
 
-    public advanced(components: { year?: number; month?: number; day?: number; hour?: number; minute?: number }): UtcDate {
+    public setted(components: { year?: number; month?: number; day?: number; hour?: number; minute?: number }): UtcDate {
         const date = new Date(Date.UTC(this.year, this.month, this.day, this.hour, this.minute));
+        date.setUTCFullYear(components.year ?? date.getUTCFullYear());
+        date.setUTCMonth((components.month ?? date.getUTCMonth()) - 1);
+        date.setUTCDate(components.day ?? date.getUTCDate());
+        date.setUTCHours(components.hour ?? date.getUTCHours());
+        date.setUTCMinutes(components.minute ?? date.getUTCMinutes());
+        return UtcDate.fromDate(date);
+    }
+
+    public advanced(components: { year?: number; month?: number; day?: number; hour?: number; minute?: number }): UtcDate {
+        const date = new Date(Date.UTC(this.year, this.month - 1, this.day, this.hour, this.minute));
         date.setUTCFullYear(date.getUTCFullYear() + (components.year ?? 0));
         date.setUTCMonth(date.getUTCMonth() + (components.month ?? 0));
         date.setUTCDate(date.getUTCDate() + (components.day ?? 0));
@@ -81,5 +91,20 @@ export class UtcDate {
         else if (this.minute > other.minute)
             return 'greater';
         return 'equal';
+    }
+}
+
+export namespace UtcDate {
+    export function iterateDates(start: UtcDate, end: UtcDate = UtcDate.now): UtcDate[] {
+        let date = start.setted({ hour: 0, minute: 0 });
+        if (date.compare(end.setted({ hour: 0, minute: 0 })) === 'greater')
+            return [];
+        const dates: UtcDate[] = [];
+        while (date.year !== end.year || date.month !== end.month || date.day !== end.day) {
+            dates.push(date);
+            date = date.advanced({ day: 1 });
+        }
+        dates.push(date);
+        return dates;
     }
 }

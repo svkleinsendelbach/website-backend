@@ -13,14 +13,17 @@ describe('eventEdit', () => {
     });
 
     it('remove event not existing', async () => {
+        const eventId = Guid.newGuid();
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            eventId: Guid.newGuid().guidString,
+            eventId: eventId.guidString,
             event: undefined
         });
         result.success;
+        const changes = await firebaseApp.database.child('events').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(eventId.guidString)).to.be.equal(true);
     });
 
     it('remove event existing', async () => {
@@ -39,6 +42,8 @@ describe('eventEdit', () => {
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(eventId.guidString).exists()).to.be.equal(false);
+        const changes = await firebaseApp.database.child('events').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(eventId.guidString)).to.be.equal(true);
     });
 
     it('add event not given over', async () => {
@@ -75,6 +80,8 @@ describe('eventEdit', () => {
             title: 'title',
             isImportant: true
         });
+        const changes = await firebaseApp.database.child('events').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(eventId.guidString)).to.be.equal(true);
     });
 
     it('add event existing', async () => {
@@ -161,6 +168,8 @@ describe('eventEdit', () => {
             title: 'title-2',
             isImportant: false
         });
+        const changes = await firebaseApp.database.child('events').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes).includes(eventId.guidString)).to.be.equal(true);
     });
 
     it('change event previous group id undefined', async () => {
@@ -216,5 +225,9 @@ describe('eventEdit', () => {
             title: 'title-2',
             isImportant: false
         });
+        const changes1 = await firebaseApp.database.child('events').child('general').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes1).includes(eventId.guidString)).to.be.equal(true);
+        const changes2 = await firebaseApp.database.child('events').child('dancing').child('changes').child(UtcDate.now.setted({ hour: 0, minute: 0}).encoded).get();
+        expect(Object.values(changes2).includes(eventId.guidString)).to.be.equal(true);
     });
 });

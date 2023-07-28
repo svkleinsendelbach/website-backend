@@ -19,6 +19,8 @@ import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions
 import { OccupancyLocationEditFunction, type OccupancyLocationEditFunctionType } from './functions/OccupancyLocationEditFunction';
 import { OccupancyAssignmentEditFunction, type OccupancyAssignmentEditFunctionType } from './functions/OccupancyAssignmentEditFuncion';
 import { type OccupancyAssignmentGetFunctionType, OccupancyAssignmentGetFunction } from './functions/OccupancyAssignmentGetFunction';
+import { EventGetChangesFunctionType, EventGetChangesFunction } from './functions/EventGetChangesFunction';
+import { ReportGetChangesFunctionType, ReportGetChangesFunction } from './functions/ReportGetChangesFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -26,11 +28,13 @@ export const firebaseFunctions = {
     searchEntity: FirebaseFunctionDescriptor.create<SearchEntityFunctionType>(SearchEntityFunction),
     event: {
         get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),
+        getChanges: FirebaseFunctionDescriptor.create<EventGetChangesFunctionType>(EventGetChangesFunction),
         edit: FirebaseFunctionDescriptor.create<EventEditFunctionType>(EventEditFunction)
     },
     report: {
         get: FirebaseFunctionDescriptor.create<ReportGetFunctionType>(ReportGetFunction),
         getAll: FirebaseFunctionDescriptor.create<ReportGetAllFunctionType>(ReportGetAllFunction),
+        getChanges: FirebaseFunctionDescriptor.create<ReportGetChangesFunctionType>(ReportGetChangesFunction),
         edit: FirebaseFunctionDescriptor.create<ReportEditFunctionType>(ReportEditFunction)
     },
     bfvData: {

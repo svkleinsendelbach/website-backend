@@ -13,11 +13,12 @@ describe('eventEdit', () => {
     });
 
     it('remove event not existing', async () => {
+        const eventId = Guid.newGuid();
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            eventId: Guid.newGuid().guidString,
+            eventId: eventId.guidString,
             event: undefined
         });
         result.success;

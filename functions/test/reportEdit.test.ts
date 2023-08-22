@@ -13,11 +13,12 @@ describe('reportEdit', () => {
     });
 
     it('remove report not existing', async () => {
+        const reportId = Guid.newGuid();
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            reportId: Guid.newGuid().guidString,
+            reportId: reportId.guidString,
             report: undefined
         });
         result.success;
@@ -34,7 +35,7 @@ describe('reportEdit', () => {
             editType: 'remove',
             groupId: 'general',
             previousGroupId: undefined,
-            reportId: Guid.newGuid().guidString,
+            reportId: reportId.guidString,
             report: undefined
         });
         result.success;

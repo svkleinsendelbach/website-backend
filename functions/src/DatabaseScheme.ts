@@ -7,28 +7,28 @@ import { type UserAuthentication, type UserAuthenticationType } from './types/Us
 
 export type DatabaseScheme = DatabaseSchemeType<{
     anpfiffInfoTeamParameters: {
-        [Key in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters
+        [Key in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters;
     };
-    events: {
+    events:{
         [Key in EventGroupId]: {
-            [Key in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>
-        }
+            [Key in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>;
+        };
     };
     reports: {
         [Key in ReportGroupId]: {
-            [Key in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>
-        }
+            [Key in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>;
+        };
     };
     users: {
         authentication: {
             [Key in UserAuthenticationType]: {
-                [Key in string]: CryptedScheme<UserAuthentication>
+                [Key in string]: CryptedScheme<UserAuthentication>;
             };
         };
     };
     notification: {
         [Key in NotificationType]: {
-            [Key in string]: string
-        }
+            [Key in string]: string;
+        };
     };
 }>;

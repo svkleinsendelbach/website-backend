@@ -1,6 +1,5 @@
-import { HttpsError, type ILogger } from 'firebase-function';
+import { HttpsError, type ILogger, UtcDate } from 'firebase-function';
 import { Guid } from './Guid';
-import { UtcDate } from './UtcDate';
 
 export type ReportGroupId =
     'general' |

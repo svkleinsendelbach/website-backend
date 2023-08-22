@@ -1,7 +1,7 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
 import { Guid } from '../src/types/Guid';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
-import { UtcDate } from '../src/types/UtcDate';
+import { UtcDate } from 'firebase-function';
 
 describe('reportEdit', () => {
     beforeEach(async () => {

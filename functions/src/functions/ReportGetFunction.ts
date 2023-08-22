@@ -1,9 +1,8 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, UtcDate, type FunctionType, DatabaseReference } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { ReportGroupId, type Report } from '../types/Report';
-import { UtcDate } from '../types/UtcDate';
 
 export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<ReportGetFunctionType> & { databaseType: DatabaseType };

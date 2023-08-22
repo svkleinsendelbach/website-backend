@@ -1,9 +1,8 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType, UtcDate } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EventGroupId, type Event, type EventGroup } from '../types/Event';
-import { UtcDate } from '../types/UtcDate';
 
 export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<EventGetFunctionType> & { databaseType: DatabaseType };

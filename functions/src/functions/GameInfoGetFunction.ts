@@ -1,11 +1,10 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError, type FunctionType, UtcDate } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getPrivateKeys } from '../privateKeys';
 import { type BfvApiLiveticker, BfvLiveticker, type GameInfo } from '../types/GameInfo';
 import DOMParser from 'dom-parser';
 import fetch from 'cross-fetch';
 import * as fontkit from 'fontkit';
-import { UtcDate } from '../types/UtcDate';
 
 export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunctionType> {
     public readonly parameters: FunctionType.Parameters<GameInfoGetFunctionType> & { databaseType: DatabaseType };

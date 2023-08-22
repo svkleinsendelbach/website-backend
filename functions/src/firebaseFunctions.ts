@@ -1,4 +1,4 @@
-import { FirebaseFunctionDescriptor, type FirebaseFunctionsType } from 'firebase-function';
+import { FirebaseFunctionDescriptor, type FirebaseFunctions } from 'firebase-function';
 import { DeleteAllDataFunction, type DeleteAllDataFunctionType } from './functions/DeleteAllDataFunction';
 import { UserAuthenticationAddFunction, type UserAuthenticationAddFunctionType } from './functions/UserAuthenticationAddFunction';
 import { UserAuthenticationCheckFunction, type UserAuthenticationCheckFunctionType } from './functions/UserAuthenticationCheckFunction';
@@ -12,18 +12,13 @@ import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
-import { SearchEntityFunction, type SearchEntityFunctionType } from './functions/SearchEntityFunction';
 import { NotificationRegisterFunction, type NotificationRegisterFunctionType } from './functions/NotificationRegisterFunction';
 import { NotificationPushFunction, type NotificationPushFunctionType } from './functions/NotificationPushFunction';
 import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
-import { OccupancyLocationEditFunction, type OccupancyLocationEditFunctionType } from './functions/OccupancyLocationEditFunction';
-import { OccupancyAssignmentEditFunction, type OccupancyAssignmentEditFunctionType } from './functions/OccupancyAssignmentEditFuncion';
-import { type OccupancyAssignmentGetFunctionType, OccupancyAssignmentGetFunction } from './functions/OccupancyAssignmentGetFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
     deleteAllData: FirebaseFunctionDescriptor.create<DeleteAllDataFunctionType>(DeleteAllDataFunction),
-    searchEntity: FirebaseFunctionDescriptor.create<SearchEntityFunctionType>(SearchEntityFunction),
     event: {
         get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),
         edit: FirebaseFunctionDescriptor.create<EventEditFunctionType>(EventEditFunction)
@@ -49,14 +44,5 @@ export const firebaseFunctions = {
     notification: {
         register: FirebaseFunctionDescriptor.create<NotificationRegisterFunctionType>(NotificationRegisterFunction),
         push: FirebaseFunctionDescriptor.create<NotificationPushFunctionType>(NotificationPushFunction)
-    },
-    occupancy: {
-        location: {
-            edit: FirebaseFunctionDescriptor.create<OccupancyLocationEditFunctionType>(OccupancyLocationEditFunction)
-        },
-        assignment: {
-            edit: FirebaseFunctionDescriptor.create<OccupancyAssignmentEditFunctionType>(OccupancyAssignmentEditFunction),
-            get: FirebaseFunctionDescriptor.create<OccupancyAssignmentGetFunctionType>(OccupancyAssignmentGetFunction)
-        }
     }
-} satisfies FirebaseFunctionsType;
+} satisfies FirebaseFunctions;

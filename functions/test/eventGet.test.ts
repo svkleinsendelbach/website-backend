@@ -1,5 +1,5 @@
 import { Guid } from '../src/types/Guid';
-import { UtcDate } from '../src/types/UtcDate';
+import { UtcDate } from 'firebase-function';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('eventGet', () => {

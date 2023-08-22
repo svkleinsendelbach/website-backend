@@ -1,6 +1,6 @@
 import { Guid } from '../src/types/Guid';
 import { type Report } from '../src/types/Report';
-import { UtcDate } from '../src/types/UtcDate';
+import { UtcDate } from 'firebase-function';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 
 describe('reportGet', () => {

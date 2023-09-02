@@ -13,28 +13,36 @@ describe('eventGet', () => {
         await firebaseApp.database.child('events').child('general').child(eventId1.guidString).set({
             date: date1.encoded,
             title: 'event-1',
-            isImportant: false
+            isImportant: false,
+            subtitle: null,
+            link: null
         }, 'encrypt');
         const date2 = UtcDate.now.advanced({ minute: 30 });
         const eventId2 = Guid.newGuid();
         await firebaseApp.database.child('events').child('general').child(eventId2.guidString).set({
             date: date2.encoded,
             title: 'event-2',
-            isImportant: false
+            isImportant: false,
+            subtitle: null,
+            link: null
         }, 'encrypt');
         const date3 = UtcDate.now.advanced({ minute: 20 });
         const eventId3 = Guid.newGuid();
         await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId3.guidString).set({
             date: date3.encoded,
             title: 'event-3',
-            isImportant: false
+            isImportant: false,
+            subtitle: null,
+            link: null
         }, 'encrypt');
         const date4 = UtcDate.now.advanced({ minute: -30 });
         const eventId4 = Guid.newGuid();
         await firebaseApp.database.child('events').child('football-adults/first-team').child(eventId4.guidString).set({
             date: date4.encoded,
             title: 'event-4',
-            isImportant: false
+            isImportant: false,
+            subtitle: null,
+            link: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('get').call({
             groupIds: ['general', 'football-adults/first-team']
@@ -47,13 +55,17 @@ describe('eventGet', () => {
                         id: eventId2.guidString,
                         date: date2.encoded,
                         title: 'event-2',
-                        isImportant: false
+                        isImportant: false,
+                        subtitle: null,
+                        link: null
                     },
                     {
                         id: eventId1.guidString,
                         date: date1.encoded,
                         title: 'event-1',
-                        isImportant: false
+                        isImportant: false,
+                        subtitle: null,
+                        link: null
                     }
                 ]
             },
@@ -64,7 +76,9 @@ describe('eventGet', () => {
                         id: eventId3.guidString,
                         date: date3.encoded,
                         title: 'event-3',
-                        isImportant: false
+                        isImportant: false,
+                        subtitle: null,
+                        link: null
                     }
                 ]
             }

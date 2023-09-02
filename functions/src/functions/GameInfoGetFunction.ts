@@ -61,7 +61,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
         const year = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.(?<year>\d{4})\s+\/\d{2}:\d{2} Uhr\s*$/g, 'year').toInt();
         const hour = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/(?<hour>\d{2}):\d{2} Uhr\s*$/g, 'hour').toInt();
         const minute = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/\d{2}:(?<minute>\d{2}) Uhr\s*$/g, 'minute').toInt();
-        const date = year === null || month === null || day === null || hour === null || minute === null? null : new UtcDate(year, month, day, hour, minute, 'Europe/Berlin');
+        const date = year === null || month === null || day === null || hour === null || minute === null ? null : new UtcDate(year, month, day, hour, minute, 'Europe/Berlin').encoded;
         const adressValue = dom.nodesByClass('bfv-game-info').at(0).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(3).value;
         const adress1 = adressValue.regexGroup(/^[\S\s]+?\|(?<street>[\S\s]+?)\|[\S\s]+?$/g, 'street').toString();
         const adress2 = adressValue.regexGroup(/^[\S\s]+?\|[\S\s]+?\|(?<city>[\S\s]+?)$/g, 'city').toString();
@@ -78,7 +78,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
                 home: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(1).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString()),
                 away: await this.mapResult(dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).value.toString(), dom.nodesByClass('bfv-matchdata-result__goals-wrapper').at(0).nthChild(5).attribute('data-font-url').regexGroup(/^\/\/app\.bfv\.de\/export\.fontface\/-\/id\/(?<id>\S+?)\/type\/css$/g, 'id').toString())
             },
-            date: date?.encoded ?? null,
+            date: date,
             homeTeam: {
                 name: title.regexGroup(/^Spiel (?<name>[\S\s]+?) gegen [\S\s]+?&nbsp;\| BFV$/g, 'name').toString(),
                 id: homeTeamId,
@@ -89,31 +89,31 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
                 id: awayTeamId,
                 imageId: awayImageId
             },
-            adress: adress ?? undefined,
-            adressDescription: adressValue.regexGroup(/^(?<description>[\S\s]+?)\|[\S\s]+?\|[\S\s]+?$/g, 'description').toString() ?? undefined,
+            adress: adress ?? null,
+            adressDescription: adressValue.regexGroup(/^(?<description>[\S\s]+?)\|[\S\s]+?\|[\S\s]+?$/g, 'description').toString() ?? null,
             report: gameReport
         });
     }
 
-    private getGameReport(dom: HtmlDom): GameInfo.Report | undefined {
+    private getGameReport(dom: HtmlDom): GameInfo.Report | null {
         const node = dom.nodeById('tab-spieldetailreiter-spielverlauf').nthChild(1).nthChild(1).nthChild(3).nthChild(1).nthChild(1).nthChild(3);
         const title = node.nthChild(1).text?.trim() ?? null;
         const paragraphs = node.nthChild(3).children.compactMap(node => {
             const paragraph = node.children.compactMap(node => {
                 if (node.text === null || node.text === '')
-                    return undefined;
-                return { text: node.text, link: node.attribute('href').toString() ?? undefined };
+                    return null;
+                return { text: node.text, link: node.attribute('href').toString() };
             });
             if (paragraph === null || paragraph.length === 0)
-                return undefined;
+                return null;
             return paragraph;
         });
-        return title === null || paragraphs === null ? undefined : { title: title, paragraphs: paragraphs };
+        return title === null || paragraphs === null ? null : { title: title, paragraphs: paragraphs };
     }
 
-    private async mapResult(rawResult: string | null, fontId: string | null): Promise<number | undefined> {
+    private async mapResult(rawResult: string | null, fontId: string | null): Promise<number | null> {
         if (rawResult === null || fontId === null)
-            return undefined;
+            return null;
         const fontUrl = `//app.bfv.de/export.fontface/-/format/ttf/id/${fontId}/type/font`;
         const font = fontkit.create(Buffer.from(await (await fetch(fontUrl)).arrayBuffer()));
         let result = 0;
@@ -125,7 +125,7 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
             const codePoint = Number.parseInt(match.groups?.codePoint ?? '', 16);
             const glyph = this.mapGlyph(codePoint, font);
             if (glyph === 'X' || glyph === '-')
-                return undefined;
+                return null;
             result = 10 * result + glyph;
         }
         return result;

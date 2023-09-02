@@ -12,7 +12,8 @@ describe('reportGetAll', () => {
         const report: Omit<Report.Flatten, 'id'> = {
             title: `title-${number}`,
             message: `message-${number}`,
-            createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded
+            createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded,
+            imageUrl: null
         };
         const reportId = Guid.newGuid();
         await firebaseApp.database.child('reports').child(groupId).child(reportId.guidString).set(report, 'encrypt');

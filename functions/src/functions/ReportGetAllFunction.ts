@@ -30,7 +30,7 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
             return [];
         return snapshot.compactMap(snapshot => {
             if (snapshot.key === null)
-                return undefined;
+                return null;
             return {
                 ...snapshot.value('decrypt'),
                 id: snapshot.key,

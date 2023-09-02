@@ -17,9 +17,9 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
             {
                 editType: ParameterBuilder.guard('string', EditType.typeGuard),
                 groupId: ParameterBuilder.guard('string', ReportGroupId.typeGuard),
-                previousGroupId: ParameterBuilder.optional(ParameterBuilder.guard('string', ReportGroupId.typeGuard)),
+                previousGroupId: ParameterBuilder.nullable(ParameterBuilder.guard('string', ReportGroupId.typeGuard)),
                 reportId: ParameterBuilder.build('string', Guid.fromString),
-                report: ParameterBuilder.optional(ParameterBuilder.build('object', Report.fromObject))
+                report: ParameterBuilder.nullable(ParameterBuilder.build('object', Report.fromObject))
             },
             this.logger.nextIndent
         );
@@ -36,12 +36,12 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
             if (snapshot.exists)
                 await reference.remove();
         } else {
-            if (this.parameters.report === undefined)
+            if (!this.parameters.report)
                 throw HttpsError('invalid-argument', 'No report in parameters to add / change.', this.logger);
             if (this.parameters.editType === 'add' && snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t add existing report.', this.logger);
             if (this.parameters.editType === 'change') {
-                if (this.parameters.previousGroupId === undefined)
+                if (!this.parameters.previousGroupId)
                     throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
                 const previousReference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(this.parameters.previousGroupId).child(this.parameters.reportId.guidString);
                 const previousSnapshot = await previousReference.snapshot();
@@ -57,13 +57,13 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
 export type ReportEditFunctionType = FunctionType<{
     editType: EditType;
     groupId: ReportGroupId;
-    previousGroupId: ReportGroupId | undefined;
+    previousGroupId: ReportGroupId | null;
     reportId: Guid;
-    report: Omit<Report, 'id'> | undefined;
+    report: Omit<Report, 'id'> | null;
 }, void, {
     editType: EditType;
     groupId: ReportGroupId;
-    previousGroupId: ReportGroupId | undefined;
+    previousGroupId: ReportGroupId | null;
     reportId: string;
-    report: Omit<Report.Flatten, 'id'> | undefined;
+    report: Omit<Report.Flatten, 'id'> | null;
 }>;

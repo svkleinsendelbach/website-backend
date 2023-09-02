@@ -36,7 +36,7 @@ export class NotificationPushFunction implements FirebaseFunction<NotificationPu
     }
 
     private async cleanupToken(result: admin.messaging.MessagingDeviceResult, token: string) {
-        if (result.error === undefined)
+        if (!result.error)
             return;
         if (result.error.code !== 'messaging/invalid-registration-token' && result.error.code !== 'messaging/registration-token-not-registered')
             return;

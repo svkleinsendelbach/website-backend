@@ -17,9 +17,9 @@ describe('reportEdit', () => {
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
             groupId: 'general',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: reportId.guidString,
-            report: undefined
+            report: null
         });
         result.success;
     });
@@ -29,14 +29,15 @@ describe('reportEdit', () => {
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title',
             message: 'message',
-            createDate: UtcDate.now.encoded
+            createDate: UtcDate.now.encoded,
+            imageUrl: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
             groupId: 'general',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: reportId.guidString,
-            report: undefined
+            report: null
         });
         result.success;
         expect(await firebaseApp.database.child('events').child('general').child(reportId.guidString).exists()).to.be.equal(false);
@@ -46,9 +47,9 @@ describe('reportEdit', () => {
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
             groupId: 'general',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: Guid.newGuid().guidString,
-            report: undefined
+            report: null
         });
         result.failure.equal({
             code: 'invalid-argument',
@@ -62,19 +63,21 @@ describe('reportEdit', () => {
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
             groupId: 'general',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: reportId.guidString,
             report: {
                 title: 'title',
                 message: 'message',
-                createDate: date.encoded
+                createDate: date.encoded,
+                imageUrl: null
             }
         });
         result.success;
         expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
             title: 'title',
             message: 'message',
-            createDate: date.encoded
+            createDate: date.encoded,
+            imageUrl: null
         });
     });
 
@@ -84,13 +87,14 @@ describe('reportEdit', () => {
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.encoded
+            createDate: date1.encoded,
+            imageUrl: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'add',
             groupId: 'general',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: reportId.guidString,
             report: {
                 title: 'title-2',
@@ -111,7 +115,7 @@ describe('reportEdit', () => {
             groupId: 'general',
             previousGroupId: 'general',
             reportId: Guid.newGuid().guidString,
-            report: undefined
+            report: null
         });
         result.failure.equal({
             code: 'invalid-argument',
@@ -146,7 +150,8 @@ describe('reportEdit', () => {
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.encoded
+            createDate: date1.encoded,
+            imageUrl: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
@@ -170,20 +175,20 @@ describe('reportEdit', () => {
         });
     });
 
-    it('change report previous group id undefined', async () => {
+    it('change report previous group id null', async () => {
         const reportId = Guid.newGuid();
         const date1 = UtcDate.now;
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            imageUrl: undefined,
+            imageUrl: null,
             createDate: date1.encoded
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
             groupId: 'football-adults/first-team/game-report',
-            previousGroupId: undefined,
+            previousGroupId: null,
             reportId: reportId.guidString,
             report: {
                 title: 'title-2',
@@ -204,7 +209,8 @@ describe('reportEdit', () => {
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
             title: 'title-1',
             message: 'message-1',
-            createDate: date1.encoded
+            createDate: date1.encoded,
+            imageUrl: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({

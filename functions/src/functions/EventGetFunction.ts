@@ -25,25 +25,25 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
         return (await Promise.all(this.parameters.groupIds.map(async id => await this.getEventGroup(id)))).flatMap(eventGroup => eventGroup ?? []);
     }
 
-    private async getEventGroup(groupId: EventGroupId): Promise<EventGroup.Flatten | undefined> {
+    private async getEventGroup(groupId: EventGroupId): Promise<EventGroup.Flatten | null> {
         const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
-            return undefined;
+            return null;
         const events = snapshot.compactMap<Event.Flatten>(snapshot => {
             if (snapshot.key === null)
-                return undefined;
+                return null;
             const event = snapshot.value('decrypt');
             const date = UtcDate.decode(event.date);
             if (date.compare(UtcDate.now) === 'less')
-                return undefined;
+                return null;
             return {
                 ...event,
                 id: snapshot.key
             };
         });
         if (events.length === 0)
-            return undefined;
+            return null;
         events.sort((a, b) => UtcDate.decode(a.date).compare(UtcDate.decode(b.date)) === 'less' ? -1 : 1);
         return {
             groupId: groupId,

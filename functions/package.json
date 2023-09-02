@@ -24,7 +24,7 @@
   "main": "lib/src/index.js",
   "dependencies": {
     "cross-fetch": "^4.0.0",
-    "firebase-function": "^1.4.60",
+    "firebase-function": "^1.4.62",
     "firebase-functions": "^4.4.1",
     "fontkit": "^2.0.2",
     "nodemailer": "^6.9.4",

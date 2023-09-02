@@ -13,7 +13,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
         const parameterParser = new ParameterParser<FunctionType.Parameters<ReportGetFunctionType>>(
             {
                 groupId: ParameterBuilder.guard('string', ReportGroupId.typeGuard),
-                numberReports: ParameterBuilder.optional(ParameterBuilder.value('number'))
+                numberReports: ParameterBuilder.nullable(ParameterBuilder.value('number'))
             },
             this.logger.nextIndent
         );
@@ -29,14 +29,14 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
             return { reports: [], hasMore: false };
         const reports = snapshot.compactMap<Report.Flatten>(snapshot => {
             if (snapshot.key === null)
-                return undefined;
+                return null;
             return {
                 ...snapshot.value('decrypt'),
                 id: snapshot.key
             };
         });
         reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
-        if (this.parameters.numberReports === undefined)
+        if (this.parameters.numberReports === null)
             return { reports: reports, hasMore: false };
         const reportsToReturn: Report.Flatten[] = [];
         let hasMore = false;
@@ -53,7 +53,7 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
 
 export type ReportGetFunctionType = FunctionType<{
     groupId: ReportGroupId;
-    numberReports: number | undefined;
+    numberReports: number | null;
 }, {
     reports: Report.Flatten[];
     hasMore: boolean;

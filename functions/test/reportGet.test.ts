@@ -12,7 +12,8 @@ describe('reportGet', () => {
         const report: Omit<Report.Flatten, 'id'> = {
             title: `title-${number}`,
             message: `message-${number}`,
-            createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded
+            createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded,
+            imageUrl: null
         };
         const reportId = Guid.newGuid();
         await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set(report, 'encrypt');
@@ -28,7 +29,7 @@ describe('reportGet', () => {
         const report2 = await addReport(2);
         const result1 = await firebaseApp.functions.function('report').function('get').call({
             groupId: 'general',
-            numberReports: undefined
+            numberReports: null
         });
         result1.success.equal({
             hasMore: false,

@@ -32,8 +32,8 @@ export type Event = {
     date: UtcDate;
     title: string;
     isImportant: boolean;
-    subtitle?: string;
-    link?: string;
+    subtitle: string | null;
+    link: string | null;
 };
 
 export namespace Event {
@@ -52,18 +52,18 @@ export namespace Event {
         if (!('isImportant' in value) || typeof value.isImportant !== 'boolean')
             throw HttpsError('internal', 'Couldn\'t get is important for event.', logger);
 
-        if ('subtitle' in value && (typeof value.subtitle !== 'string' && value.subtitle !== undefined))
+        if (!('subtitle' in value) || !(typeof value.subtitle === 'string' || value.subtitle === null))
             throw HttpsError('internal', 'Couldn\'t get subtitle for event.', logger);
 
-        if ('link' in value && (typeof value.link !== 'string' && value.link !== undefined))
+        if (!('link' in value) || !(typeof value.link === 'string' || value.link === null))
             throw HttpsError('internal', 'Couldn\'t get link for event.', logger);
 
         return {
             date: UtcDate.decode(value.date),
             title: value.title,
             isImportant: value.isImportant,
-            subtitle: 'subtitle' in value ? value.subtitle as string : undefined,
-            link: 'link' in value ? value.link as string : undefined
+            subtitle: value.subtitle,
+            link: value.link
         };
     }
 
@@ -72,8 +72,8 @@ export namespace Event {
         date: string;
         title: string;
         isImportant: boolean;
-        subtitle?: string;
-        link?: string;
+        subtitle: string | null;
+        link: string | null;
     };
 
     export function flatten(event: Event): Event.Flatten;

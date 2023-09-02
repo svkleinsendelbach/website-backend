@@ -30,7 +30,7 @@ export type Report = {
     id: Guid;
     title: string;
     message: string;
-    imageUrl?: string;
+    imageUrl: string | null;
     createDate: UtcDate;
 };
 
@@ -50,13 +50,13 @@ export namespace Report {
         if (!('createDate' in value) || typeof value.createDate !== 'string')
             throw HttpsError('internal', 'Couldn\'t get create date for report.', logger);
 
-        if ('imageUrl' in value && (typeof value.imageUrl !== 'string' && value.imageUrl !== undefined))
+        if (!('imageUrl' in value) || !(typeof value.imageUrl === 'string' || value.imageUrl === null))
             throw HttpsError('internal', 'Couldn\'t get image url for report.', logger);
 
         return {
             title: value.title,
             message: value.message,
-            imageUrl: 'imageUrl' in value ? value.imageUrl as string : undefined,
+            imageUrl: value.imageUrl,
             createDate: UtcDate.decode(value.createDate)
         };
     }
@@ -65,7 +65,7 @@ export namespace Report {
         id: string;
         title: string;
         message: string;
-        imageUrl?: string | undefined;
+        imageUrl: string | null;
         createDate: string;
     };
 

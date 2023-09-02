@@ -6,18 +6,18 @@ export type GameInfo = {
         gameDay: number;
     };
     result: {
-        home: number | undefined;
-        away: number | undefined;
+        home: number | null;
+        away: number | null;
     };
     date: string;
     homeTeam: GameInfo.Team;
     awayTeam: GameInfo.Team;
-    adress: string | undefined;
-    adressDescription: string | undefined;
+    adress: string | null;
+    adressDescription: string | null;
     livetickers: Array<{
         id: string;
     } & BfvLiveticker>;
-    report: GameInfo.Report | undefined;
+    report: GameInfo.Report | null;
 };
 
 export namespace GameInfo {
@@ -29,7 +29,7 @@ export namespace GameInfo {
 
     export type Report = { 
         title: string; 
-        paragraphs: { text: string; link: string | undefined }[][];
+        paragraphs: { text: string; link: string | null }[][];
     };
 }
 export type BfvLiveticker = {

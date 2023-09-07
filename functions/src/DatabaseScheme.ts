@@ -1,34 +1,24 @@
 import { type CryptedScheme, type DatabaseSchemeType } from 'firebase-function';
 import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameters';
-import { type Event, type EventGroupId } from './types/Event';
-import { type NotificationType } from './types/Notification';
-import { type Report, type ReportGroupId } from './types/Report';
-import { type UserAuthentication, type UserAuthenticationType } from './types/UserAuthentication';
+import { type Event, type EventGroupId as EventGroupIds } from './types/Event';
+import { type Report, type ReportGroupId as ReportGroupIds } from './types/Report';
+import { User } from './types/User';
 
 export type DatabaseScheme = DatabaseSchemeType<{
     anpfiffInfoTeamParameters: {
-        [Key in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters;
+        [Type in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters;
     };
     events:{
-        [Key in EventGroupId]: {
-            [Key in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>;
+        [EventGroupId in EventGroupIds]: {
+            [EventId in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>;
         };
     };
     reports: {
-        [Key in ReportGroupId]: {
-            [Key in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>;
+        [ReportGroupId in ReportGroupIds]: {
+            [ReportId in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>;
         };
     };
     users: {
-        authentication: {
-            [Key in UserAuthenticationType]: {
-                [Key in string]: CryptedScheme<UserAuthentication>;
-            };
-        };
-    };
-    notification: {
-        [Key in NotificationType]: {
-            [Key in string]: string;
-        };
+        [HashedUserId in string]: CryptedScheme<Omit<User, 'hashedUserId'>>
     };
 }>;

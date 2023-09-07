@@ -1,20 +1,25 @@
 import { FirebaseFunctionDescriptor, type FirebaseFunctions } from 'firebase-function';
+
 import { DeleteAllDataFunction, type DeleteAllDataFunctionType } from './functions/DeleteAllDataFunction';
-import { UserAuthenticationAddFunction, type UserAuthenticationAddFunctionType } from './functions/UserAuthenticationAddFunction';
-import { UserAuthenticationCheckFunction, type UserAuthenticationCheckFunctionType } from './functions/UserAuthenticationCheckFunction';
-import { UserAuthenticationAcceptDeclineFunction, type UserAuthenticationAcceptDeclineFunctionType } from './functions/UserAuthenticationAcceptDeclineFunction';
-import { UserAuthenticationGetAllUnauthenticatedFunction, type UserAuthenticationGetAllUnauthenticatedFunctionType } from './functions/UserAuthenticationGetAllUnauthenticatedFunction';
-import { EventEditFunction, type EventEditFunctionType } from './functions/EventEditFunction';
-import { EventGetFunction, type EventGetFunctionType } from './functions/EventGetFunction';
 import { VerifyRecaptchaFunction, type VerifyRecaptchaFunctionType } from './functions/VerifyRecaptchaFunction';
-import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
-import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
-import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
-import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
+
+import { EventGetFunction, type EventGetFunctionType } from './functions/EventGetFunction';
+import { EventEditFunction, type EventEditFunctionType } from './functions/EventEditFunction';
+
 import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
-import { NotificationRegisterFunction, type NotificationRegisterFunctionType } from './functions/NotificationRegisterFunction';
-import { NotificationPushFunction, type NotificationPushFunctionType } from './functions/NotificationPushFunction';
 import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
+import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
+
+import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
+import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
+
+import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
+
+import { UserRequestAccessFunction, type UserRequestAccessFunctionType } from './functions/UserRequestAccessFunction';
+import { UserGetAllUnauthenticatedFunction, type UserGetAllUnauthenticatedFunctionType } from './functions/UserGetAllUnauthenticatedFunction';
+import { UserCheckRolesFunction, type UserCheckRolesFunctionType } from './functions/UserCheckRolesFunction';
+import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionType } from './functions/UserHandleAccessRequestFunction';
+import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -35,14 +40,11 @@ export const firebaseFunctions = {
     sendMail: {
         contact: FirebaseFunctionDescriptor.create<SendMailContactFunctionType>(SendMailContactFunction)
     },
-    userAuthentication: {
-        add: FirebaseFunctionDescriptor.create<UserAuthenticationAddFunctionType>(UserAuthenticationAddFunction),
-        check: FirebaseFunctionDescriptor.create<UserAuthenticationCheckFunctionType>(UserAuthenticationCheckFunction),
-        acceptDecline: FirebaseFunctionDescriptor.create<UserAuthenticationAcceptDeclineFunctionType>(UserAuthenticationAcceptDeclineFunction),
-        getAllUnauthenticated: FirebaseFunctionDescriptor.create<UserAuthenticationGetAllUnauthenticatedFunctionType>(UserAuthenticationGetAllUnauthenticatedFunction)
-    },
-    notification: {
-        register: FirebaseFunctionDescriptor.create<NotificationRegisterFunctionType>(NotificationRegisterFunction),
-        push: FirebaseFunctionDescriptor.create<NotificationPushFunctionType>(NotificationPushFunction)
+    user: {
+        requestAccess: FirebaseFunctionDescriptor.create<UserRequestAccessFunctionType>(UserRequestAccessFunction),
+        getAlUnauthenticated: FirebaseFunctionDescriptor.create<UserGetAllUnauthenticatedFunctionType>(UserGetAllUnauthenticatedFunction),
+        checkRoles: FirebaseFunctionDescriptor.create<UserCheckRolesFunctionType>(UserCheckRolesFunction),
+        handleAccessRequest: FirebaseFunctionDescriptor.create<UserHandleAccessRequestFunctionType>(UserHandleAccessRequestFunction),
+        editRoles: FirebaseFunctionDescriptor.create<UserEditRolesFunctionType>(UserEditRolesFunction)
     }
 } satisfies FirebaseFunctions;

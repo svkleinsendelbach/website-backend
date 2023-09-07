@@ -1,7 +1,7 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HtmlDom, HttpsError, type FunctionType, UtcDate } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getPrivateKeys } from '../privateKeys';
-import { type BfvApiLiveticker, BfvLiveticker, type GameInfo } from '../types/GameInfo';
+import { type GameInfo } from '../types/GameInfo';
 import DOMParser from 'dom-parser';
 import fetch from 'cross-fetch';
 import * as fontkit from 'fontkit';
@@ -25,22 +25,10 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
     public async executeFunction(): Promise<FunctionType.ReturnType<GameInfoGetFunctionType>> {
         this.logger.log('GameInfoGetFunction.executeFunction', {}, 'info');
         const gameInfo = await this.fetchGameInfoFromGamePage(this.parameters.gameId);
-        const livetickerIds = await this.fetchLivetickerIdsFromGamePage(this.parameters.gameId);
-        const livetickers = await Promise.all(livetickerIds.map(async livetickerId => {
-            const url = `https://apiwrapper.bfv.de/spiel/${this.parameters.gameId}/ticker/${livetickerId}`;
-            const ticker: BfvApiLiveticker = await (await fetch(url)).json();
-            return {
-                id: livetickerId,
-                ...BfvLiveticker.mapBfvLiveticker(ticker, gameInfo.homeTeam.imageId)
-            };
-        }));
-        return {
-            ...gameInfo,
-            livetickers: livetickers
-        };
+        return gameInfo;
     }
 
-    private async fetchGameInfoFromGamePage(gameId: string): Promise<Omit<GameInfo, 'livetickers'>> {
+    private async fetchGameInfoFromGamePage(gameId: string): Promise<GameInfo> {
         const url = `https://www.bfv.de/spiele/${gameId}`;
         const html = await (await fetch(url)).text();
         const dom = new HtmlDom(new DOMParser().parseFromString(html));
@@ -62,15 +50,17 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
         const hour = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/(?<hour>\d{2}):\d{2} Uhr\s*$/g, 'hour').toInt();
         const minute = dateValue.regexGroup(/^\s*\d{2}\.\d{2}\.\d{4}\s+\/\d{2}:(?<minute>\d{2}) Uhr\s*$/g, 'minute').toInt();
         const date = year === null || month === null || day === null || hour === null || minute === null ? null : new UtcDate(year, month, day, hour, minute, 'Europe/Berlin').encoded;
+        if (date === null)
+            throw HttpsError('unavailable', 'Couldn\' get date.', this.logger);
         const adressValue = dom.nodesByClass('bfv-game-info').at(0).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(3).value;
         const adress1 = adressValue.regexGroup(/^[\S\s]+?\|(?<street>[\S\s]+?)\|[\S\s]+?$/g, 'street').toString();
         const adress2 = adressValue.regexGroup(/^[\S\s]+?\|[\S\s]+?\|(?<city>[\S\s]+?)$/g, 'city').toString();
         const adress = adress1 === null || adress2 === null ? null : `${adress1}, ${adress2}`;
         const title = dom.nodesByTag('head').at(0).nodesByTag('title').at(0).value;
-        return ensureNotNullable<Omit<GameInfo, 'livetickers'>>({
+        return {
             id: gameId,
             competition: {
-                name: node.nthChild(3).nthChild(1).nthChild(1).value.toString(),
+                name: node.nthChild(3).nthChild(1).nthChild(1).value.toString() ?? 'n.a.',
                 link: node.nthChild(3).nthChild(1).attribute('href').toString(),
                 gameDay: gameDay ?? 1
             },
@@ -80,19 +70,19 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
             },
             date: date,
             homeTeam: {
-                name: title.regexGroup(/^Spiel (?<name>[\S\s]+?) gegen [\S\s]+?&nbsp;\| BFV$/g, 'name').toString(),
+                name: title.regexGroup(/^Spiel (?<name>[\S\s]+?) gegen [\S\s]+?&nbsp;\| BFV$/g, 'name').toString() ?? 'n.a.',
                 id: homeTeamId,
                 imageId: homeImageId
             },
             awayTeam: {
-                name: title.regexGroup(/^Spiel [\S\s]+? gegen (?<name>[\S\s]+?)&nbsp;\| BFV$/g, 'name').toString(),
+                name: title.regexGroup(/^Spiel [\S\s]+? gegen (?<name>[\S\s]+?)&nbsp;\| BFV$/g, 'name').toString() ?? 'n.a.',
                 id: awayTeamId,
                 imageId: awayImageId
             },
             adress: adress ?? null,
             adressDescription: adressValue.regexGroup(/^(?<description>[\S\s]+?)\|[\S\s]+?\|[\S\s]+?$/g, 'description').toString() ?? null,
             report: gameReport
-        });
+        };
     }
 
     private getGameReport(dom: HtmlDom): GameInfo.Report | null {
@@ -148,43 +138,8 @@ export class GameInfoGetFunction implements FirebaseFunction<GameInfoGetFunction
             default: return 'X';
         }
     }
-
-    private async fetchLivetickerIdsFromGamePage(gameId: string): Promise<string[]> {
-        const url = `https://www.bfv.de/partial/spieldetail/liveticker/${gameId}`;
-        const html = await (await fetch(url)).text();
-        const dom = new HtmlDom(new DOMParser().parseFromString(html));
-        const node = dom.nodesByClass('bfv-liveticker').at(0).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(1).nthChild(1);
-        const livetickerIds: string[] = [];
-        for (const attribute of node.attributes ?? []) {
-            if (attribute.name === 'value')
-                livetickerIds.push(attribute.value);
-        }
-        for (const attribute of node.nthChild(1).attributes ?? []) {
-            if (attribute.name === 'value')
-                livetickerIds.push(attribute.value);
-        }
-        return livetickerIds;
-    }
 }
 
 export type GameInfoGetFunctionType = FunctionType<{
     gameId: string;
 }, GameInfo>;
-
-export type Nullable<T> = {
-    [P in keyof T]: Nullable<T[P]> | null;
-};
-
-export function ensureNotNullable<T>(nullableValue: Nullable<T>, previousKeyPath: string = ''): T {
-    if (nullableValue === null)
-        throw new Error(`Ensure not null failed: ${previousKeyPath} is null.`);
-    if (typeof nullableValue !== 'object' || Array.isArray(nullableValue))
-        return nullableValue as T;
-    const value: T = {} as T;
-    for (const entry of Object.entries(nullableValue)) {
-        if (entry[1] === null)
-            throw new Error(`Ensure not null failed: ${previousKeyPath}/${entry[0]} is null.`);
-        value[entry[0] as keyof T] = ensureNotNullable(entry[1] as Nullable<T[keyof T]>, `${previousKeyPath}/${entry[0]}`);
-    }
-    return value;
-}

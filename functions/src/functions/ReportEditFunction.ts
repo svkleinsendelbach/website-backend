@@ -1,6 +1,6 @@
 import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { checkUserAuthentication } from '../checkUserAuthentication';
+import { checkUserRoles } from '../checkUserRoles';
 import { type DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
@@ -29,7 +29,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
 
     public async executeFunction(): Promise<FunctionType.ReturnType<ReportEditFunctionType>> {
         this.logger.log('ReportEditFunction.executeFunction', {}, 'info');
-        await checkUserAuthentication(this.auth, 'editReports', this.parameters.databaseType, this.logger);
+        await checkUserRoles(this.auth, 'websiteManager', this.parameters.databaseType, this.logger);
         const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(this.parameters.groupId).child(this.parameters.reportId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {

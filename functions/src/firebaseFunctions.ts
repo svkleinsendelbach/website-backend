@@ -16,7 +16,7 @@ import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions
 import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
 
 import { UserRequestAccessFunction, type UserRequestAccessFunctionType } from './functions/UserRequestAccessFunction';
-import { UserGetAllUnauthenticatedFunction, type UserGetAllUnauthenticatedFunctionType } from './functions/UserGetAllUnauthenticatedFunction';
+import { UserGetAllFunction, type UserGetAllFunctionType } from './functions/UserGetAllFunction';
 import { UserCheckRolesFunction, type UserCheckRolesFunctionType } from './functions/UserCheckRolesFunction';
 import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionType } from './functions/UserHandleAccessRequestFunction';
 import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
@@ -42,7 +42,7 @@ export const firebaseFunctions = {
     },
     user: {
         requestAccess: FirebaseFunctionDescriptor.create<UserRequestAccessFunctionType>(UserRequestAccessFunction),
-        getAlUnauthenticated: FirebaseFunctionDescriptor.create<UserGetAllUnauthenticatedFunctionType>(UserGetAllUnauthenticatedFunction),
+        getAll: FirebaseFunctionDescriptor.create<UserGetAllFunctionType>(UserGetAllFunction),
         checkRoles: FirebaseFunctionDescriptor.create<UserCheckRolesFunctionType>(UserCheckRolesFunction),
         handleAccessRequest: FirebaseFunctionDescriptor.create<UserHandleAccessRequestFunctionType>(UserHandleAccessRequestFunction),
         editRoles: FirebaseFunctionDescriptor.create<UserEditRolesFunctionType>(UserEditRolesFunction)

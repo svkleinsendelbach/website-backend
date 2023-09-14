@@ -10,6 +10,9 @@ import { ReportGetFunction, type ReportGetFunctionType } from './functions/Repor
 import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 
+import { OccupancyGetAllFunction, type OccupancyGetAllFunctionType } from './functions/OccupancyGetAllFunction';
+import { OccupancyEditFunction, type OccupancyEditFunctionType } from './functions/OccupancyEditFunction';
+
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
 
@@ -32,6 +35,10 @@ export const firebaseFunctions = {
         get: FirebaseFunctionDescriptor.create<ReportGetFunctionType>(ReportGetFunction),
         getAll: FirebaseFunctionDescriptor.create<ReportGetAllFunctionType>(ReportGetAllFunction),
         edit: FirebaseFunctionDescriptor.create<ReportEditFunctionType>(ReportEditFunction)
+    },
+    occupancy: {
+        getAll: FirebaseFunctionDescriptor.create<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
+        edit: FirebaseFunctionDescriptor.create<OccupancyEditFunctionType>(OccupancyEditFunction)
     },
     bfvData: {
         gameInfo: FirebaseFunctionDescriptor.create<GameInfoGetFunctionType>(GameInfoGetFunction),

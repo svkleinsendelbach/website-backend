@@ -3,6 +3,7 @@ import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameter
 import { type Event, type EventGroupId as EventGroupIds } from './types/Event';
 import { type Report, type ReportGroupId as ReportGroupIds } from './types/Report';
 import { User } from './types/User';
+import { Occupancy } from './types/Occupancy';
 
 export type DatabaseScheme = DatabaseSchemeType<{
     anpfiffInfoTeamParameters: {
@@ -17,6 +18,9 @@ export type DatabaseScheme = DatabaseSchemeType<{
         [ReportGroupId in ReportGroupIds]: {
             [ReportId in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>;
         };
+    };
+    occupancies: {
+        [OccupancyId in string]: CryptedScheme<Omit<Occupancy.Flatten, 'id'>>;
     };
     users: {
         [HashedUserId in string]: CryptedScheme<Omit<User, 'hashedUserId'>>

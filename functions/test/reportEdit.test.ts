@@ -40,7 +40,7 @@ describe('reportEdit', () => {
             report: null
         });
         result.success;
-        expect(await firebaseApp.database.child('events').child('general').child(reportId.guidString).exists()).to.be.equal(false);
+        expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).exists()).to.be.equal(false);
     });
 
     it('add report not given over', async () => {

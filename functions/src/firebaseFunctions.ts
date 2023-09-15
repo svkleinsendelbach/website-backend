@@ -1,6 +1,7 @@
-import { FirebaseFunctionDescriptor, type FirebaseFunctions } from 'firebase-function';
+import { FirebaseFunctionDescriptor, FirebaseRequestDescriptor, type FirebaseFunctions } from 'firebase-function';
 
 import { DeleteAllDataFunction, type DeleteAllDataFunctionType } from './functions/DeleteAllDataFunction';
+import { IcsEventsRequest, type IcsEventsRequestType } from './functions/IcsEventsRequest';
 import { VerifyRecaptchaFunction, type VerifyRecaptchaFunctionType } from './functions/VerifyRecaptchaFunction';
 
 import { EventGetFunction, type EventGetFunctionType } from './functions/EventGetFunction';
@@ -26,6 +27,7 @@ import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functio
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
+    icsEvents: FirebaseRequestDescriptor.create<IcsEventsRequestType>(IcsEventsRequest),
     deleteAllData: FirebaseFunctionDescriptor.create<DeleteAllDataFunctionType>(DeleteAllDataFunction),
     event: {
         get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),

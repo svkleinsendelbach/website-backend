@@ -24,10 +24,12 @@
   "main": "lib/src/index.js",
   "dependencies": {
     "cross-fetch": "^4.0.0",
-    "firebase-function": "^1.4.62",
+    "firebase-function": "^1.4.65",
     "firebase-functions": "^4.4.1",
     "fontkit": "^2.0.2",
+    "ical-generator": "^5.0.1",
     "nodemailer": "^6.9.4",
+    "typescript": "^5.2.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

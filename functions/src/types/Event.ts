@@ -22,8 +22,33 @@ export namespace EventGroupId {
         'football-youth/f-youth', 'football-youth/g-youth', 'gymnastics', 'dancing'
     ];
 
+    export const title: Record<EventGroupId, string> = {
+        'dancing': 'Tanzen',
+        'football-adults/ah-team': 'Alte Herren',
+        'football-adults/first-team': '1. Mannschaft',
+        'football-adults/general': 'Herrenfußball',
+        'football-adults/second-team': '2. Mannschaft',
+        'football-youth/c-youth': 'C-Jugend',
+        'football-youth/e-youth': 'E-Jugend',
+        'football-youth/f-youth': 'F-Jugend',
+        'football-youth/g-youth': 'G-Jugend',
+        'football-youth/general': 'Jugendfußball',
+        'general': 'Allgemeines',
+        'gymnastics': 'Gymnastik'
+    };
+
     export function typeGuard(value: string): value is EventGroupId {
         return (EventGroupId.all as string[]).includes(value);
+    }
+
+    export function decodeSelectedGroupIds(selection: string): EventGroupId[] {
+        const selectionNumber = Number.parseInt(selection, 16);
+        const groupIds: EventGroupId[] = [];
+        for (const [index, groupId] of EventGroupId.all.map((groupId, index) => [index, groupId] as const)) {
+            if ((selectionNumber & (0b1 << index)) !== 0)
+                groupIds.push(groupId);
+        }
+        return groupIds;
     }
 }
 

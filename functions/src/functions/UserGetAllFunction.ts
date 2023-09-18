@@ -1,7 +1,7 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType, ParameterBuilder } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, type FunctionType, ParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { User } from '../types/User';
 
@@ -21,7 +21,7 @@ export class UserGetAllFunction implements FirebaseFunction<UserGetAllFunctionTy
     public async executeFunction(): Promise<FunctionType.ReturnType<UserGetAllFunctionType>> {
         this.logger.log('UserGetAllFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('users');
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('users');
         const snapshot = await reference.snapshot();
         return snapshot.compactMap(snapshot => {
             if (snapshot.key === null)

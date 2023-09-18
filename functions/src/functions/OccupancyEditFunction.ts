@@ -1,4 +1,4 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
@@ -27,8 +27,8 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
 
     public async executeFunction(): Promise<FunctionType.ReturnType<OccupancyEditFunctionType>> {
         this.logger.log('OccupancyEditFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, 'occupancyManager', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('occupancies').child(this.parameters.occupancyId.guidString);
+        await checkUserRoles(this.auth, 'occupancyManager', this.parameters.databaseType, this.logger.nextIndent);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('occupancies').child(this.parameters.occupancyId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {
             if (snapshot.exists)
@@ -38,9 +38,8 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
                 throw HttpsError('invalid-argument', 'No occupancy in parameters to add / change.', this.logger);
             if (this.parameters.editType === 'add' && snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t add existing occupancy.', this.logger);
-            if (this.parameters.editType === 'change' && !snapshot.exists) {
+            if (this.parameters.editType === 'change' && !snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t change not existing occupancy.', this.logger);
-            }
             await reference.set(Occupancy.flatten(this.parameters.occupancy), 'encrypt');
         }
     }

@@ -1,4 +1,4 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getPrivateKeys } from '../privateKeys';
 import { checkUserRoles } from '../checkUserRoles';
@@ -27,7 +27,7 @@ export class UserEditRolesFunction implements FirebaseFunction<UserEditRolesFunc
         const myHashedUserId = await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger.nextIndent);
         if (this.parameters.hashedUserId === myHashedUserId && !this.parameters.roles.includes('admin'))
             throw HttpsError('unavailable', 'Couldn\'t remove admin role from yourself.', this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('users').child(this.parameters.hashedUserId);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('users').child(this.parameters.hashedUserId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             throw HttpsError('not-found', 'User not found.', this.logger);

@@ -1,6 +1,6 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference, UtcDate } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, type FunctionType, UtcDate } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { ReportGroupId, type Report } from '../types/Report';
 
@@ -24,7 +24,7 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
 
     private async getReports(groupId: ReportGroupId): Promise<Array<Report.Flatten & { groupId: ReportGroupId }>> {
         this.logger.log('ReportGetAllFunction.getReports', { groupId: groupId }, 'info');
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(groupId);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return [];

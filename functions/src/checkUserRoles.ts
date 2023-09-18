@@ -1,7 +1,6 @@
-import { type DatabaseType, HttpsError, type ILogger, DatabaseReference, Crypter } from 'firebase-function';
+import { type DatabaseType, HttpsError, type ILogger, Crypter } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { type DatabaseScheme } from './DatabaseScheme';
-import { getPrivateKeys } from './privateKeys';
+import { DatabaseScheme } from './DatabaseScheme';
 import { type User } from './types/User';
 
 export async function checkUserRoles(
@@ -14,7 +13,7 @@ export async function checkUserRoles(
     if (auth === undefined)
         throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', logger);
     const hashedUserId = Crypter.sha512(auth.uid);
-    const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(databaseType)).child('users').child(hashedUserId);
+    const reference = DatabaseScheme.reference(databaseType).child('users').child(hashedUserId);
     const snapshot = await reference.snapshot();
     if (!snapshot.exists)
         throw HttpsError('permission-denied', 'The function must be called while authenticated, user doesn\'t exist.', logger);

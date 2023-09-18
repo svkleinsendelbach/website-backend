@@ -1,8 +1,8 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
 import { Guid } from '../types/Guid';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
@@ -30,7 +30,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
     public async executeFunction(): Promise<FunctionType.ReturnType<EventEditFunctionType>> {
         this.logger.log('EventEditFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'websiteManager', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {
             if (snapshot.exists)
@@ -43,7 +43,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
             if (this.parameters.editType === 'change') {
                 if (!this.parameters.previousGroupId)
                     throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
-                const previousReference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(this.parameters.previousGroupId).child(this.parameters.eventId.guidString);
+                const previousReference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(this.parameters.previousGroupId).child(this.parameters.eventId.guidString);
                 const previousSnapshot = await previousReference.snapshot();
                 if (!previousSnapshot.exists)
                     throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);

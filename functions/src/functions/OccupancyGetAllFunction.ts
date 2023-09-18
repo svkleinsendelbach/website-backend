@@ -1,4 +1,4 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { getPrivateKeys } from '../privateKeys';
 import { Occupancy } from '../types/Occupancy';
@@ -19,7 +19,7 @@ export class OccupancyGetAllFunction implements FirebaseFunction<OccupancyGetAll
     public async executeFunction(): Promise<FunctionType.ReturnType<OccupancyGetAllFunctionType>> {
         this.logger.log('OccupancyGetAllFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'occupancyManager', this.parameters.databaseType, this.logger.nextIndent);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('occupancies');
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('occupancies');
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return [];

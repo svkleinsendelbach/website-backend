@@ -14,6 +14,9 @@ import { ReportEditFunction, type ReportEditFunctionType } from './functions/Rep
 import { OccupancyGetAllFunction, type OccupancyGetAllFunctionType } from './functions/OccupancyGetAllFunction';
 import { OccupancyEditFunction, type OccupancyEditFunctionType } from './functions/OccupancyEditFunction';
 
+import { CriticismSuggestionGetAllFunction, type CriticismSuggestionGetAllFunctionType } from './functions/CriticismSuggestionGetAllFunction';
+import { CriticismSuggestionEditFunction, type CriticismSuggestionEditFunctionType } from './functions/CriticismSuggestionEditFunction';
+
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
 
@@ -41,6 +44,10 @@ export const firebaseFunctions = {
     occupancy: {
         getAll: FirebaseFunctionDescriptor.create<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
         edit: FirebaseFunctionDescriptor.create<OccupancyEditFunctionType>(OccupancyEditFunction)
+    },
+    criticismSuggestion: {
+        getAll: FirebaseFunctionDescriptor.create<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),
+        edit: FirebaseFunctionDescriptor.create<CriticismSuggestionEditFunctionType>(CriticismSuggestionEditFunction)
     },
     bfvData: {
         gameInfo: FirebaseFunctionDescriptor.create<GameInfoGetFunctionType>(GameInfoGetFunction),

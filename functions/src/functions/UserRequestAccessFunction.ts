@@ -1,6 +1,6 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, Crypter, DatabaseReference, HttpsError, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, Crypter, HttpsError, type FunctionType } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 
 export class UserRequestAccessFunction implements FirebaseFunction<UserRequestAccessFunctionType> {
@@ -24,7 +24,7 @@ export class UserRequestAccessFunction implements FirebaseFunction<UserRequestAc
         this.logger.log('UserRequestAccessFunction.executeFunction', {}, 'info');
         if (this.auth === undefined)
             throw HttpsError('permission-denied', 'The function must be called while authenticated, nobody signed in.', this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('users').child(Crypter.sha512(this.auth.uid));
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('users').child(Crypter.sha512(this.auth.uid));
         const snapshot = await reference.snapshot();
         if (snapshot.exists)
             throw HttpsError('already-exists', 'User has already requested access.', this.logger);

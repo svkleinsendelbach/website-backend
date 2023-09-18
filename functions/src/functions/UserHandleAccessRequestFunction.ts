@@ -1,7 +1,7 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 
 export class UserHandleAccessRequestFunction implements FirebaseFunction<UserHandleAccessRequestFunctionType> {
@@ -24,7 +24,7 @@ export class UserHandleAccessRequestFunction implements FirebaseFunction<UserHan
     public async executeFunction(): Promise<FunctionType.ReturnType<UserHandleAccessRequestFunctionType>> {
         this.logger.log('UserHandleAccessRequestFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('users').child(this.parameters.hashedUserId);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('users').child(this.parameters.hashedUserId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             throw HttpsError('not-found', 'User not found.', this.logger);

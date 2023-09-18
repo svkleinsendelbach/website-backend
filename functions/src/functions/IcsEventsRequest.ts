@@ -1,5 +1,4 @@
-import { type DatabaseType, type FirebaseRequest, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference } from 'firebase-function';
-import { getPrivateKeys } from '../privateKeys';
+import { type DatabaseType, type FirebaseRequest, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
 import { Event, EventGroup, EventGroupId } from '../types/Event';
 import ical from 'ical-generator';
 import { DatabaseScheme } from '../DatabaseScheme';
@@ -27,7 +26,7 @@ export class IcsEventsRequest implements FirebaseRequest<IcsEventsRequestType> {
     }
 
     private async getEventGroup(id: EventGroupId): Promise<EventGroup | null> {
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(id);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(id);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             return null;

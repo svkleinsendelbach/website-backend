@@ -1,6 +1,6 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, DatabaseReference, type FunctionType, UtcDate } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, UtcDate } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EventGroupId, type Event, type EventGroup } from '../types/Event';
 
@@ -26,7 +26,7 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
     }
 
     private async getEventGroup(groupId: EventGroupId): Promise<EventGroup.Flatten | null> {
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('events').child(groupId);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return null;

@@ -35,10 +35,10 @@ describe('occupancyGetAll', () => {
         };
     }
 
-    it('get all occupanciew', async () => {
+    it('get all occupancies', async () => {
         const occupancy1 = await addOccupancy(1);
         const occupancy2 = await addOccupancy(2);
-        const occupancy3 = await addOccupancy(3,);
+        const occupancy3 = await addOccupancy(3);
         const result = await firebaseApp.functions.function('occupancy').function('getAll').call({});
         result.success.unsorted([occupancy3, occupancy2, occupancy1]);
     });

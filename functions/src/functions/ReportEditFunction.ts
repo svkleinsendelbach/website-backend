@@ -1,7 +1,7 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, DatabaseReference, HttpsError } from 'firebase-function';
+import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
-import { type DatabaseScheme } from '../DatabaseScheme';
+import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Guid } from '../types/Guid';
@@ -30,7 +30,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
     public async executeFunction(): Promise<FunctionType.ReturnType<ReportEditFunctionType>> {
         this.logger.log('ReportEditFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'websiteManager', this.parameters.databaseType, this.logger);
-        const reference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(this.parameters.groupId).child(this.parameters.reportId.guidString);
+        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(this.parameters.groupId).child(this.parameters.reportId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {
             if (snapshot.exists)
@@ -43,7 +43,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
             if (this.parameters.editType === 'change') {
                 if (!this.parameters.previousGroupId)
                     throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
-                const previousReference = DatabaseReference.base<DatabaseScheme>(getPrivateKeys(this.parameters.databaseType)).child('reports').child(this.parameters.previousGroupId).child(this.parameters.reportId.guidString);
+                const previousReference = DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(this.parameters.previousGroupId).child(this.parameters.reportId.guidString);
                 const previousSnapshot = await previousReference.snapshot();
                 if (!previousSnapshot.exists)
                     throw HttpsError('invalid-argument', 'Couldn\'t change not existing report.', this.logger);

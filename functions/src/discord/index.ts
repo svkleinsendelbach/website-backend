@@ -3,6 +3,7 @@ import { discordKeys } from "../privateKeys";
 import { Event, EventGroupId } from "../types/Event";
 import { Report, ReportGroupId } from "../types/Report";
 import { DatabaseType } from "firebase-function";
+import { CriticismSuggestion } from "../types/CriticismSuggestion";
 
 export class Discord {
     public constructor(
@@ -124,6 +125,17 @@ export class Discord {
             return;
         try {
             await message.delete();
+        } catch {}
+    }
+
+    public async addCriticismSuggestion(criticismSuggestion: Omit<CriticismSuggestion, 'id'>) {
+        const channel = await this.getChannel('criticismSuggestion');
+        if (!channel)
+            return;
+        try {
+            await channel.send({
+                embeds: [CriticismSuggestion.discordEmbed(criticismSuggestion)]
+            });
         } catch {}
     }
 }

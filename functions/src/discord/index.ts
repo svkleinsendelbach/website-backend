@@ -1,6 +1,7 @@
 import { Client, Events, GatewayIntentBits, Message, TextBasedChannel } from "discord.js";
 import { discordKeys } from "../privateKeys";
 import { Event, EventGroupId } from "../types/Event";
+import { Report, ReportGroupId } from "../types/Report";
 import { DatabaseType } from "firebase-function";
 
 export class Discord {
@@ -81,6 +82,44 @@ export class Discord {
         if (!event.discordMessageId)
             return;
         const message = await this.getMessage('events', event.discordMessageId);
+        if (!message)
+            return;
+        try {
+            await message.delete();
+        } catch {}
+    }
+
+    public async addReport(report: Omit<Report, 'id' | 'discordMessageId'>, groupId: ReportGroupId): Promise<Omit<Report, 'id'>> {
+        const channel = await this.getChannel('reports');
+        if (!channel)
+            return Report.addDiscordMessageId(report, null);
+        try {
+            const message = await channel.send({
+                embeds: [Report.discordEmbed(report, groupId)]
+            });
+            return Report.addDiscordMessageId(report, message.id);
+        } catch {
+            return Report.addDiscordMessageId(report, null);           
+        }
+    }
+
+    public async changeReport(report: Omit<Report, 'id'>, groupId: ReportGroupId) {
+        if (!report.discordMessageId)
+            return;
+        const message = await this.getMessage('reports', report.discordMessageId);
+        if (!message)
+            return;
+        try {
+            await message.edit({
+                embeds: [Report.discordEmbed(report, groupId)]
+            });
+        } catch {}
+    }
+
+    public async removeReport(report: Omit<Report, 'id'>) {
+        if (!report.discordMessageId)
+            return;
+        const message = await this.getMessage('reports', report.discordMessageId);
         if (!message)
             return;
         try {

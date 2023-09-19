@@ -22,7 +22,7 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
         return reports;
     }
 
-    private async getReports(groupId: ReportGroupId): Promise<Array<Report.Flatten & { groupId: ReportGroupId }>> {
+    private async getReports(groupId: ReportGroupId): Promise<Array<Omit<Report.Flatten, 'discordMessageId'> & { groupId: ReportGroupId }>> {
         this.logger.log('ReportGetAllFunction.getReports', { groupId: groupId }, 'info');
         const reference = DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(groupId);
         const snapshot = await reference.snapshot();
@@ -31,8 +31,11 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
         return snapshot.compactMap(snapshot => {
             if (snapshot.key === null)
                 return null;
+            const report = snapshot.value('decrypt') as Omit<Report.Flatten, 'id' | 'discordMessageId'>;
+            if ('discordMessageId' in report)
+                delete report.discordMessageId;
             return {
-                ...snapshot.value('decrypt'),
+                ...report,
                 id: snapshot.key,
                 groupId: groupId
             };
@@ -40,4 +43,4 @@ export class ReportGetAllFunction implements FirebaseFunction<ReportGetAllFuncti
     }
 }
 
-export type ReportGetAllFunctionType = FunctionType<Record<string, never>, Array<Report.Flatten & { groupId: ReportGroupId }>>;
+export type ReportGetAllFunctionType = FunctionType<Record<string, never>, Array<Omit<Report.Flatten, 'discordMessageId'> & { groupId: ReportGroupId }>>;

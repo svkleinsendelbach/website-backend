@@ -30,7 +30,8 @@ describe('reportEdit', () => {
             title: 'title',
             message: 'message',
             createDate: UtcDate.now.encoded,
-            imageUrl: null
+            imageUrl: null,
+            discordMessageId: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'remove',
@@ -53,7 +54,7 @@ describe('reportEdit', () => {
         });
         result.failure.equal({
             code: 'invalid-argument',
-            message: 'No report in parameters to add / change.'
+            message: 'No report in parameters to add.'
         });
     });
 
@@ -77,7 +78,8 @@ describe('reportEdit', () => {
             title: 'title',
             message: 'message',
             createDate: date.encoded,
-            imageUrl: null
+            imageUrl: null,
+            discordMessageId: null
         });
     });
 
@@ -88,7 +90,8 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             createDate: date1.encoded,
-            imageUrl: null
+            imageUrl: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
@@ -119,7 +122,7 @@ describe('reportEdit', () => {
         });
         result.failure.equal({
             code: 'invalid-argument',
-            message: 'No report in parameters to add / change.'
+            message: 'No report in parameters to change.'
         });
     });
 
@@ -151,7 +154,8 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             createDate: date1.encoded,
-            imageUrl: null
+            imageUrl: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
@@ -171,7 +175,8 @@ describe('reportEdit', () => {
             title: 'title-2',
             message: 'message-2',
             imageUrl: 'image-url-2',
-            createDate: date2.encoded
+            createDate: date2.encoded,
+            discordMessageId: null
         });
     });
 
@@ -182,7 +187,8 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             imageUrl: null,
-            createDate: date1.encoded
+            createDate: date1.encoded,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
@@ -210,7 +216,8 @@ describe('reportEdit', () => {
             title: 'title-1',
             message: 'message-1',
             createDate: date1.encoded,
-            imageUrl: null
+            imageUrl: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
@@ -231,7 +238,8 @@ describe('reportEdit', () => {
             title: 'title-2',
             message: 'message-2',
             imageUrl: 'image-url-2',
-            createDate: date2.encoded
+            createDate: date2.encoded,
+            discordMessageId: null
         });
     });
 });

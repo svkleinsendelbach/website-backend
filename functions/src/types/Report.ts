@@ -1,5 +1,6 @@
 import { HttpsError, type ILogger, UtcDate } from 'firebase-function';
 import { Guid } from './Guid';
+import { EmbedBuilder } from 'discord.js';
 
 export type ReportGroupId =
     'general' |
@@ -21,6 +22,20 @@ export namespace ReportGroupId {
         'gymnastics', 'dancing'
     ];
 
+    export const title: Record<ReportGroupId, string> = {
+        'dancing': 'Tanzen',
+        'football-adults/first-team/game-report': '1. Mannschaft',
+        'football-adults/general': 'Herrenfußball',
+        'football-adults/second-team/game-report': '2. Mannschaft',
+        'football-youth/c-youth/game-report': 'C-Jugend',
+        'football-youth/e-youth/game-report': 'E-Jugend',
+        'football-youth/f-youth/game-report': 'F-Jugend',
+        'football-youth/g-youth/game-report': 'G-Jugend',
+        'football-youth/general': 'Jugendfußball',
+        'general': 'Allgemeines',
+        'gymnastics': 'Gymnastik'
+    };
+
     export function typeGuard(value: string): value is ReportGroupId {
         return (ReportGroupId.all as string[]).includes(value);
     }
@@ -32,10 +47,11 @@ export type Report = {
     message: string;
     imageUrl: string | null;
     createDate: UtcDate;
+    discordMessageId: string | null;
 };
 
 export namespace Report {
-    export function fromObject(value: object | null, logger: ILogger): Omit<Report, 'id'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<Report, 'id' | 'discordMessageId'> {
         logger.log('Report.fromObject', { value: value });
 
         if (value === null)
@@ -67,6 +83,7 @@ export namespace Report {
         message: string;
         imageUrl: string | null;
         createDate: string;
+        discordMessageId: string | null;
     };
 
     export function flatten(report: Report): Report.Flatten;
@@ -77,7 +94,8 @@ export namespace Report {
             title: report.title,
             message: report.message,
             imageUrl: report.imageUrl,
-            createDate: report.createDate.encoded
+            createDate: report.createDate.encoded,
+            discordMessageId: report.discordMessageId
         };
     }
 
@@ -89,7 +107,24 @@ export namespace Report {
             title: report.title,
             message: report.message,
             imageUrl: report.imageUrl,
-            createDate: UtcDate.decode(report.createDate)
+            createDate: UtcDate.decode(report.createDate),
+            discordMessageId: report.discordMessageId
         };
+    }
+
+    export function addDiscordMessageId(report: Omit<Report, 'discordMessageId'>, discordMessageId: string | null): Report;
+    export function addDiscordMessageId(report: Omit<Report, 'id' | 'discordMessageId'>, discordMessageId: string | null): Omit<Report, 'id'>;
+    export function addDiscordMessageId(report: Omit<Report, 'discordMessageId'> | Omit<Report, 'id' | 'discordMessageId'>, discordMessageId: string | null): Report | Omit<Report, 'id'> {
+        return {
+            ...report,
+            discordMessageId: discordMessageId
+        };
+    }
+
+    export function discordEmbed(report: Omit<Report, 'id' | 'discordMessageId'>, groupId: ReportGroupId): EmbedBuilder {
+        return new EmbedBuilder()
+            .setTitle(`${ReportGroupId.title[groupId]} | ${report.title}`)
+            .setDescription(report.message)
+            .setThumbnail(report.imageUrl);
     }
 }

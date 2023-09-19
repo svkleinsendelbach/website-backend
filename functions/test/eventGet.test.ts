@@ -15,7 +15,8 @@ describe('eventGet', () => {
             title: 'event-1',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = UtcDate.now.advanced({ minute: 30 });
         const eventId2 = Guid.newGuid();
@@ -24,7 +25,8 @@ describe('eventGet', () => {
             title: 'event-2',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date3 = UtcDate.now.advanced({ minute: 20 });
         const eventId3 = Guid.newGuid();
@@ -33,7 +35,8 @@ describe('eventGet', () => {
             title: 'event-3',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date4 = UtcDate.now.advanced({ minute: -30 });
         const eventId4 = Guid.newGuid();
@@ -42,7 +45,8 @@ describe('eventGet', () => {
             title: 'event-4',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('get').call({
             groupIds: ['general', 'football-adults/first-team']

@@ -54,7 +54,9 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     'no-unused-vars': 'off',
-    'no-redeclare': 'off'
+    'no-redeclare': 'off',
+    'no-empty': 'off',
+    'no-dupe-class-members': 'off'
   }
 }
   

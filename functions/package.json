@@ -16,7 +16,7 @@
     "test:coverage": "nyc npm run test",
     "testUtils:coverage": "nyc npm run testUtils",
     "generateApiSchemaDocs": "cd .. && redoc-cli build functions/api-schema.yaml -o functions/docs/api-schema.html && cd functions",
-    "secrets": "ts-node ../../secrets/src/manageSecrets.ts"
+    "secrets": "ts-node ../../../secrets-manager/src/index.ts"
   },
   "engines": {
     "node": "16"
@@ -24,6 +24,7 @@
   "main": "lib/src/index.js",
   "dependencies": {
     "cross-fetch": "^4.0.0",
+    "discord.js": "^14.13.0",
     "firebase-function": "^1.4.65",
     "firebase-functions": "^4.4.1",
     "fontkit": "^2.0.2",

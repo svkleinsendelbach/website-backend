@@ -1,5 +1,6 @@
 import { HttpsError, type ILogger, UtcDate } from 'firebase-function';
 import { Guid } from './Guid';
+import { EmbedBuilder } from 'discord.js';
 
 export type EventGroupId =
     'general' |
@@ -59,10 +60,11 @@ export type Event = {
     isImportant: boolean;
     subtitle: string | null;
     link: string | null;
+    discordMessageId: string | null;
 };
 
 export namespace Event {
-    export function fromObject(value: object | null, logger: ILogger): Omit<Event, 'id'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<Event, 'id' | 'discordMessageId'> {
         logger.log('Event.fromObject', { value: value });
 
         if (value === null)
@@ -99,6 +101,7 @@ export namespace Event {
         isImportant: boolean;
         subtitle: string | null;
         link: string | null;
+        discordMessageId: string | null;
     };
 
     export function flatten(event: Event): Event.Flatten;
@@ -110,7 +113,8 @@ export namespace Event {
             title: event.title,
             isImportant: event.isImportant,
             subtitle: event.subtitle,
-            link: event.link
+            link: event.link,
+            discordMessageId: event.discordMessageId
         };
     }
 
@@ -123,19 +127,38 @@ export namespace Event {
             title: event.title,
             isImportant: event.isImportant,
             subtitle: event.subtitle,
-            link: event.link
+            link: event.link,
+            discordMessageId: event.discordMessageId
         };
+    }
+
+    export function addDiscordMessageId(event: Omit<Event, 'discordMessageId'>, discordMessageId: string | null): Event;
+    export function addDiscordMessageId(event: Omit<Event, 'id' | 'discordMessageId'>, discordMessageId: string | null): Omit<Event, 'id'>;
+    export function addDiscordMessageId(event: Omit<Event, 'discordMessageId'> | Omit<Event, 'id' | 'discordMessageId'>, discordMessageId: string | null): Event | Omit<Event, 'id'> {
+        return {
+            ...event,
+            discordMessageId: discordMessageId
+        };
+    }
+
+    export function discordEmbed(event: Omit<Event, 'id' | 'discordMessageId'>, groupId: EventGroupId): EmbedBuilder {
+        return new EmbedBuilder()
+            .setColor(event.isImportant ? 0xE55604 : null)
+            .setTitle(`${event.date.description('de-DE', 'Europe/Berlin')} | ${EventGroupId.title[groupId]} | ${event.title}`)
+            .setURL(event.link)
+            .setDescription(event.subtitle)
+            .setTimestamp(event.date.toDate);
     }
 }
 
 export type EventGroup = {
     groupId: EventGroupId;
-    events: Event[];
+    events: Omit<Event, 'discordMessageId'>[];
 };
 
 export namespace EventGroup {
     export type Flatten = {
         groupId: EventGroupId;
-        events: Event.Flatten[];
+        events: Omit<Event.Flatten, 'discordMessageId'>[];
     };
 }

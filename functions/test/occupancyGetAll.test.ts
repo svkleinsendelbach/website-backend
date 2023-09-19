@@ -12,8 +12,8 @@ describe('occupancyGetAll', () => {
         await cleanUpFirebase();
     });
 
-    async function addOccupancy(number: number): Promise<Occupancy.Flatten> {
-        const occupancy: Omit<Occupancy.Flatten, 'id'> = {
+    async function addOccupancy(number: number): Promise<Omit<Occupancy.Flatten, 'discordMessageId'>> {
+        const occupancy: Omit<Occupancy.Flatten, 'id' | 'discordMessageId'> = {
             location: 'sportshome',
             title: `title-${number}`,
             start: UtcDate.now.advanced({ minute: number * 100 }).encoded,
@@ -28,7 +28,10 @@ describe('occupancyGetAll', () => {
             }
         };
         const occupancyId = Guid.newGuid();
-        await firebaseApp.database.child('occupancies').child(occupancyId.guidString).set(occupancy, 'encrypt');
+        await firebaseApp.database.child('occupancies').child(occupancyId.guidString).set({
+            ...occupancy,
+            discordMessageId: null
+        }, 'encrypt');
         return {
             ...occupancy,
             id: occupancyId.guidString,

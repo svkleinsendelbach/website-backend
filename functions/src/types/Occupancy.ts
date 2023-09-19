@@ -1,5 +1,6 @@
 import { HttpsError, ILogger, UtcDate } from "firebase-function";
 import { Guid } from "./Guid";
+import { EmbedBuilder } from "discord.js";
 
 export type Occupancy = {
     id: Guid;
@@ -8,12 +9,19 @@ export type Occupancy = {
     start: UtcDate;
     end: UtcDate;
     recurring: Occupancy.Recurring | null;
+    discordMessageId: string | null;
 };
 
 export namespace Occupancy {
     export type Location = 'a-field' | 'b-field' | 'sportshome';
 
     export namespace Location {
+        export const title: Record<Location, string> = {
+            'a-field': 'A-Platz',
+            'b-field': 'B-Platz',
+            'sportshome': 'Sportheim'
+        };
+
         export function typeGuard(value: string): value is Occupancy.Location {
             return ['a-field', 'b-field', 'sportshome'].includes(value);
         }
@@ -29,6 +37,13 @@ export namespace Occupancy {
         export type Type = 'day' | 'month' | 'week' | 'year';
 
         export namespace Type {
+            export const perTitle: Record<Type, string> = {
+                day: 'jeden Tag',
+                week: 'jede Woche',
+                month: 'jeden Monat',
+                year: 'jedes Jahr'
+            };
+
             export function typeGuard(value: string): value is Occupancy.Recurring.Type {
                 return ['day', 'month', 'week', 'year'].includes(value);
             }
@@ -85,7 +100,7 @@ export namespace Occupancy {
         }
     }
 
-    export function fromObject(value: object | null, logger: ILogger): Omit<Occupancy, 'id'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<Occupancy, 'id' | 'discordMessageId'> {
         logger.log('Occupancy.fromObject', { value: value });
 
         if (value === null)
@@ -122,6 +137,7 @@ export namespace Occupancy {
         start: string;
         end: string;
         recurring: Occupancy.Recurring.Flatten | null;
+        discordMessageId: string | null;
     };
 
     export function flatten(occupancy: Occupancy): Occupancy.Flatten;
@@ -135,7 +151,8 @@ export namespace Occupancy {
                 ? null
                 : Occupancy.Recurring.flatten(occupancy.recurring),
             start: occupancy.start.encoded,
-            title: occupancy.title
+            title: occupancy.title,
+            discordMessageId: occupancy.discordMessageId
         };
     }
 
@@ -150,7 +167,29 @@ export namespace Occupancy {
                 ? null
                 : Occupancy.Recurring.concrete(occupancy.recurring),
             start: UtcDate.decode(occupancy.start),
-            title: occupancy.title
+            title: occupancy.title,
+            discordMessageId: occupancy.discordMessageId
         };
+    }
+
+    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'discordMessageId'>, discordMessageId: string | null): Occupancy;
+    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'id' | 'discordMessageId'>, discordMessageId: string | null): Omit<Occupancy, 'id'>;
+    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'discordMessageId'> | Omit<Occupancy, 'id' | 'discordMessageId'>, discordMessageId: string | null): Occupancy | Omit<Occupancy, 'id'> {
+        return {
+            ...occupancy,
+            discordMessageId: discordMessageId
+        };
+    }
+
+    export function discordEmbed(occupancy: Omit<Occupancy, 'id' | 'discordMessageId'>): EmbedBuilder {
+        const dateDescription = `${occupancy.start.description('de-DE', 'Europe/Berlin')} - ${occupancy.end.description('de-DE', 'Europe/Berlin')}`;
+        return new EmbedBuilder()
+            .setTitle(`${occupancy.title} | ${Occupancy.Location.title[occupancy.location]}`)
+            .setDescription(
+                occupancy.recurring
+                    ? `${dateDescription} ${Recurring.Type.perTitle[occupancy.recurring.repeatEvery]} bis ${occupancy.recurring.untilIncluding.description('de-DE', 'Europe/Berlin')}`
+                    : dateDescription
+            )
+            .setTimestamp(occupancy.start.toDate);
     }
 }

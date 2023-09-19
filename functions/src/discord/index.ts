@@ -4,6 +4,7 @@ import { Event, EventGroupId } from "../types/Event";
 import { Report, ReportGroupId } from "../types/Report";
 import { DatabaseType } from "firebase-function";
 import { CriticismSuggestion } from "../types/CriticismSuggestion";
+import { Occupancy } from "../types/Occupancy";
 
 export class Discord {
     public constructor(
@@ -129,13 +130,51 @@ export class Discord {
     }
 
     public async addCriticismSuggestion(criticismSuggestion: Omit<CriticismSuggestion, 'id'>) {
-        const channel = await this.getChannel('criticismSuggestion');
+        const channel = await this.getChannel('criticismSuggestions');
         if (!channel)
             return;
         try {
             await channel.send({
                 embeds: [CriticismSuggestion.discordEmbed(criticismSuggestion)]
             });
+        } catch {}
+    }
+
+    public async addOccupancy(occupancy: Omit<Occupancy, 'id' | 'discordMessageId'>): Promise<Omit<Occupancy, 'id'>> {
+        const channel = await this.getChannel('occupancies');
+        if (!channel)
+            return Occupancy.addDiscordMessageId(occupancy, null);
+        try {
+            const message = await channel.send({
+                embeds: [Occupancy.discordEmbed(occupancy)]
+            });
+            return Occupancy.addDiscordMessageId(occupancy, message.id);
+        } catch {
+            return Occupancy.addDiscordMessageId(occupancy, null);           
+        }
+    }
+
+    public async changeOccupancy(occupancy: Omit<Occupancy, 'id'>) {
+        if (!occupancy.discordMessageId)
+            return;
+        const message = await this.getMessage('occupancies', occupancy.discordMessageId);
+        if (!message)
+            return;
+        try {
+            await message.edit({
+                embeds: [Occupancy.discordEmbed(occupancy)]
+            });
+        } catch {}
+    }
+
+    public async removeOccupancy(occupancy: Omit<Occupancy, 'id'>) {
+        if (!occupancy.discordMessageId)
+            return;
+        const message = await this.getMessage('occupancies', occupancy.discordMessageId);
+        if (!message)
+            return;
+        try {
+            await message.delete();
         } catch {}
     }
 }

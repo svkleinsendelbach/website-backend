@@ -1,10 +1,11 @@
-import { Client, Events, GatewayIntentBits, Message, TextBasedChannel } from "discord.js";
+import { Client, EmbedBuilder, Events, GatewayIntentBits, Message, TextBasedChannel } from "discord.js";
 import { discordKeys } from "../privateKeys";
 import { Event, EventGroupId } from "../types/Event";
 import { Report, ReportGroupId } from "../types/Report";
-import { DatabaseType } from "firebase-function";
+import { DatabaseType, FunctionType } from "firebase-function";
 import { CriticismSuggestion } from "../types/CriticismSuggestion";
 import { Occupancy } from "../types/Occupancy";
+import { SendMailContactFunctionType } from "../functions/SendMailContactFunction";
 
 export class Discord {
     public constructor(
@@ -175,6 +176,21 @@ export class Discord {
             return;
         try {
             await message.delete();
+        } catch {}
+    }
+
+    public async contactRequest(contact: FunctionType.Parameters<SendMailContactFunctionType>) {
+        const channel = await this.getChannel('contactRequest');
+        if (!channel)
+            return;
+        try {
+            await channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle(`${contact.senderName} | ${contact.senderAddress}`)
+                        .setDescription(`An: ${contact.receiverName}, ${contact.receiverAddress}\n\n${contact.message}`)
+                ]
+            });
         } catch {}
     }
 }

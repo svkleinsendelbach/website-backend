@@ -6,7 +6,7 @@ import { DatabaseScheme } from '../DatabaseScheme';
 import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
-import { Discord } from '../discord';
+import { Discord } from '../Discord';
 
 export class EventEditFunction implements FirebaseFunction<EventEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<EventEditFunctionType> & { databaseType: DatabaseType };
@@ -58,11 +58,11 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
         const databaseEvent = await this.getDatabaseEvent();
         if (databaseEvent)
             throw HttpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
-        let event = Event.addDiscordMessageId(this.parameters.event, null);
-        event = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.addEvent(event, this.parameters.groupId);
-        }, event);
-        await this.reference.set(Event.flatten(event), 'encrypt');
+        const event = this.parameters.event;
+        const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
+            return await discord.add('events', Event.discordEmbed(event, this.parameters.groupId));
+        }, null);
+        await this.reference.set(Event.flatten(Event.addDiscordMessageId(event, discordMessageId)), 'encrypt');
     }
 
     private async changeEvent() {
@@ -73,7 +73,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
         const event = Event.addDiscordMessageId(this.parameters.event, databaseEvent.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.changeEvent(event, this.parameters.groupId);
+            await discord.change('events', event.discordMessageId, Event.discordEmbed(event, this.parameters.groupId));
         });
         await this.reference.set(Event.flatten(event), 'encrypt');
     }
@@ -94,7 +94,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
         if (!databaseEvent)
             return;
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.removeEvent(databaseEvent);
+            await discord.remove('events', databaseEvent.discordMessageId);
         });
         await this.reference.remove();
     }

@@ -6,7 +6,7 @@ import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Guid } from '../types/Guid';
 import { Report, ReportGroupId } from '../types/Report';
-import { Discord } from '../discord';
+import { Discord } from '../Discord';
 
 export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<ReportEditFunctionType> & { databaseType: DatabaseType };
@@ -58,11 +58,11 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
         const databaseReport = await this.getDatabaseReport();
         if (databaseReport)
             throw HttpsError('invalid-argument', 'Couldn\'t add existing report.', this.logger);
-        let report = Report.addDiscordMessageId(this.parameters.report, null);
-        report = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.addReport(report, this.parameters.groupId);
-        }, report);
-        await this.reference.set(Report.flatten(report), 'encrypt');
+        const report = this.parameters.report;
+        const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
+            return await discord.add('reports', Report.discordEmbed(report, this.parameters.groupId));
+        }, null);
+        await this.reference.set(Report.flatten(Report.addDiscordMessageId(report, discordMessageId)), 'encrypt');
     }
 
     private async changeReport() {
@@ -73,7 +73,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing report.', this.logger);
         const report = Report.addDiscordMessageId(this.parameters.report, databaseReport.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.changeReport(report, this.parameters.groupId);
+            await discord.change('reports', report.discordMessageId, Report.discordEmbed(report, this.parameters.groupId));
         });
         await this.reference.set(Report.flatten(report), 'encrypt');
     }
@@ -94,7 +94,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
         if (!databaseReport)
             return;
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.removeReport(databaseReport);
+            await discord.remove('reports', databaseReport.discordMessageId);
         });
         await this.reference.remove();
     }

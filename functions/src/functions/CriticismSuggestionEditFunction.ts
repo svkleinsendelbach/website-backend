@@ -6,7 +6,7 @@ import { Guid } from '../types/Guid';
 import { CriticismSuggestion } from '../types/CriticismSuggestion';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { Discord } from '../discord';
+import { Discord } from '../Discord';
 
 export class CriticismSuggestionEditFunction implements FirebaseFunction<CriticismSuggestionEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<CriticismSuggestionEditFunctionType> & { databaseType: DatabaseType };
@@ -42,8 +42,8 @@ export class CriticismSuggestionEditFunction implements FirebaseFunction<Critici
                 if (snapshot.exists)
                     throw HttpsError('invalid-argument', 'Couldn\'t add existing criticism suggestion.', this.logger);
                 const criticismSuggestion = this.parameters.criticismSuggestion;
-                void Discord.execute(this.parameters.databaseType, async discord => {
-                    await discord.addCriticismSuggestion(criticismSuggestion);
+                void Discord.execute(this.parameters.databaseType, async discord => {                    
+                    await discord.add('criticismSuggestions', CriticismSuggestion.discordEmbed(criticismSuggestion));
                 });
             }
             if (this.parameters.editType === 'change' && !snapshot.exists)

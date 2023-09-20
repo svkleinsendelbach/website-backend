@@ -6,7 +6,7 @@ import { Guid } from '../types/Guid';
 import { Occupancy } from '../types/Occupancy';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { Discord } from '../discord';
+import { Discord } from '../Discord';
 
 export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<OccupancyEditFunctionType> & { databaseType: DatabaseType };
@@ -56,11 +56,11 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
         const databaseOccupancy = await this.getDatabaseOccupancy();
         if (databaseOccupancy)
             throw HttpsError('invalid-argument', 'Couldn\'t add existing occupancy.', this.logger);
-        let occupancy = Occupancy.addDiscordMessageId(this.parameters.occupancy, null);
-        occupancy = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.addOccupancy(occupancy);
-        }, occupancy);
-        await this.reference.set(Occupancy.flatten(occupancy), 'encrypt');
+        const occupancy = this.parameters.occupancy;
+        const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
+            return await discord.add('occupancies', Occupancy.discordEmbed(occupancy));
+        }, null);
+        await this.reference.set(Occupancy.flatten(Occupancy.addDiscordMessageId(occupancy, discordMessageId)), 'encrypt');
     }
 
     private async changeOccupancy() {
@@ -71,7 +71,7 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing occupancy.', this.logger);
         const occupancy = Occupancy.addDiscordMessageId(this.parameters.occupancy, databaseOccupancy.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.changeOccupancy(occupancy);
+            await discord.change('occupancies', occupancy.discordMessageId, Occupancy.discordEmbed(occupancy));
         });
         await this.reference.set(Occupancy.flatten(occupancy), 'encrypt');
     }
@@ -81,7 +81,7 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
         if (!databaseOccupancy)
             return;
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.removeOccupancy(databaseOccupancy);
+            await discord.remove('occupancies', databaseOccupancy.discordMessageId);
         });
         await this.reference.remove();
     }

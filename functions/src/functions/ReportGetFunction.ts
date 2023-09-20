@@ -27,18 +27,21 @@ export class ReportGetFunction implements FirebaseFunction<ReportGetFunctionType
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return { reports: [], hasMore: false };
-        const reports = snapshot.compactMap<Report.Flatten>(snapshot => {
+        const reports = snapshot.compactMap<Omit<Report.Flatten, 'discordMessageId'>>(snapshot => {
             if (snapshot.key === null)
                 return null;
+            const report = snapshot.value('decrypt') as Omit<Report.Flatten, 'id' | 'discordMessageId'>;
+            if ('discordMessageId' in report)
+                delete report.discordMessageId;
             return {
-                ...snapshot.value('decrypt'),
+                ...report,
                 id: snapshot.key
             };
         });
         reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
         if (this.parameters.numberReports === null)
             return { reports: reports, hasMore: false };
-        const reportsToReturn: Report.Flatten[] = [];
+        const reportsToReturn: Omit<Report.Flatten, 'discordMessageId'>[] = [];
         let hasMore = false;
         for (const report of reports) {
             if (reportsToReturn.length === this.parameters.numberReports) {
@@ -55,6 +58,6 @@ export type ReportGetFunctionType = FunctionType<{
     groupId: ReportGroupId;
     numberReports: number | null;
 }, {
-    reports: Report.Flatten[];
+    reports: Omit<Report.Flatten, 'discordMessageId'>[];
     hasMore: boolean;
 }>;

@@ -3,6 +3,8 @@ import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import nodemailer from 'nodemailer';
 import type Mail from 'nodemailer/lib/mailer';
 import { getPrivateKeys, sendContactMailAccount } from '../privateKeys';
+import { Discord } from '../Discord';
+import { EmbedBuilder } from 'discord.js';
 
 export class SendMailContactFunction implements FirebaseFunction<SendMailContactFunctionType> {
     public readonly parameters: FunctionType.Parameters<SendMailContactFunctionType> & { databaseType: DatabaseType };
@@ -53,6 +55,13 @@ export class SendMailContactFunction implements FirebaseFunction<SendMailContact
                 <p>${this.parameters.message}</p>
                 `
         };
+        void Discord.execute(this.parameters.databaseType, async discord => {
+            await discord.add('contactRequest', 
+                new EmbedBuilder()
+                    .setTitle(`${this.parameters.senderName} | ${this.parameters.senderAddress}`)
+                    .setDescription(`An: ${this.parameters.receiverName}, ${this.parameters.receiverAddress}\n\n${this.parameters.message}`)
+            );
+        });
         return await new Promise<{ success: boolean; message: string }>(resolve => {
             this.transporter.sendMail(mailOptions, (error, info) => {
                 if (error !== null) {

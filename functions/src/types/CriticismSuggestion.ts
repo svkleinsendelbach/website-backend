@@ -1,5 +1,6 @@
 import { HttpsError, ILogger } from "firebase-function";
 import { Guid } from "./Guid";
+import { EmbedBuilder } from "discord.js";
 
 export type CriticismSuggestion = {
     id: Guid;
@@ -17,6 +18,11 @@ export namespace CriticismSuggestion {
         export function typeGuard(value: string): value is Type {
             return value === 'criticism' || value === 'suggestion';
         }
+
+        export const title: Record<Type, string> = {
+            criticism: 'Kritik',
+            suggestion: 'Vorschlag'
+        };
     }
     
     export function fromObject(value: object | null, logger: ILogger): Omit<CriticismSuggestion, 'id'> {
@@ -82,5 +88,12 @@ export namespace CriticismSuggestion {
             contactEmail: criticismSuggestion.contactEmail,
             workedOff: criticismSuggestion.workedOff
         };
+    }
+
+    export function discordEmbed(criticismSuggestion: Omit<CriticismSuggestion, 'id'>): EmbedBuilder {
+        return new EmbedBuilder()
+            .setColor(criticismSuggestion.type === 'criticism' ? 0xAD2121 : 0x1E90FF)
+            .setTitle(`${Type.title[criticismSuggestion.type]} | ${criticismSuggestion.title}`)
+            .setDescription(`${criticismSuggestion.description}\n\nKontakt: ${criticismSuggestion.contactEmail}`);
     }
 }

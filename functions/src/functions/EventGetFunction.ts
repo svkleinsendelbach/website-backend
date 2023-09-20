@@ -30,10 +30,12 @@ export class EventGetFunction implements FirebaseFunction<EventGetFunctionType> 
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return null;
-        const events = snapshot.compactMap<Event.Flatten>(snapshot => {
+        const events = snapshot.compactMap<Omit<Event.Flatten, 'discordMessageId'>>(snapshot => {
             if (snapshot.key === null)
                 return null;
-            const event = snapshot.value('decrypt');
+            const event = snapshot.value('decrypt') as Omit<Event.Flatten, 'id' | 'discordMessageId'>;
+            if ('discordMessageId' in event)
+                delete event.discordMessageId;
             const date = UtcDate.decode(event.date);
             if (date.compare(UtcDate.now) === 'less')
                 return null;

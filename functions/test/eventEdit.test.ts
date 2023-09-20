@@ -31,7 +31,8 @@ describe('eventEdit', () => {
             title: 'title',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'remove',
@@ -54,7 +55,7 @@ describe('eventEdit', () => {
         });
         result.failure.equal({
             code: 'invalid-argument',
-            message: 'No event in parameters to add / change.'
+            message: 'No event in parameters to add.'
         });
     });
 
@@ -80,7 +81,8 @@ describe('eventEdit', () => {
             title: 'title',
             isImportant: true,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         });
     });
 
@@ -92,7 +94,8 @@ describe('eventEdit', () => {
             title: 'title-1',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = UtcDate.now.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -115,16 +118,26 @@ describe('eventEdit', () => {
     });
 
     it('change event not given over', async () => {
+        const eventId = Guid.newGuid();
+        const date = UtcDate.now;
+        await firebaseApp.database.child('events').child('general').child(eventId.guidString).set({
+            date: date.encoded,
+            title: 'title-1',
+            isImportant: false,
+            subtitle: null,
+            link: null,
+            discordMessageId: null
+        }, 'encrypt');
         const result = await firebaseApp.functions.function('event').function('edit').call({
             editType: 'change',
             groupId: 'general',
             previousGroupId: 'general',
-            eventId: Guid.newGuid().guidString,
+            eventId: eventId.guidString,
             event: null
         });
         result.failure.equal({
             code: 'invalid-argument',
-            message: 'No event in parameters to add / change.'
+            message: 'No event in parameters to change.'
         });
     });
 
@@ -156,7 +169,8 @@ describe('eventEdit', () => {
             title: 'title-1',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -178,7 +192,8 @@ describe('eventEdit', () => {
             title: 'title-2',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         });
     });
 
@@ -190,7 +205,8 @@ describe('eventEdit', () => {
             title: 'title-1',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -220,7 +236,8 @@ describe('eventEdit', () => {
             title: 'title-1',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         }, 'encrypt');
         const date2 = date1.advanced({ hour: 1 });
         const result = await firebaseApp.functions.function('event').function('edit').call({
@@ -243,7 +260,8 @@ describe('eventEdit', () => {
             title: 'title-2',
             isImportant: false,
             subtitle: null,
-            link: null
+            link: null,
+            discordMessageId: null
         });
     });
 });

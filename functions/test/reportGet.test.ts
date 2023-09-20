@@ -8,15 +8,18 @@ describe('reportGet', () => {
         await cleanUpFirebase();
     });
 
-    async function addReport(number: number): Promise<Report.Flatten> {
-        const report: Omit<Report.Flatten, 'id'> = {
+    async function addReport(number: number): Promise<Omit<Report.Flatten, 'discordMessageId'>> {
+        const report: Omit<Report.Flatten, 'id' | 'discordMessageId'> = {
             title: `title-${number}`,
             message: `message-${number}`,
             createDate: UtcDate.now.advanced({ minute: number * 100 }).encoded,
             imageUrl: null
         };
         const reportId = Guid.newGuid();
-        await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set(report, 'encrypt');
+        await firebaseApp.database.child('reports').child('general').child(reportId.guidString).set({
+            ...report, 
+            discordMessageId: null
+        }, 'encrypt');
         return {
             id: reportId.guidString,
             ...report

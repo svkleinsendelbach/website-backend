@@ -26,12 +26,15 @@ export class OccupancyGetAllFunction implements FirebaseFunction<OccupancyGetAll
         return snapshot.compactMap(snapshot => {
             if (snapshot.key === null)
                 return null;
+            const occupancy = snapshot.value('decrypt') as Omit<Occupancy.Flatten, 'id' | 'discordMessageId'>;
+            if ('discordMessageId' in occupancy)
+                delete occupancy.discordMessageId;
             return {
-                ...snapshot.value('decrypt'),
+                ...occupancy,
                 id: snapshot.key
             };
         });
     }
 }
 
-export type OccupancyGetAllFunctionType = FunctionType<Record<string, never>, Array<Occupancy.Flatten>>;
+export type OccupancyGetAllFunctionType = FunctionType<Record<string, never>, Array<Omit<Occupancy.Flatten, 'discordMessageId'>>>;

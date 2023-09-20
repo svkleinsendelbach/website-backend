@@ -6,6 +6,7 @@ import { Guid } from '../types/Guid';
 import { CriticismSuggestion } from '../types/CriticismSuggestion';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
+import { Discord } from '../Discord';
 
 export class CriticismSuggestionEditFunction implements FirebaseFunction<CriticismSuggestionEditFunctionType> {
     public readonly parameters: FunctionType.Parameters<CriticismSuggestionEditFunctionType> & { databaseType: DatabaseType };
@@ -37,8 +38,14 @@ export class CriticismSuggestionEditFunction implements FirebaseFunction<Critici
         } else {
             if (!this.parameters.criticismSuggestion)
                 throw HttpsError('invalid-argument', 'No criticism suggestion in parameters to add / change.', this.logger);
-            if (this.parameters.editType === 'add' && snapshot.exists)
-                throw HttpsError('invalid-argument', 'Couldn\'t add existing criticism suggestion.', this.logger);
+            if (this.parameters.editType === 'add') {
+                if (snapshot.exists)
+                    throw HttpsError('invalid-argument', 'Couldn\'t add existing criticism suggestion.', this.logger);
+                const criticismSuggestion = this.parameters.criticismSuggestion;
+                void Discord.execute(this.parameters.databaseType, async discord => {                    
+                    await discord.add('criticismSuggestions', CriticismSuggestion.discordEmbed(criticismSuggestion));
+                });
+            }
             if (this.parameters.editType === 'change' && !snapshot.exists)
                 throw HttpsError('invalid-argument', 'Couldn\'t change not existing criticism suggestion.', this.logger);
             await reference.set(CriticismSuggestion.flatten(this.parameters.criticismSuggestion), 'encrypt');

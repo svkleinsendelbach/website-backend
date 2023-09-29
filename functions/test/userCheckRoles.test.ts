@@ -1,4 +1,4 @@
-import { Crypter } from 'firebase-function';
+import { sha512 } from 'firebase-function';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { testUser } from './privateKeys';
 
@@ -23,7 +23,7 @@ describe('userCheckRoles', () => {
 
     it('unauthenticated', async () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).set({
             firstName: 'John',
             lastName: 'Doe',
             roles: 'unauthenticated'
@@ -39,7 +39,7 @@ describe('userCheckRoles', () => {
 
     it('authenticated', async () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).set({
             firstName: 'John',
             lastName: 'Doe',
             roles: ['admin']
@@ -52,7 +52,7 @@ describe('userCheckRoles', () => {
 
     it('missing role', async () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).set({
             firstName: 'John',
             lastName: 'Doe',
             roles: ['admin']

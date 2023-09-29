@@ -1,5 +1,4 @@
-import { HttpsError, ILogger, UtcDate } from "firebase-function";
-import { Guid } from "./Guid";
+import { HttpsError, ILogger, UtcDate, Guid } from "firebase-function";
 import { EmbedBuilder } from "discord.js";
 
 export type Occupancy = {

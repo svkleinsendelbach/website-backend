@@ -1,4 +1,4 @@
-import { Guid } from '../src/types/Guid';
+import { Guid } from 'firebase-function';
 import { UtcDate } from 'firebase-function';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { Occupancy } from '../src/types/Occupancy';

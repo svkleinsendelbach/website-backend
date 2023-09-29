@@ -1,4 +1,4 @@
-import { HttpsError, type DatabaseType, type ILogger } from 'firebase-function';
+import { HttpsError, type ILogger, IDatabaseReference } from 'firebase-function';
 import { DatabaseScheme } from '../DatabaseScheme';
 
 export type AnpfiffInfoTeamParameters = {
@@ -19,9 +19,9 @@ export namespace AnpfiffInfoTeamParameters {
         }
     }
 
-    export async function fetchFromDatabase(type: AnpfiffInfoTeamParameters.Type, databaseType: DatabaseType, logger: ILogger): Promise<AnpfiffInfoTeamParameters> {
-        logger.log('AnpfiffInfoTeamParameters.fetchFromDatabase', { type: type, databaseType: databaseType });
-        const reference = DatabaseScheme.reference(databaseType).child('anpfiffInfoTeamParameters').child(type);
+    export async function fetchFromDatabase(type: AnpfiffInfoTeamParameters.Type, databaseReference: IDatabaseReference<DatabaseScheme>, logger: ILogger): Promise<AnpfiffInfoTeamParameters> {
+        logger.log('AnpfiffInfoTeamParameters.fetchFromDatabase', { type: type });
+        const reference = databaseReference.child('anpfiffInfoTeamParameters').child(type);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             throw HttpsError('internal', 'Couldn\'t get anpfiff info team parameters.', logger);

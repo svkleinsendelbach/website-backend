@@ -1,36 +1,38 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterBuilder, ParameterParser, type IFunctionType, HttpsError, IParameterContainer, IDatabaseReference, GuardParameterBuilder, NullableParameterBuilder, Guid } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
-import { Guid } from '../types/Guid';
 import { CriticismSuggestion } from '../types/CriticismSuggestion';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
 import { Discord } from '../Discord';
 
-export class CriticismSuggestionEditFunction implements FirebaseFunction<CriticismSuggestionEditFunctionType> {
-    public readonly parameters: FunctionType.Parameters<CriticismSuggestionEditFunctionType> & { databaseType: DatabaseType };
+export class CriticismSuggestionEditFunction implements IFirebaseFunction<CriticismSuggestionEditFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<CriticismSuggestionEditFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('CriticismSuggestionEditFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<CriticismSuggestionEditFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('CriticismSuggestionEditFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<CriticismSuggestionEditFunctionType>>(
             {
-                editType: ParameterBuilder.guard('string', EditType.typeGuard),
-                criticismSuggestionId: ParameterBuilder.build('string', Guid.fromString),
-                criticismSuggestion: ParameterBuilder.nullable(ParameterBuilder.build('object', CriticismSuggestion.fromObject))
+                editType: new GuardParameterBuilder('string', EditType.typeGuard),
+                criticismSuggestionId: new ParameterBuilder('string', Guid.fromString),
+                criticismSuggestion: new NullableParameterBuilder(new ParameterBuilder('object', CriticismSuggestion.fromObject))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<CriticismSuggestionEditFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<CriticismSuggestionEditFunctionType>> {
         this.logger.log('CriticismSuggestionEditFunction.executeFunction', {}, 'info');
         if (this.parameters.editType !== 'add')
-            await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger.nextIndent);
-        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('criticismSuggestions').child(this.parameters.criticismSuggestionId.guidString);
+            await checkUserRoles(this.auth, 'admin', this.databaseReference, this.logger.nextIndent);
+        const reference = this.databaseReference.child('criticismSuggestions').child(this.parameters.criticismSuggestionId.guidString);
         const snapshot = await reference.snapshot();
         if (this.parameters.editType === 'remove') {
             if (snapshot.exists)
@@ -53,7 +55,7 @@ export class CriticismSuggestionEditFunction implements FirebaseFunction<Critici
     }
 }
 
-export type CriticismSuggestionEditFunctionType = FunctionType<{
+export type CriticismSuggestionEditFunctionType = IFunctionType<{
     editType: EditType;
     criticismSuggestionId: Guid;
     criticismSuggestion: Omit<CriticismSuggestion, 'id'> | null;

@@ -1,31 +1,35 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, type IFunctionType, IDatabaseReference, IParameterContainer, ArrayParameterBuilder, GuardParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
-import { getPrivateKeys } from '../privateKeys';
 import { User } from '../types/User';
+import { DatabaseScheme } from '../DatabaseScheme';
 
-export class UserCheckRolesFunction implements FirebaseFunction<UserCheckRolesFunctionType> {
-    public readonly parameters: FunctionType.Parameters<UserCheckRolesFunctionType> & { databaseType: DatabaseType };
+export class UserCheckRolesFunction implements IFirebaseFunction<UserCheckRolesFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<UserCheckRolesFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('UserCheckRolesFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<UserCheckRolesFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('UserCheckRolesFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<UserCheckRolesFunctionType>>(
             {
-                roles: ParameterBuilder.array(ParameterBuilder.guard('string', User.Role.typeGuard))
+                roles: new ArrayParameterBuilder(new GuardParameterBuilder('string', User.Role.typeGuard))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<UserCheckRolesFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<UserCheckRolesFunctionType>> {
         this.logger.log('UserCheckRolesFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, this.parameters.roles, this.parameters.databaseType, this.logger.nextIndent);
+        await checkUserRoles(this.auth, this.parameters.roles, this.databaseReference, this.logger.nextIndent);
     }
 }
 
-export type UserCheckRolesFunctionType = FunctionType<{
+export type UserCheckRolesFunctionType = IFunctionType<{
     roles: User.Role[];
 }, void>;

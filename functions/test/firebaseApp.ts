@@ -1,4 +1,4 @@
-import { Crypter } from 'firebase-function';
+import { sha512 } from 'firebase-function';
 import { FirebaseApp } from 'firebase-function/lib/src/testUtils';
 import { type DatabaseScheme } from '../src/DatabaseScheme';
 import { type firebaseFunctions } from '../src/firebaseFunctions';
@@ -13,7 +13,7 @@ export const firebaseApp = new FirebaseApp<typeof firebaseFunctions, DatabaseSch
 export async function authenticateTestUser(roles: User.Role[] = User.Role.all) {
     if (firebaseApp.auth.currentUser === null)
         await firebaseApp.auth.signIn(testUser.email, testUser.password);
-    await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+    await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).set({
         firstName: testUser.firstName,
         lastName: testUser.lastName,
         roles: roles

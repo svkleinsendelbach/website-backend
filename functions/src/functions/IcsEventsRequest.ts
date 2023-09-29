@@ -1,32 +1,35 @@
-import { type DatabaseType, type FirebaseRequest, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type IFirebaseRequest, type ILogger, ParameterBuilder, ParameterParser, type IFunctionType, IDatabaseReference, IParameterContainer } from 'firebase-function';
 import { Event, EventGroup, EventGroupId } from '../types/Event';
 import ical from 'ical-generator';
 import { DatabaseScheme } from '../DatabaseScheme';
 
-export class IcsEventsRequest implements FirebaseRequest<IcsEventsRequestType> {
-    public readonly parameters: FunctionType.Parameters<IcsEventsRequestType> & { databaseType: DatabaseType };
+export class IcsEventsRequest implements IFirebaseRequest<IcsEventsRequestType> {
+    public readonly parameters: IFunctionType.Parameters<IcsEventsRequestType> & { databaseType: DatabaseType };
 
-    public constructor(parameters: Record<string, unknown> & { databaseType: DatabaseType }, private readonly logger: ILogger) {
-        this.logger.log('IcsEventsRequest.constructor', { parameters: parameters }, 'notice');
-        const parameterContainer = new ParameterContainer(parameters, 'uncrypted', this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<IcsEventsRequestType>>(
+    public constructor(
+        parameterContainer: IParameterContainer,
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('IcsEventsRequest.constructor', undefined, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<IcsEventsRequestType>>(
             {
-                selection: ParameterBuilder.build('string', EventGroupId.decodeSelectedGroupIds)
+                selection: new ParameterBuilder('string', EventGroupId.decodeSelectedGroupIds)
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<IcsEventsRequestType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<IcsEventsRequestType>> {
         this.logger.log('IcsEventsRequest.executeFunction', {}, 'info');
         const eventGroups = (await Promise.all(this.parameters.selection.map(async groupId => await this.getEventGroup(groupId)))).flatMap(eventGroup => eventGroup ?? []);
         return this.calendar(eventGroups);
     }
 
     private async getEventGroup(id: EventGroupId): Promise<EventGroup | null> {
-        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(id);
+        const reference = this.databaseReference.child('events').child(id);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             return null;
@@ -71,7 +74,7 @@ export class IcsEventsRequest implements FirebaseRequest<IcsEventsRequestType> {
     }
 }
 
-export type IcsEventsRequestType = FunctionType<{
+export type IcsEventsRequestType = IFunctionType<{
     selection: EventGroupId[];
 }, string, {
     selection: string;

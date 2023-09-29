@@ -1,6 +1,6 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
-import { Guid } from '../src/types/Guid';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
+import { Guid } from 'firebase-function';
 
 describe('criticismSuggestionEdit', () => {
     beforeEach(async () => {

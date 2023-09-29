@@ -1,7 +1,7 @@
 import { expect } from "firebase-function/lib/src/testUtils";
 import { cleanUpFirebase, firebaseApp } from "./firebaseApp";
 import { testUser } from "./privateKeys";
-import { Crypter } from "firebase-function";
+import { sha512 } from "firebase-function";
 
 describe('userHandleAccessRequest', () => {
     beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('userHandleAccessRequest', () => {
     });
 
     it('already exist', async () => {
-        await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).set({
+        await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).set({
             firstName: 'John',
             lastName: 'Doe',
             roles: 'unauthenticated'
@@ -34,7 +34,7 @@ describe('userHandleAccessRequest', () => {
             lastName: 'öoij'
         });
         result.success;
-        expect(await firebaseApp.database.child('users').child(Crypter.sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
+        expect(await firebaseApp.database.child('users').child(sha512(firebaseApp.auth.currentUser!.uid)).get('decrypt')).to.be.deep.equal({
             firstName: 'VAR',
             lastName: 'öoij',
             roles: 'unauthenticated'

@@ -1,33 +1,36 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, IParameterContainer, ParameterParser, type IFunctionType, HttpsError, IDatabaseReference, ValueParameterBuilder, ArrayParameterBuilder, GuardParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getPrivateKeys } from '../privateKeys';
 import { checkUserRoles } from '../checkUserRoles';
 import { User } from '../types/User';
 import { DatabaseScheme } from '../DatabaseScheme';
 
-export class UserEditRolesFunction implements FirebaseFunction<UserEditRolesFunctionType> {
-    public readonly parameters: FunctionType.Parameters<UserEditRolesFunctionType> & { databaseType: DatabaseType };
+export class UserEditRolesFunction implements IFirebaseFunction<UserEditRolesFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<UserEditRolesFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('UserEditRolesFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<UserEditRolesFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('UserEditRolesFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<UserEditRolesFunctionType>>(
             {
-                hashedUserId: ParameterBuilder.value('string'),
-                roles: ParameterBuilder.array(ParameterBuilder.guard('string', User.Role.typeGuard))
+                hashedUserId: new ValueParameterBuilder('string'),
+                roles: new ArrayParameterBuilder(new GuardParameterBuilder('string', User.Role.typeGuard))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<UserEditRolesFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<UserEditRolesFunctionType>> {
         this.logger.log('UserEditRolesFunction.executeFunction', {}, 'info');
-        const myHashedUserId = await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger.nextIndent);
+        const myHashedUserId = await checkUserRoles(this.auth, 'admin', this.databaseReference, this.logger.nextIndent);
         if (this.parameters.hashedUserId === myHashedUserId && !this.parameters.roles.includes('admin'))
             throw HttpsError('unavailable', 'Couldn\'t remove admin role from yourself.', this.logger);
-        const reference = DatabaseScheme.reference(this.parameters.databaseType).child('users').child(this.parameters.hashedUserId);
+        const reference = this.databaseReference.child('users').child(this.parameters.hashedUserId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
             throw HttpsError('not-found', 'User not found.', this.logger);
@@ -39,7 +42,7 @@ export class UserEditRolesFunction implements FirebaseFunction<UserEditRolesFunc
     }
 }
 
-export type UserEditRolesFunctionType = FunctionType<{
+export type UserEditRolesFunctionType = IFunctionType<{
     hashedUserId: string;
     roles: User.Role[];
 }, void>;

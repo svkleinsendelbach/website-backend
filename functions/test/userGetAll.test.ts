@@ -1,4 +1,4 @@
-import { Crypter } from "firebase-function";
+import { sha512 } from "firebase-function";
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from "./firebaseApp";
 import { testUser } from "./privateKeys";
 
@@ -43,7 +43,7 @@ describe('userGetAllUnauthenticated', () => {
             {
                 firstName: testUser.firstName,
                 lastName: testUser.lastName,
-                hashedUserId: Crypter.sha512(firebaseApp.auth.currentUser!.uid),
+                hashedUserId: sha512(firebaseApp.auth.currentUser!.uid),
                 roles: ['admin']
 
             },
@@ -104,7 +104,7 @@ describe('userGetAllUnauthenticated', () => {
             {
                 firstName: testUser.firstName,
                 lastName: testUser.lastName,
-                hashedUserId: Crypter.sha512(firebaseApp.auth.currentUser!.uid),
+                hashedUserId: sha512(firebaseApp.auth.currentUser!.uid),
                 roles: ['admin']
 
             },

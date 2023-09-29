@@ -1,36 +1,38 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError, CryptedScheme, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterBuilder, Guid, ParameterParser, type IFunctionType, HttpsError, CryptedScheme, IDatabaseReference, IParameterContainer, GuardParameterBuilder, NullableParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
-import { Guid } from '../types/Guid';
 import { Report, ReportGroupId } from '../types/Report';
 import { Discord } from '../Discord';
 
-export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionType> {
-    public readonly parameters: FunctionType.Parameters<ReportEditFunctionType> & { databaseType: DatabaseType };
+export class ReportEditFunction implements IFirebaseFunction<ReportEditFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<ReportEditFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('ReportEditFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<ReportEditFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('ReportEditFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<ReportEditFunctionType>>(
             {
-                editType: ParameterBuilder.guard('string', EditType.typeGuard),
-                groupId: ParameterBuilder.guard('string', ReportGroupId.typeGuard),
-                previousGroupId: ParameterBuilder.nullable(ParameterBuilder.guard('string', ReportGroupId.typeGuard)),
-                reportId: ParameterBuilder.build('string', Guid.fromString),
-                report: ParameterBuilder.nullable(ParameterBuilder.build('object', Report.fromObject))
+                editType: new GuardParameterBuilder('string', EditType.typeGuard),
+                groupId: new GuardParameterBuilder('string', ReportGroupId.typeGuard),
+                previousGroupId: new NullableParameterBuilder(new GuardParameterBuilder('string', ReportGroupId.typeGuard)),
+                reportId: new ParameterBuilder('string', Guid.fromString),
+                report: new NullableParameterBuilder(new ParameterBuilder('object', Report.fromObject))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<ReportEditFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<ReportEditFunctionType>> {
         this.logger.log('ReportEditFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, 'websiteManager', this.parameters.databaseType, this.logger);
+        await checkUserRoles(this.auth, 'websiteManager', this.databaseReference, this.logger);
         switch (this.parameters.editType) {
             case 'add':
                 return await this.addReport();
@@ -41,8 +43,8 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
         }
     }
 
-    private get reference(): DatabaseReference<CryptedScheme<Omit<Report.Flatten, 'id'>>> {
-        return DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(this.parameters.groupId).child(this.parameters.reportId.guidString);
+    private get reference(): IDatabaseReference<CryptedScheme<Omit<Report.Flatten, 'id'>>> {
+        return this.databaseReference.child('reports').child(this.parameters.groupId).child(this.parameters.reportId.guidString);
     }
 
     private async getDatabaseReport(): Promise<Omit<Report, 'id'> | null> {
@@ -81,7 +83,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
     private async removePreviousReport(): Promise<Omit<Report, "id">> {
         if (!this.parameters.previousGroupId)
             throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
-        const previousReference = DatabaseScheme.reference(this.parameters.databaseType).child('reports').child(this.parameters.previousGroupId).child(this.parameters.reportId.guidString);
+        const previousReference = this.databaseReference.child('reports').child(this.parameters.previousGroupId).child(this.parameters.reportId.guidString);
         const previousSnapshot = await previousReference.snapshot();
         if (!previousSnapshot.exists)
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing report.', this.logger);
@@ -100,7 +102,7 @@ export class ReportEditFunction implements FirebaseFunction<ReportEditFunctionTy
     }
 }
 
-export type ReportEditFunctionType = FunctionType<{
+export type ReportEditFunctionType = IFunctionType<{
     editType: EditType;
     groupId: ReportGroupId;
     previousGroupId: ReportGroupId | null;

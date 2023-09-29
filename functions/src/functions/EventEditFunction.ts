@@ -1,36 +1,38 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, HttpsError, type FunctionType, DatabaseReference, CryptedScheme } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, Guid, ParameterBuilder, ParameterParser, HttpsError, type IFunctionType, CryptedScheme, IParameterContainer, IDatabaseReference, GuardParameterBuilder, NullableParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { checkUserRoles } from '../checkUserRoles';
-import { Guid } from '../types/Guid';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
 import { Discord } from '../Discord';
 
-export class EventEditFunction implements FirebaseFunction<EventEditFunctionType> {
-    public readonly parameters: FunctionType.Parameters<EventEditFunctionType> & { databaseType: DatabaseType };
+export class EventEditFunction implements IFirebaseFunction<EventEditFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<EventEditFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('EventEditFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<EventEditFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('EventEditFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<EventEditFunctionType>>(
             {
-                editType: ParameterBuilder.guard('string', EditType.typeGuard),
-                groupId: ParameterBuilder.guard('string', EventGroupId.typeGuard),
-                previousGroupId: ParameterBuilder.nullable(ParameterBuilder.guard('string', EventGroupId.typeGuard)),
-                eventId: ParameterBuilder.build('string', Guid.fromString),
-                event: ParameterBuilder.nullable(ParameterBuilder.build('object', Event.fromObject))
+                editType: new GuardParameterBuilder('string', EditType.typeGuard),
+                groupId: new GuardParameterBuilder('string', EventGroupId.typeGuard),
+                previousGroupId: new NullableParameterBuilder(new GuardParameterBuilder('string', EventGroupId.typeGuard)),
+                eventId: new ParameterBuilder('string', Guid.fromString),
+                event: new NullableParameterBuilder(new ParameterBuilder('object', Event.fromObject))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<EventEditFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<EventEditFunctionType>> {
         this.logger.log('EventEditFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, 'websiteManager', this.parameters.databaseType, this.logger);
+        await checkUserRoles(this.auth, 'websiteManager', this.databaseReference, this.logger);
         switch (this.parameters.editType) {
             case 'add':
                 return await this.addEvent();
@@ -41,8 +43,8 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
         }
     }
 
-    private get reference(): DatabaseReference<CryptedScheme<Omit<Event.Flatten, 'id'>>> {
-        return DatabaseScheme.reference(this.parameters.databaseType).child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
+    private get reference(): IDatabaseReference<CryptedScheme<Omit<Event.Flatten, 'id'>>> {
+        return this.databaseReference.child('events').child(this.parameters.groupId).child(this.parameters.eventId.guidString);
     }
 
     private async getDatabaseEvent(): Promise<Omit<Event, 'id'> | null> {
@@ -81,7 +83,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
     private async removePreviousEvent(): Promise<Omit<Event, "id">> {
         if (!this.parameters.previousGroupId)
             throw HttpsError('invalid-argument', 'No previous group id in parameters to change.', this.logger);
-        const previousReference = DatabaseScheme.reference(this.parameters.databaseType).child('events').child(this.parameters.previousGroupId).child(this.parameters.eventId.guidString);
+        const previousReference = this.databaseReference.child('events').child(this.parameters.previousGroupId).child(this.parameters.eventId.guidString);
         const previousSnapshot = await previousReference.snapshot();
         if (!previousSnapshot.exists)
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
@@ -100,7 +102,7 @@ export class EventEditFunction implements FirebaseFunction<EventEditFunctionType
     }
 }
 
-export type EventEditFunctionType = FunctionType<{
+export type EventEditFunctionType = IFunctionType<{
     editType: EditType;
     groupId: EventGroupId;
     previousGroupId: EventGroupId | null;

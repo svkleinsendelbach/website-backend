@@ -1,13 +1,14 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, type IFunctionType, IDatabaseReference, IParameterContainer, ValueParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import nodemailer from 'nodemailer';
 import type Mail from 'nodemailer/lib/mailer';
-import { getPrivateKeys, sendContactMailAccount } from '../privateKeys';
+import { sendContactMailAccount } from '../privateKeys';
 import { Discord } from '../Discord';
 import { EmbedBuilder } from 'discord.js';
+import { DatabaseScheme } from '../DatabaseScheme';
 
-export class SendMailContactFunction implements FirebaseFunction<SendMailContactFunctionType> {
-    public readonly parameters: FunctionType.Parameters<SendMailContactFunctionType> & { databaseType: DatabaseType };
+export class SendMailContactFunction implements IFirebaseFunction<SendMailContactFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<SendMailContactFunctionType> & { databaseType: DatabaseType };
 
     private readonly transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -17,24 +18,28 @@ export class SendMailContactFunction implements FirebaseFunction<SendMailContact
         logger: true
     });
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('SendMailContactFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<SendMailContactFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        auth: AuthData | null, 
+        databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('SendMailContactFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<SendMailContactFunctionType>>(
             {
-                senderName: ParameterBuilder.value('string'),
-                senderAddress: ParameterBuilder.value('string'),
-                receiverName: ParameterBuilder.value('string'),
-                receiverAddress: ParameterBuilder.value('string'),
-                message: ParameterBuilder.value('string')
+                senderName: new ValueParameterBuilder('string'),
+                senderAddress: new ValueParameterBuilder('string'),
+                receiverName: new ValueParameterBuilder('string'),
+                receiverAddress: new ValueParameterBuilder('string'),
+                message: new ValueParameterBuilder('string')
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<SendMailContactFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<SendMailContactFunctionType>> {
         this.logger.log('SendMailContactFunction.executeFunction', {}, 'info');
         const mailOptions: Mail.Options = {
             from: `${this.parameters.senderName} <${this.parameters.senderAddress}>`,
@@ -79,7 +84,7 @@ export class SendMailContactFunction implements FirebaseFunction<SendMailContact
     }
 }
 
-export type SendMailContactFunctionType = FunctionType<{
+export type SendMailContactFunctionType = IFunctionType<{
     senderName: string;
     senderAddress: string;
     receiverName: string;

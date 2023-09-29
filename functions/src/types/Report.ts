@@ -1,5 +1,4 @@
-import { HttpsError, type ILogger, UtcDate } from 'firebase-function';
-import { Guid } from './Guid';
+import { HttpsError, type ILogger, UtcDate, Guid } from 'firebase-function';
 import { EmbedBuilder } from 'discord.js';
 
 export type ReportGroupId =

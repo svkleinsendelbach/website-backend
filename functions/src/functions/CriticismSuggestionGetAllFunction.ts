@@ -1,30 +1,33 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, type IFunctionType, IParameterContainer, IDatabaseReference, NullableParameterBuilder, ValueParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getPrivateKeys } from '../privateKeys';
 import { CriticismSuggestion } from '../types/CriticismSuggestion';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
 
-export class CriticismSuggestionGetAllFunction implements FirebaseFunction<CriticismSuggestionGetAllFunctionType> {
-    public readonly parameters: FunctionType.Parameters<CriticismSuggestionGetAllFunctionType> & { databaseType: DatabaseType };
+export class CriticismSuggestionGetAllFunction implements IFirebaseFunction<CriticismSuggestionGetAllFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<CriticismSuggestionGetAllFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('CriticismSuggestionGetAllFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<CriticismSuggestionGetAllFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('CriticismSuggestionGetAllFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<CriticismSuggestionGetAllFunctionType>>(
             {
-                workedOff: ParameterBuilder.nullable(ParameterBuilder.value('boolean'))
+                workedOff: new NullableParameterBuilder(new ValueParameterBuilder('boolean'))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<CriticismSuggestionGetAllFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<CriticismSuggestionGetAllFunctionType>> {
         this.logger.log('CriticismSuggestionGetAllFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, 'admin', this.parameters.databaseType, this.logger.nextIndent);
-        const references = DatabaseScheme.reference(this.parameters.databaseType).child('criticismSuggestions');
+        await checkUserRoles(this.auth, 'admin', this.databaseReference, this.logger.nextIndent);
+        const references = this.databaseReference.child('criticismSuggestions');
         const snapshot = await references.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return [];
@@ -42,6 +45,6 @@ export class CriticismSuggestionGetAllFunction implements FirebaseFunction<Criti
     }
 }
 
-export type CriticismSuggestionGetAllFunctionType = FunctionType<{
+export type CriticismSuggestionGetAllFunctionType = IFunctionType<{
     workedOff: boolean | null;
 }, Array<CriticismSuggestion.Flatten>>;

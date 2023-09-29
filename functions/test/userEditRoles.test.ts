@@ -1,4 +1,4 @@
-import { Crypter } from "firebase-function";
+import { sha512 } from "firebase-function";
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from "./firebaseApp";
 import { expect } from "firebase-function/lib/src/testUtils";
 
@@ -13,7 +13,7 @@ describe('userCheckRoles', () => {
 
     it('remove admin from myself', async () => {
         const result = await firebaseApp.functions.function('user').function('editRoles').call({
-            hashedUserId: Crypter.sha512(firebaseApp.auth.currentUser!.uid),
+            hashedUserId: sha512(firebaseApp.auth.currentUser!.uid),
             roles: ['websiteManager']
         });
         result.failure.equal({

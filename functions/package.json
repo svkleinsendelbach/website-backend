@@ -25,7 +25,7 @@
   "dependencies": {
     "cross-fetch": "^4.0.0",
     "discord.js": "^14.13.0",
-    "firebase-function": "^1.4.65",
+    "firebase-function": "^1.4.71",
     "firebase-functions": "^4.4.1",
     "fontkit": "^2.0.2",
     "ical-generator": "^5.0.1",

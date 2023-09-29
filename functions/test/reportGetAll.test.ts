@@ -1,4 +1,4 @@
-import { Guid } from '../src/types/Guid';
+import { Guid } from 'firebase-function';
 import { type ReportGroupId, type Report } from '../src/types/Report';
 import { UtcDate } from 'firebase-function';
 import { cleanUpFirebase, firebaseApp } from './firebaseApp';

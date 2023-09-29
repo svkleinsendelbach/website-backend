@@ -1,25 +1,30 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, type IFunctionType, IParameterContainer, IDatabaseReference, ValueParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getPrivateKeys, recaptchaSecretKey } from '../privateKeys';
+import { recaptchaSecretKey } from '../privateKeys';
 import fetch from 'cross-fetch';
+import { DatabaseScheme } from '../DatabaseScheme';
 
-export class VerifyRecaptchaFunction implements FirebaseFunction<VerifyRecaptchaFunctionType> {
-    public readonly parameters: FunctionType.Parameters<VerifyRecaptchaFunctionType> & { databaseType: DatabaseType };
+export class VerifyRecaptchaFunction implements IFirebaseFunction<VerifyRecaptchaFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<VerifyRecaptchaFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('VerifyRecaptchaFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<VerifyRecaptchaFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        auth: AuthData | null, 
+        databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('VerifyRecaptchaFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<VerifyRecaptchaFunctionType>>(
             {
-                token: ParameterBuilder.value('string')
+                token: new ValueParameterBuilder('string')
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<VerifyRecaptchaFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<VerifyRecaptchaFunctionType>> {
         this.logger.log('VerifyRecaptchaFunction.executeFunction', {}, 'info');
         const url = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${this.parameters.token}`;
         const result = await (await fetch(url)).json();
@@ -30,7 +35,7 @@ export class VerifyRecaptchaFunction implements FirebaseFunction<VerifyRecaptcha
     }
 }
 
-export type VerifyRecaptchaFunctionType = FunctionType<{
+export type VerifyRecaptchaFunctionType = IFunctionType<{
     token: string;
 }, {
     success: boolean;

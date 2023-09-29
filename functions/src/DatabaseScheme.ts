@@ -1,13 +1,12 @@
-import { DatabaseReference, type CryptedScheme, type DatabaseSchemeType, DatabaseType } from 'firebase-function';
+import { type CryptedScheme } from 'firebase-function';
 import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameters';
 import { type Event, type EventGroupId as EventGroupIds } from './types/Event';
 import { type Report, type ReportGroupId as ReportGroupIds } from './types/Report';
 import { User } from './types/User';
 import { Occupancy } from './types/Occupancy';
 import { CriticismSuggestion } from './types/CriticismSuggestion';
-import { getPrivateKeys } from './privateKeys';
 
-export type DatabaseScheme = DatabaseSchemeType<{
+export type DatabaseScheme = {
     anpfiffInfoTeamParameters: {
         [Type in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters;
     };
@@ -30,10 +29,4 @@ export type DatabaseScheme = DatabaseSchemeType<{
     users: {
         [HashedUserId in string]: CryptedScheme<Omit<User, 'hashedUserId'>>
     };
-}>;
-
-export namespace DatabaseScheme {
-    export function reference(databaseType: DatabaseType): DatabaseReference<DatabaseScheme> {
-        return DatabaseReference.base<DatabaseScheme>(getPrivateKeys(databaseType));
-    }
-}
+};

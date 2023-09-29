@@ -1,5 +1,4 @@
-import { HttpsError, ILogger } from "firebase-function";
-import { Guid } from "./Guid";
+import { HttpsError, ILogger, Guid } from "firebase-function";
 import { EmbedBuilder } from "discord.js";
 
 export type CriticismSuggestion = {

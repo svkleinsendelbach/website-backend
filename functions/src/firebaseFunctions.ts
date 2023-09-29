@@ -1,4 +1,4 @@
-import { FirebaseFunctionDescriptor, FirebaseRequestDescriptor, type FirebaseFunctions } from 'firebase-function';
+import { FirebaseDescriptor, type FirebaseFunctions } from 'firebase-function';
 
 import { DeleteAllDataFunction, type DeleteAllDataFunctionType } from './functions/DeleteAllDataFunction';
 import { IcsEventsRequest, type IcsEventsRequestType } from './functions/IcsEventsRequest';
@@ -29,38 +29,38 @@ import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionTy
 import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
 
 export const firebaseFunctions = {
-    verifyRecaptcha: FirebaseFunctionDescriptor.create<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
-    icsEvents: FirebaseRequestDescriptor.create<IcsEventsRequestType>(IcsEventsRequest),
-    deleteAllData: FirebaseFunctionDescriptor.create<DeleteAllDataFunctionType>(DeleteAllDataFunction),
+    verifyRecaptcha: FirebaseDescriptor._function<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
+    icsEvents: FirebaseDescriptor.request<IcsEventsRequestType>(IcsEventsRequest),
+    deleteAllData: FirebaseDescriptor._function<DeleteAllDataFunctionType>(DeleteAllDataFunction),
     event: {
-        get: FirebaseFunctionDescriptor.create<EventGetFunctionType>(EventGetFunction),
-        edit: FirebaseFunctionDescriptor.create<EventEditFunctionType>(EventEditFunction)
+        get: FirebaseDescriptor._function<EventGetFunctionType>(EventGetFunction),
+        edit: FirebaseDescriptor._function<EventEditFunctionType>(EventEditFunction)
     },
     report: {
-        get: FirebaseFunctionDescriptor.create<ReportGetFunctionType>(ReportGetFunction),
-        getAll: FirebaseFunctionDescriptor.create<ReportGetAllFunctionType>(ReportGetAllFunction),
-        edit: FirebaseFunctionDescriptor.create<ReportEditFunctionType>(ReportEditFunction)
+        get: FirebaseDescriptor._function<ReportGetFunctionType>(ReportGetFunction),
+        getAll: FirebaseDescriptor._function<ReportGetAllFunctionType>(ReportGetAllFunction),
+        edit: FirebaseDescriptor._function<ReportEditFunctionType>(ReportEditFunction)
     },
     occupancy: {
-        getAll: FirebaseFunctionDescriptor.create<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
-        edit: FirebaseFunctionDescriptor.create<OccupancyEditFunctionType>(OccupancyEditFunction)
+        getAll: FirebaseDescriptor._function<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
+        edit: FirebaseDescriptor._function<OccupancyEditFunctionType>(OccupancyEditFunction)
     },
     criticismSuggestion: {
-        getAll: FirebaseFunctionDescriptor.create<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),
-        edit: FirebaseFunctionDescriptor.create<CriticismSuggestionEditFunctionType>(CriticismSuggestionEditFunction)
+        getAll: FirebaseDescriptor._function<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),
+        edit: FirebaseDescriptor._function<CriticismSuggestionEditFunctionType>(CriticismSuggestionEditFunction)
     },
     bfvData: {
-        gameInfo: FirebaseFunctionDescriptor.create<GameInfoGetFunctionType>(GameInfoGetFunction),
-        teamSquad: FirebaseFunctionDescriptor.create<TeamSquadGetFunctionType>(TeamSquadGetFunction)
+        gameInfo: FirebaseDescriptor._function<GameInfoGetFunctionType>(GameInfoGetFunction),
+        teamSquad: FirebaseDescriptor._function<TeamSquadGetFunctionType>(TeamSquadGetFunction)
     },
     sendMail: {
-        contact: FirebaseFunctionDescriptor.create<SendMailContactFunctionType>(SendMailContactFunction)
+        contact: FirebaseDescriptor._function<SendMailContactFunctionType>(SendMailContactFunction)
     },
     user: {
-        requestAccess: FirebaseFunctionDescriptor.create<UserRequestAccessFunctionType>(UserRequestAccessFunction),
-        getAll: FirebaseFunctionDescriptor.create<UserGetAllFunctionType>(UserGetAllFunction),
-        checkRoles: FirebaseFunctionDescriptor.create<UserCheckRolesFunctionType>(UserCheckRolesFunction),
-        handleAccessRequest: FirebaseFunctionDescriptor.create<UserHandleAccessRequestFunctionType>(UserHandleAccessRequestFunction),
-        editRoles: FirebaseFunctionDescriptor.create<UserEditRolesFunctionType>(UserEditRolesFunction)
+        requestAccess: FirebaseDescriptor._function<UserRequestAccessFunctionType>(UserRequestAccessFunction),
+        getAll: FirebaseDescriptor._function<UserGetAllFunctionType>(UserGetAllFunction),
+        checkRoles: FirebaseDescriptor._function<UserCheckRolesFunctionType>(UserCheckRolesFunction),
+        handleAccessRequest: FirebaseDescriptor._function<UserHandleAccessRequestFunctionType>(UserHandleAccessRequestFunction),
+        editRoles: FirebaseDescriptor._function<UserEditRolesFunctionType>(UserEditRolesFunction)
     }
 } satisfies FirebaseFunctions;

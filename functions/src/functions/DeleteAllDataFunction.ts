@@ -1,26 +1,28 @@
-import { type DatabaseType, type FirebaseFunction, HttpsError, ParameterContainer, ParameterParser, type ILogger, type FunctionType } from 'firebase-function';
-import { getPrivateKeys } from '../privateKeys';
+import { type DatabaseType, type IFirebaseFunction, HttpsError, ParameterParser, type ILogger, type IFunctionType, IDatabaseReference, IParameterContainer } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { DatabaseScheme } from '../DatabaseScheme';
 
-export class DeleteAllDataFunction implements FirebaseFunction<DeleteAllDataFunctionType> {
-    public readonly parameters: FunctionType.Parameters<DeleteAllDataFunctionType> & { databaseType: DatabaseType };
+export class DeleteAllDataFunction implements IFirebaseFunction<DeleteAllDataFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<DeleteAllDataFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('DeleteAllDataFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<DeleteAllDataFunctionType>>({}, this.logger.nextIndent);
-        parameterParser.parseParameters(parameterContainer);
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('DeleteAllDataFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<DeleteAllDataFunctionType>>({}, this.logger.nextIndent);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<DeleteAllDataFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<DeleteAllDataFunctionType>> {
         this.logger.log('DeleteAllDataFunction.executeFunction', {}, 'info');
         if (this.parameters.databaseType.value !== 'testing')
             throw HttpsError('failed-precondition', 'Function can only be called for testing.', this.logger);
-        const reference = DatabaseScheme.reference(this.parameters.databaseType);
-        await reference.remove();
+        await this.databaseReference.remove();
     }
 }
 
-export type DeleteAllDataFunctionType = FunctionType<Record<string, never>, void>;
+export type DeleteAllDataFunctionType = IFunctionType<Record<string, never>, void>;

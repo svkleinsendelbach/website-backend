@@ -1,34 +1,36 @@
-import { type DatabaseType, type FirebaseFunction, type ILogger, ParameterBuilder, ParameterContainer, ParameterParser, type FunctionType, HttpsError, CryptedScheme, DatabaseReference } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, Guid, ParameterBuilder, ParameterParser, type IFunctionType, HttpsError, CryptedScheme, IParameterContainer, IDatabaseReference, GuardParameterBuilder, NullableParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
-import { getPrivateKeys } from '../privateKeys';
 import { EditType } from '../types/EditType';
-import { Guid } from '../types/Guid';
 import { Occupancy } from '../types/Occupancy';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
 import { Discord } from '../Discord';
 
-export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunctionType> {
-    public readonly parameters: FunctionType.Parameters<OccupancyEditFunctionType> & { databaseType: DatabaseType };
+export class OccupancyEditFunction implements IFirebaseFunction<OccupancyEditFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<OccupancyEditFunctionType> & { databaseType: DatabaseType };
 
-    public constructor(data: Record<string, unknown> & { databaseType: DatabaseType }, private readonly auth: AuthData | undefined, private readonly logger: ILogger) {
-        this.logger.log('OccupancyEditFunction.constructor', { data: data, auth: auth }, 'notice');
-        const parameterContainer = new ParameterContainer(data, getPrivateKeys, this.logger.nextIndent);
-        const parameterParser = new ParameterParser<FunctionType.Parameters<OccupancyEditFunctionType>>(
+    public constructor(
+        parameterContainer: IParameterContainer, 
+        private readonly auth: AuthData | null, 
+        private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
+        private readonly logger: ILogger
+    ) {
+        this.logger.log('OccupancyEditFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<OccupancyEditFunctionType>>(
             {
-                editType: ParameterBuilder.guard('string', EditType.typeGuard),
-                occupancyId: ParameterBuilder.build('string', Guid.fromString),
-                occupancy: ParameterBuilder.nullable(ParameterBuilder.build('object', Occupancy.fromObject))
+                editType: new GuardParameterBuilder('string', EditType.typeGuard),
+                occupancyId: new ParameterBuilder('string', Guid.fromString),
+                occupancy: new NullableParameterBuilder(new ParameterBuilder('object', Occupancy.fromObject))
             },
             this.logger.nextIndent
         );
-        parameterParser.parseParameters(parameterContainer);
+        parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async executeFunction(): Promise<FunctionType.ReturnType<OccupancyEditFunctionType>> {
+    public async execute(): Promise<IFunctionType.ReturnType<OccupancyEditFunctionType>> {
         this.logger.log('OccupancyEditFunction.executeFunction', {}, 'info');
-        await checkUserRoles(this.auth, 'occupancyManager', this.parameters.databaseType, this.logger.nextIndent);
+        await checkUserRoles(this.auth, 'occupancyManager', this.databaseReference, this.logger.nextIndent);
         switch (this.parameters.editType) {
             case 'add':
                 return await this.addOccupancy();
@@ -39,8 +41,8 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
         }
     }
 
-    private get reference(): DatabaseReference<CryptedScheme<Omit<Occupancy.Flatten, 'id'>>> {
-        return DatabaseScheme.reference(this.parameters.databaseType).child('occupancies').child(this.parameters.occupancyId.guidString);
+    private get reference(): IDatabaseReference<CryptedScheme<Omit<Occupancy.Flatten, 'id'>>> {
+        return this.databaseReference.child('occupancies').child(this.parameters.occupancyId.guidString);
     }
 
     private async getDatabaseOccupancy(): Promise<Omit<Occupancy, 'id'> | null> {
@@ -87,7 +89,7 @@ export class OccupancyEditFunction implements FirebaseFunction<OccupancyEditFunc
     }
 }
 
-export type OccupancyEditFunctionType = FunctionType<{
+export type OccupancyEditFunctionType = IFunctionType<{
     editType: EditType;
     occupancyId: Guid;
     occupancy: Omit<Occupancy, 'id' | 'discordMessageId'> | null;

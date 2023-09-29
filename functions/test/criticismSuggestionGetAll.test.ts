@@ -1,4 +1,4 @@
-import { Guid } from '../src/types/Guid';
+import { Guid } from 'firebase-function';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { CriticismSuggestion } from '../src/types/CriticismSuggestion';
 

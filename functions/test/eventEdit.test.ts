@@ -1,5 +1,5 @@
 import { expect } from 'firebase-function/lib/src/testUtils';
-import { Guid } from '../src/types/Guid';
+import { Guid } from 'firebase-function';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { UtcDate } from 'firebase-function';
 

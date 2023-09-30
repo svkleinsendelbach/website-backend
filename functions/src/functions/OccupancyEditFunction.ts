@@ -4,7 +4,6 @@ import { EditType } from '../types/EditType';
 import { Occupancy } from '../types/Occupancy';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { Discord } from '../Discord';
 
 export class OccupancyEditFunction implements IFirebaseFunction<OccupancyEditFunctionType> {
     public readonly parameters: IFunctionType.Parameters<OccupancyEditFunctionType> & { databaseType: DatabaseType };
@@ -58,11 +57,7 @@ export class OccupancyEditFunction implements IFirebaseFunction<OccupancyEditFun
         const databaseOccupancy = await this.getDatabaseOccupancy();
         if (databaseOccupancy)
             throw HttpsError('invalid-argument', 'Couldn\'t add existing occupancy.', this.logger);
-        const occupancy = this.parameters.occupancy;
-        const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.add('occupancies', Occupancy.discordEmbed(occupancy));
-        }, null);
-        await this.reference.set(Occupancy.flatten(Occupancy.addDiscordMessageId(occupancy, discordMessageId)), 'encrypt');
+        await this.reference.set(Occupancy.flatten(this.parameters.occupancy), 'encrypt');
     }
 
     private async changeOccupancy() {
@@ -71,20 +66,13 @@ export class OccupancyEditFunction implements IFirebaseFunction<OccupancyEditFun
         const databaseOccupancy = await this.getDatabaseOccupancy();
         if (!databaseOccupancy)
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing occupancy.', this.logger);
-        const occupancy = Occupancy.addDiscordMessageId(this.parameters.occupancy, databaseOccupancy.discordMessageId);
-        void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.change('occupancies', occupancy.discordMessageId, Occupancy.discordEmbed(occupancy));
-        });
-        await this.reference.set(Occupancy.flatten(occupancy), 'encrypt');
+        await this.reference.set(Occupancy.flatten(this.parameters.occupancy), 'encrypt');
     }
     
     private async removeOccupancy() {
         const databaseOccupancy = await this.getDatabaseOccupancy();
         if (!databaseOccupancy)
             return;
-        void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.remove('occupancies', databaseOccupancy.discordMessageId);
-        });
         await this.reference.remove();
     }
 }

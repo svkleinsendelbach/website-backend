@@ -62,7 +62,7 @@ export class EventEditFunction implements IFirebaseFunction<EventEditFunctionTyp
             throw HttpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
         const event = this.parameters.event;
         const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.add('events', Event.discordEmbed(event, this.parameters.groupId));
+            return await discord.add('events', { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
         }, null);
         await this.reference.set(Event.flatten(Event.addDiscordMessageId(event, discordMessageId)), 'encrypt');
     }
@@ -75,7 +75,7 @@ export class EventEditFunction implements IFirebaseFunction<EventEditFunctionTyp
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
         const event = Event.addDiscordMessageId(this.parameters.event, databaseEvent.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.change('events', event.discordMessageId, Event.discordEmbed(event, this.parameters.groupId));
+            await discord.change('events', event.discordMessageId, { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
         });
         await this.reference.set(Event.flatten(event), 'encrypt');
     }

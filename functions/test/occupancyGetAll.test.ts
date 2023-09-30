@@ -28,10 +28,7 @@ describe('occupancyGetAll', () => {
             }
         };
         const occupancyId = Guid.newGuid();
-        await firebaseApp.database.child('occupancies').child(occupancyId.guidString).set({
-            ...occupancy,
-            discordMessageId: null
-        }, 'encrypt');
+        await firebaseApp.database.child('occupancies').child(occupancyId.guidString).set(occupancy, 'encrypt');
         return {
             ...occupancy,
             id: occupancyId.guidString,

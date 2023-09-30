@@ -29,8 +29,7 @@ describe('occupancyEdit', () => {
             title: 'title',
             start: UtcDate.now.encoded,
             end: UtcDate.now.advanced({ minute: 30 }).encoded,
-            recurring: null,
-            discordMessageId: null
+            recurring: null
         }, 'encrypt');
         const result = await firebaseApp.functions.function('occupancy').function('edit').call({
             editType: 'remove',
@@ -81,8 +80,7 @@ describe('occupancyEdit', () => {
                 untilIncluding: date.advanced({ minute: 60 }).encoded,
                 repeatEvery: 'year',
                 excludingDates: [date.advanced({ minute: 45 }).encoded]
-            },
-            discordMessageId: null
+            }
         });
     });
 
@@ -98,8 +96,7 @@ describe('occupancyEdit', () => {
                 untilIncluding: date1.advanced({ minute: 60 }).encoded,
                 repeatEvery: 'year',
                 excludingDates: [date1.advanced({ minute: 45 }).encoded]
-            },
-            discordMessageId: null
+            }
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('occupancy').function('edit').call({
@@ -167,8 +164,7 @@ describe('occupancyEdit', () => {
             title: 'title-1',
             start: date1.encoded,
             end: date1.advanced({ minute: 30 }).encoded,
-            recurring: null,
-            discordMessageId: null
+            recurring: null
         }, 'encrypt');
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('occupancy').function('edit').call({
@@ -196,8 +192,7 @@ describe('occupancyEdit', () => {
                 untilIncluding: date2.advanced({ minute: 60 }).encoded,
                 repeatEvery: 'year',
                 excludingDates: [date2.advanced({ minute: 45 }).encoded]
-            },
-            discordMessageId: null
+            }
         });
     });
 });

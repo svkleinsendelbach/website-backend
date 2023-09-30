@@ -1,5 +1,4 @@
 import { HttpsError, ILogger, UtcDate, Guid } from "firebase-function";
-import { EmbedBuilder } from "discord.js";
 
 export type Occupancy = {
     id: Guid;
@@ -8,7 +7,6 @@ export type Occupancy = {
     start: UtcDate;
     end: UtcDate;
     recurring: Occupancy.Recurring | null;
-    discordMessageId: string | null;
 };
 
 export namespace Occupancy {
@@ -19,6 +17,12 @@ export namespace Occupancy {
             'a-field': 'A-Platz',
             'b-field': 'B-Platz',
             'sportshome': 'Sportheim'
+        };
+
+        export const color: Record<Location, `#${string}`> = {
+            'a-field': '#ad2121',
+            'b-field': '#e3bc08',
+            'sportshome': '#1e90ff'
         };
 
         export function typeGuard(value: string): value is Occupancy.Location {
@@ -97,6 +101,14 @@ export namespace Occupancy {
                 untilIncluding: UtcDate.decode(recurring.untilIncluding)
             };
         }
+
+        export function advancement(type: Type, times: number): Record<'day' | 'month' | 'year', number> {
+            return {
+                day: type === 'day' ? times : type === 'week' ? 7 * times : 0,
+                month: type === 'month' ? times : 0,
+                year: type === 'year' ? times : 0
+            };
+        }
     }
 
     export function fromObject(value: object | null, logger: ILogger): Omit<Occupancy, 'id' | 'discordMessageId'> {
@@ -136,7 +148,6 @@ export namespace Occupancy {
         start: string;
         end: string;
         recurring: Occupancy.Recurring.Flatten | null;
-        discordMessageId: string | null;
     };
 
     export function flatten(occupancy: Occupancy): Occupancy.Flatten;
@@ -150,8 +161,7 @@ export namespace Occupancy {
                 ? null
                 : Occupancy.Recurring.flatten(occupancy.recurring),
             start: occupancy.start.encoded,
-            title: occupancy.title,
-            discordMessageId: occupancy.discordMessageId
+            title: occupancy.title
         };
     }
 
@@ -166,29 +176,7 @@ export namespace Occupancy {
                 ? null
                 : Occupancy.Recurring.concrete(occupancy.recurring),
             start: UtcDate.decode(occupancy.start),
-            title: occupancy.title,
-            discordMessageId: occupancy.discordMessageId
+            title: occupancy.title
         };
-    }
-
-    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'discordMessageId'>, discordMessageId: string | null): Occupancy;
-    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'id' | 'discordMessageId'>, discordMessageId: string | null): Omit<Occupancy, 'id'>;
-    export function addDiscordMessageId(occupancy: Omit<Occupancy, 'discordMessageId'> | Omit<Occupancy, 'id' | 'discordMessageId'>, discordMessageId: string | null): Occupancy | Omit<Occupancy, 'id'> {
-        return {
-            ...occupancy,
-            discordMessageId: discordMessageId
-        };
-    }
-
-    export function discordEmbed(occupancy: Omit<Occupancy, 'id' | 'discordMessageId'>): EmbedBuilder {
-        const dateDescription = `${occupancy.start.description('de-DE', 'Europe/Berlin')} - ${occupancy.end.description('de-DE', 'Europe/Berlin')}`;
-        return new EmbedBuilder()
-            .setTitle(`${occupancy.title} | ${Occupancy.Location.title[occupancy.location]}`)
-            .setDescription(
-                occupancy.recurring
-                    ? `${dateDescription} ${Recurring.Type.perTitle[occupancy.recurring.repeatEvery]} bis ${occupancy.recurring.untilIncluding.description('de-DE', 'Europe/Berlin')}`
-                    : dateDescription
-            )
-            .setTimestamp(occupancy.start.toDate);
     }
 }

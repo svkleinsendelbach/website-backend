@@ -61,11 +61,11 @@ export class SendMailContactFunction implements IFirebaseFunction<SendMailContac
                 `
         };
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.add('contactRequest', 
-                new EmbedBuilder()
+            await discord.add('contactRequest', {
+                embeds: [new EmbedBuilder()
                     .setTitle(`${this.parameters.senderName} | ${this.parameters.senderAddress}`)
-                    .setDescription(`An: ${this.parameters.receiverName}, ${this.parameters.receiverAddress}\n\n${this.parameters.message}`)
-            );
+                    .setDescription(`An: ${this.parameters.receiverName}, ${this.parameters.receiverAddress}\n\n${this.parameters.message}`)]
+            });
         });
         return await new Promise<{ success: boolean; message: string }>(resolve => {
             this.transporter.sendMail(mailOptions, (error, info) => {

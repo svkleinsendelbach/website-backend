@@ -11,6 +11,7 @@ import { ReportGetFunction, type ReportGetFunctionType } from './functions/Repor
 import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 
+import { OccupancyDiscordSchedule } from './functions/OccupancyDiscordSchedule';
 import { OccupancyGetAllFunction, type OccupancyGetAllFunctionType } from './functions/OccupancyGetAllFunction';
 import { OccupancyEditFunction, type OccupancyEditFunctionType } from './functions/OccupancyEditFunction';
 
@@ -43,7 +44,8 @@ export const firebaseFunctions = {
     },
     occupancy: {
         getAll: FirebaseDescriptor._function<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
-        edit: FirebaseDescriptor._function<OccupancyEditFunctionType>(OccupancyEditFunction)
+        edit: FirebaseDescriptor._function<OccupancyEditFunctionType>(OccupancyEditFunction),
+        discordSchedule: FirebaseDescriptor.schedule('0 9 * * MON', OccupancyDiscordSchedule)
     },
     criticismSuggestion: {
         getAll: FirebaseDescriptor._function<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),

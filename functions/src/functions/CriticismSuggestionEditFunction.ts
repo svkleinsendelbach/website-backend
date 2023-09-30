@@ -45,7 +45,7 @@ export class CriticismSuggestionEditFunction implements IFirebaseFunction<Critic
                     throw HttpsError('invalid-argument', 'Couldn\'t add existing criticism suggestion.', this.logger);
                 const criticismSuggestion = this.parameters.criticismSuggestion;
                 void Discord.execute(this.parameters.databaseType, async discord => {                    
-                    await discord.add('criticismSuggestions', CriticismSuggestion.discordEmbed(criticismSuggestion));
+                    await discord.add('criticismSuggestions', { embeds: [CriticismSuggestion.discordEmbed(criticismSuggestion)] });
                 });
             }
             if (this.parameters.editType === 'change' && !snapshot.exists)

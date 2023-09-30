@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder, Events, GatewayIntentBits, Message, TextBasedChannel } from "discord.js";
+import { Client, Events, GatewayIntentBits, Message, MessageCreateOptions, MessageEditOptions, MessagePayload, TextBasedChannel } from "discord.js";
 import { discordKeys } from "./privateKeys";
 import { DatabaseType } from "firebase-function";
 
@@ -49,30 +49,26 @@ export class Discord {
         }
     }
 
-    public async add(channelType: keyof typeof discordKeys.channelIds, embed: EmbedBuilder): Promise<string | null> {
+    public async add(channelType: keyof typeof discordKeys.channelIds, content: string | MessagePayload | MessageCreateOptions): Promise<string | null> {
         const channel = await this.getChannel(channelType);
         if (!channel)
             return null;
         try {
-            const message = await channel.send({
-                embeds: [embed]
-            });
+            const message = await channel.send(content);
             return message.id;
         } catch {
             return null;
         }
     }
 
-    public async change(channelType: keyof typeof discordKeys.channelIds, messageId: string | null, embed: EmbedBuilder) {
+    public async change(channelType: keyof typeof discordKeys.channelIds, messageId: string | null, content: string | MessagePayload | MessageEditOptions) {
         if (!messageId)
             return;
         const message = await this.getMessage(channelType, messageId);
         if (!message)
             return;
         try {
-            await message.edit({
-                embeds: [embed]
-            });
+            await message.edit(content);
         } catch {}
     }
 

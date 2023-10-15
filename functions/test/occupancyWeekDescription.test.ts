@@ -2,10 +2,8 @@ import { MockDatabaseReference } from "firebase-function/lib/src/testUtils";
 import { DatabaseScheme } from "../src/DatabaseScheme";
 import { OccupancyWeekDescription } from "../src/types/OccupancyWeekDescription";
 import { expect } from "chai";
-import { CryptedScheme, DatabaseType, UtcDate } from "firebase-function";
+import { CryptedScheme, UtcDate } from "firebase-function";
 import { Occupancy } from "../src/types/Occupancy";
-import { EmbedBuilder } from "discord.js";
-import { Discord } from "../src/Discord";
 
 describe('occupancyWeekDescription', () => {
     it('no occupancies', async () => {
@@ -140,23 +138,6 @@ describe('occupancyWeekDescription', () => {
             'a-field': `${occupancyWeekDescription.dateDescription(occupancies['a'])} | ${occupancies['a'].title}\n${occupancyWeekDescription.dateDescription(occupancies['b'])} | ${occupancies['b'].title}\n${occupancyWeekDescription.dateDescription(occupancies['c'])} | ${occupancies['c'].title}\n${occupancyWeekDescription.dateDescription(occupancies['d'])} | ${occupancies['d'].title}\n\n\n` + 
                 `Überschneidungen:\n${occupancyWeekDescription.dayDescription(occupancies['b'].start)} | ${occupancies['a'].title} - ${occupancies['b'].title}\n${occupancyWeekDescription.dayDescription(occupancies['c'].start)} | ${occupancies['a'].title} - ${occupancies['c'].title}\n${occupancyWeekDescription.dayDescription(occupancies['d'].start)} | ${occupancies['c'].title} - ${occupancies['d'].title}`,
             'b-field': 'Keine Belegungen'
-        });
-
-
-        const descriptions = occupancyWeekDescription.descriptions;
-        const embeds: EmbedBuilder[] = [];
-        for (const [location, description] of Object.entries(descriptions) as [Occupancy.Location, string][]) {
-            const embed = new EmbedBuilder()
-                .setTitle(Occupancy.Location.title[location])
-                .setDescription(description)
-                .setColor(Occupancy.Location.color[location]);
-            embeds.push(embed);
-        }
-        await Discord.execute(new DatabaseType('release'), async discord => {
-            await discord.add('occupancies', {
-                content: `Woche ${occupancyWeekDescription.weekDescription}`,
-                embeds: embeds
-            });
         });
     });
 });

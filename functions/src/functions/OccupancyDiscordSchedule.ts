@@ -4,6 +4,7 @@ import { Occupancy } from '../types/Occupancy';
 import { EmbedBuilder } from 'discord.js';
 import { Discord } from '../Discord';
 import { OccupancyWeekDescription } from '../types/OccupancyWeekDescription';
+import { discordKeys } from '../privateKeys';
 
 export class OccupancyDiscordSchedule implements IFirebaseSchedule {
     public constructor(
@@ -26,7 +27,7 @@ export class OccupancyDiscordSchedule implements IFirebaseSchedule {
             embeds.push(embed);
         }
         await Discord.execute(this.databaseType, async discord => {
-            await discord.add('occupancies', {
+            await discord.add(discordKeys.channelIds.occupancies, {
                 content: `Woche ${occupancyWeekDescription.weekDescription}`,
                 embeds: embeds
             });

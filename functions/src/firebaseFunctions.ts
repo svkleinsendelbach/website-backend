@@ -21,7 +21,7 @@ import { CriticismSuggestionEditFunction, type CriticismSuggestionEditFunctionTy
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
 
-import { SendMailContactFunction, type SendMailContactFunctionType } from './functions/SendMailContactFunction';
+import { ContactFunction, type ContactFunctionType } from './functions/ContactFunction';
 
 import { UserRequestAccessFunction, type UserRequestAccessFunctionType } from './functions/UserRequestAccessFunction';
 import { UserGetAllFunction, type UserGetAllFunctionType } from './functions/UserGetAllFunction';
@@ -33,6 +33,7 @@ export const firebaseFunctions = {
     verifyRecaptcha: FirebaseDescriptor._function<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
     icsEvents: FirebaseDescriptor.request<IcsEventsRequestType>(IcsEventsRequest),
     deleteAllData: FirebaseDescriptor._function<DeleteAllDataFunctionType>(DeleteAllDataFunction),
+    contact: FirebaseDescriptor._function<ContactFunctionType>(ContactFunction),
     event: {
         get: FirebaseDescriptor._function<EventGetFunctionType>(EventGetFunction),
         edit: FirebaseDescriptor._function<EventEditFunctionType>(EventEditFunction)
@@ -54,9 +55,6 @@ export const firebaseFunctions = {
     bfvData: {
         gameInfo: FirebaseDescriptor._function<GameInfoGetFunctionType>(GameInfoGetFunction),
         teamSquad: FirebaseDescriptor._function<TeamSquadGetFunctionType>(TeamSquadGetFunction)
-    },
-    sendMail: {
-        contact: FirebaseDescriptor._function<SendMailContactFunctionType>(SendMailContactFunction)
     },
     user: {
         requestAccess: FirebaseDescriptor._function<UserRequestAccessFunctionType>(UserRequestAccessFunction),

@@ -5,6 +5,7 @@ import { DatabaseScheme } from '../DatabaseScheme';
 import { EditType } from '../types/EditType';
 import { Event, EventGroupId } from '../types/Event';
 import { Discord } from '../Discord';
+import { discordKeys } from '../privateKeys';
 
 export class EventEditFunction implements IFirebaseFunction<EventEditFunctionType> {
     public readonly parameters: IFunctionType.Parameters<EventEditFunctionType> & { databaseType: DatabaseType };
@@ -62,7 +63,7 @@ export class EventEditFunction implements IFirebaseFunction<EventEditFunctionTyp
             throw HttpsError('invalid-argument', 'Couldn\'t add existing event.', this.logger);
         const event = this.parameters.event;
         const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.add('events', { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
+            return await discord.add(discordKeys.channelIds.events, { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
         }, null);
         await this.reference.set(Event.flatten(Event.addDiscordMessageId(event, discordMessageId)), 'encrypt');
     }
@@ -75,7 +76,7 @@ export class EventEditFunction implements IFirebaseFunction<EventEditFunctionTyp
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing event.', this.logger);
         const event = Event.addDiscordMessageId(this.parameters.event, databaseEvent.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.change('events', event.discordMessageId, { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
+            await discord.change(discordKeys.channelIds.events, event.discordMessageId, { embeds: [Event.discordEmbed(event, this.parameters.groupId)] });
         });
         await this.reference.set(Event.flatten(event), 'encrypt');
     }
@@ -96,7 +97,7 @@ export class EventEditFunction implements IFirebaseFunction<EventEditFunctionTyp
         if (!databaseEvent)
             return;
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.remove('events', databaseEvent.discordMessageId);
+            await discord.remove(discordKeys.channelIds.events, databaseEvent.discordMessageId);
         });
         await this.reference.remove();
     }

@@ -5,6 +5,7 @@ import { CriticismSuggestion } from '../types/CriticismSuggestion';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
 import { Discord } from '../Discord';
+import { discordKeys } from '../privateKeys';
 
 export class CriticismSuggestionEditFunction implements IFirebaseFunction<CriticismSuggestionEditFunctionType> {
     public readonly parameters: IFunctionType.Parameters<CriticismSuggestionEditFunctionType> & { databaseType: DatabaseType };
@@ -45,7 +46,7 @@ export class CriticismSuggestionEditFunction implements IFirebaseFunction<Critic
                     throw HttpsError('invalid-argument', 'Couldn\'t add existing criticism suggestion.', this.logger);
                 const criticismSuggestion = this.parameters.criticismSuggestion;
                 void Discord.execute(this.parameters.databaseType, async discord => {                    
-                    await discord.add('criticismSuggestions', { embeds: [CriticismSuggestion.discordEmbed(criticismSuggestion)] });
+                    await discord.add(discordKeys.channelIds.criticismSuggestions, { embeds: [CriticismSuggestion.discordEmbed(criticismSuggestion)] });
                 });
             }
             if (this.parameters.editType === 'change' && !snapshot.exists)

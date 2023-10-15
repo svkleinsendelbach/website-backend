@@ -5,6 +5,7 @@ import { DatabaseScheme } from '../DatabaseScheme';
 import { EditType } from '../types/EditType';
 import { Report, ReportGroupId } from '../types/Report';
 import { Discord } from '../Discord';
+import { discordKeys } from '../privateKeys';
 
 export class ReportEditFunction implements IFirebaseFunction<ReportEditFunctionType> {
     public readonly parameters: IFunctionType.Parameters<ReportEditFunctionType> & { databaseType: DatabaseType };
@@ -62,7 +63,7 @@ export class ReportEditFunction implements IFirebaseFunction<ReportEditFunctionT
             throw HttpsError('invalid-argument', 'Couldn\'t add existing report.', this.logger);
         const report = this.parameters.report;
         const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.add('reports', { embeds: [Report.discordEmbed(report, this.parameters.groupId)] });
+            return await discord.add(discordKeys.channelIds.reports, { embeds: [Report.discordEmbed(report, this.parameters.groupId)] });
         }, null);
         await this.reference.set(Report.flatten(Report.addDiscordMessageId(report, discordMessageId)), 'encrypt');
     }
@@ -75,7 +76,7 @@ export class ReportEditFunction implements IFirebaseFunction<ReportEditFunctionT
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing report.', this.logger);
         const report = Report.addDiscordMessageId(this.parameters.report, databaseReport.discordMessageId);
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.change('reports', report.discordMessageId, { embeds: [Report.discordEmbed(report, this.parameters.groupId)] });
+            await discord.change(discordKeys.channelIds.reports, report.discordMessageId, { embeds: [Report.discordEmbed(report, this.parameters.groupId)] });
         });
         await this.reference.set(Report.flatten(report), 'encrypt');
     }
@@ -96,7 +97,7 @@ export class ReportEditFunction implements IFirebaseFunction<ReportEditFunctionT
         if (!databaseReport)
             return;
         void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.remove('reports', databaseReport.discordMessageId);
+            await discord.remove(discordKeys.channelIds.reports, databaseReport.discordMessageId);
         });
         await this.reference.remove();
     }

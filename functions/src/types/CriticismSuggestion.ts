@@ -6,7 +6,6 @@ export type CriticismSuggestion = {
     type: CriticismSuggestion.Type;
     title: string;
     description: string;
-    contactEmail: string;
     workedOff: boolean;
 };
 
@@ -39,9 +38,6 @@ export namespace CriticismSuggestion {
         if (!('description' in value) || typeof value.description !== 'string')
             throw HttpsError('internal', 'Couldn\'t get description for criticism suggestion.', logger);
 
-        if (!('contactEmail' in value) || typeof value.contactEmail !== 'string')
-            throw HttpsError('internal', 'Couldn\'t get contact email for criticism suggestion.', logger);
-
         if (!('workedOff' in value) || typeof value.workedOff !== 'boolean')
             throw HttpsError('internal', 'Couldn\'t get worked off for criticism suggestion.', logger);
 
@@ -49,7 +45,6 @@ export namespace CriticismSuggestion {
             type: value.type,
             title: value.title,
             description: value.description,
-            contactEmail: value.contactEmail,
             workedOff: value.workedOff
         };
     }
@@ -59,7 +54,6 @@ export namespace CriticismSuggestion {
         type: CriticismSuggestion.Type;
         title: string;
         description: string;
-        contactEmail: string;
         workedOff: boolean;
     };
 
@@ -71,7 +65,6 @@ export namespace CriticismSuggestion {
             type: criticismSuggestion.type,
             title: criticismSuggestion.title,
             description: criticismSuggestion.description,
-            contactEmail: criticismSuggestion.contactEmail,
             workedOff: criticismSuggestion.workedOff
         };
     }
@@ -84,7 +77,6 @@ export namespace CriticismSuggestion {
             type: criticismSuggestion.type,
             title: criticismSuggestion.title,
             description: criticismSuggestion.description,
-            contactEmail: criticismSuggestion.contactEmail,
             workedOff: criticismSuggestion.workedOff
         };
     }
@@ -93,6 +85,6 @@ export namespace CriticismSuggestion {
         return new EmbedBuilder()
             .setColor(criticismSuggestion.type === 'criticism' ? 0xAD2121 : 0x1E90FF)
             .setTitle(`${Type.title[criticismSuggestion.type]} | ${criticismSuggestion.title}`)
-            .setDescription(`${criticismSuggestion.description}\n\nKontakt: ${criticismSuggestion.contactEmail}`);
+            .setDescription(criticismSuggestion.description);
     }
 }

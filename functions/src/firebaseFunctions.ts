@@ -28,6 +28,9 @@ import { UserGetAllFunction, type UserGetAllFunctionType } from './functions/Use
 import { UserCheckRolesFunction, type UserCheckRolesFunctionType } from './functions/UserCheckRolesFunction';
 import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionType } from './functions/UserHandleAccessRequestFunction';
 import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
+import { NewsletterEditFunction, type NewsletterEditFunctionType } from './functions/NewsletterEditFunction';
+import { NewsletterGetAllFunction, type NewsletterGetAllFunctionType } from './functions/NewsletterGetAllFunction';
+import { NewsletterGetFunction, type NewsletterGetFunctionType } from './functions/NewsletterGetFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseDescriptor._function<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -51,6 +54,11 @@ export const firebaseFunctions = {
     criticismSuggestion: {
         getAll: FirebaseDescriptor._function<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),
         edit: FirebaseDescriptor._function<CriticismSuggestionEditFunctionType>(CriticismSuggestionEditFunction)
+    },
+    newsletter: {
+        get: FirebaseDescriptor._function<NewsletterGetFunctionType>(NewsletterGetFunction),
+        getAll: FirebaseDescriptor._function<NewsletterGetAllFunctionType>(NewsletterGetAllFunction),
+        edit: FirebaseDescriptor._function<NewsletterEditFunctionType>(NewsletterEditFunction)        
     },
     bfvData: {
         gameInfo: FirebaseDescriptor._function<GameInfoGetFunctionType>(GameInfoGetFunction),

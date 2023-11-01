@@ -16,7 +16,6 @@ describe('criticismSuggestionGetAll', () => {
             type: Math.random() < 0.5 ? 'criticism' : 'suggestion',
             title: `title-${number}`,
             description: `description-${number}`,
-            contactEmail: `email-${number}`,
             workedOff: workedOff
         };
         const criticismSuggestionId = Guid.newGuid();

@@ -5,6 +5,7 @@ import { type Report, type ReportGroupId as ReportGroupIds } from './types/Repor
 import { User } from './types/User';
 import { Occupancy } from './types/Occupancy';
 import { CriticismSuggestion } from './types/CriticismSuggestion';
+import { Newsletter } from './types/Newsletter';
 
 export type DatabaseScheme = {
     anpfiffInfoTeamParameters: {
@@ -19,6 +20,9 @@ export type DatabaseScheme = {
         [ReportGroupId in ReportGroupIds]: {
             [ReportId in string]: CryptedScheme<Omit<Report.Flatten, 'id'>>;
         };
+    };
+    newsletter: {
+        [NewsletterId in string]: CryptedScheme<Omit<Newsletter.Flatten, 'id'>>;
     };
     occupancies: {
         [OccupancyId in string]: CryptedScheme<Omit<Occupancy.Flatten, 'id'>>;

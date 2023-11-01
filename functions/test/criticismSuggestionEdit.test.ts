@@ -27,7 +27,6 @@ describe('criticismSuggestionEdit', () => {
             type: 'criticism',
             title: 'title',
             description: 'description',
-            contactEmail: 'contactEmail',
             workedOff: false
         }, 'encrypt');
         const result = await firebaseApp.functions.function('criticismSuggestion').function('edit').call({
@@ -60,7 +59,6 @@ describe('criticismSuggestionEdit', () => {
                 type: 'criticism',
                 title: 'title',
                 description: 'description',
-                contactEmail: 'contactEmail',
                 workedOff: false
             }
         });
@@ -69,7 +67,6 @@ describe('criticismSuggestionEdit', () => {
             type: 'criticism',
             title: 'title',
             description: 'description',
-            contactEmail: 'contactEmail',
             workedOff: false
         });
     });
@@ -80,7 +77,6 @@ describe('criticismSuggestionEdit', () => {
             type: 'criticism',
             title: 'title',
             description: 'description',
-            contactEmail: 'contactEmail',
             workedOff: false
         }, 'encrypt');
         const result = await firebaseApp.functions.function('criticismSuggestion').function('edit').call({
@@ -90,7 +86,6 @@ describe('criticismSuggestionEdit', () => {
                 type: 'suggestion',
                 title: 'title-2',
                 description: 'description-2',
-                contactEmail: 'contactEmail-2',
                 workedOff: true
             }
         });
@@ -121,7 +116,6 @@ describe('criticismSuggestionEdit', () => {
                 type: 'criticism',
                 title: 'title',
                 description: 'description',
-                contactEmail: 'contactEmail',
                 workedOff: false
             }
         });
@@ -137,7 +131,6 @@ describe('criticismSuggestionEdit', () => {
             type: 'criticism',
             title: 'title',
             description: 'description',
-            contactEmail: 'contactEmail',
             workedOff: false
         }, 'encrypt');
         const result = await firebaseApp.functions.function('criticismSuggestion').function('edit').call({
@@ -147,7 +140,6 @@ describe('criticismSuggestionEdit', () => {
                 type: 'suggestion',
                 title: 'title-2',
                 description: 'description-2',
-                contactEmail: 'contactEmail-2',
                 workedOff: true
             }
         });
@@ -156,7 +148,6 @@ describe('criticismSuggestionEdit', () => {
             type: 'suggestion',
             title: 'title-2',
             description: 'description-2',
-            contactEmail: 'contactEmail-2',
             workedOff: true
         });
     });

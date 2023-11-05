@@ -10,7 +10,6 @@ export type Newsletter = {
     titlePage: {
         title: string;
         description: string;
-        imageSrc: string;
         month: Newsletter.Month;
         year: number;
     };
@@ -47,9 +46,6 @@ export namespace Newsletter {
 
         if (!('description' in value.titlePage) || typeof value.titlePage.description !== 'string')
             throw HttpsError('internal', 'Couldn\'t get description for newsletter title page.', logger);
-
-        if (!('imageSrc' in value.titlePage) || typeof value.titlePage.imageSrc !== 'string')
-            throw HttpsError('internal', 'Couldn\'t get imageSrc for newsletter title page.', logger);
 
         if (!('month' in value.titlePage) || typeof value.titlePage.month !== 'string' || !Month.typeGuard(value.titlePage.month))
             throw HttpsError('internal', 'Couldn\'t get month for newsletter title page.', logger);
@@ -116,7 +112,6 @@ export namespace Newsletter {
             titlePage: {
                 title: value.titlePage.title,
                 description: value.titlePage.description,
-                imageSrc: value.titlePage.imageSrc,
                 month: value.titlePage.month,
                 year: value.titlePage.year
             },
@@ -142,7 +137,6 @@ export namespace Newsletter {
         titlePage: {
             title: string;
             description: string;
-            imageSrc: string;
             month: Newsletter.Month;
             year: number;
         };

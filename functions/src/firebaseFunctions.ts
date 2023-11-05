@@ -31,6 +31,9 @@ import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functio
 import { NewsletterEditFunction, type NewsletterEditFunctionType } from './functions/NewsletterEditFunction';
 import { NewsletterGetAllFunction, type NewsletterGetAllFunctionType } from './functions/NewsletterGetAllFunction';
 import { NewsletterGetFunction, type NewsletterGetFunctionType } from './functions/NewsletterGetFunction';
+import { NewsletterSubscriptionGetAllFunction, type NewsletterSubscriptionGetAllFunctionType } from './functions/NewsletterSubscriptionGetAllFunction';
+import { NewsletterSubscriptionSubscribeFunction, type NewsletterSubscriptionSubscribeFunctionType } from './functions/NewsletterSubscriptionSubscribeFunction';
+import { NewsletterSubscriptionUnsubscribeFunction, type NewsletterSubscriptionUnsubscribeFunctionType } from './functions/NewsletterSubscriptionUnsubscribeFunction';
 
 export const firebaseFunctions = {
     verifyRecaptcha: FirebaseDescriptor._function<VerifyRecaptchaFunctionType>(VerifyRecaptchaFunction),
@@ -58,7 +61,12 @@ export const firebaseFunctions = {
     newsletter: {
         get: FirebaseDescriptor._function<NewsletterGetFunctionType>(NewsletterGetFunction),
         getAll: FirebaseDescriptor._function<NewsletterGetAllFunctionType>(NewsletterGetAllFunction),
-        edit: FirebaseDescriptor._function<NewsletterEditFunctionType>(NewsletterEditFunction)        
+        edit: FirebaseDescriptor._function<NewsletterEditFunctionType>(NewsletterEditFunction),
+        subscription: {
+            getAll: FirebaseDescriptor._function<NewsletterSubscriptionGetAllFunctionType>(NewsletterSubscriptionGetAllFunction),
+            subscribe: FirebaseDescriptor._function<NewsletterSubscriptionSubscribeFunctionType>(NewsletterSubscriptionSubscribeFunction),
+            unsubscribe: FirebaseDescriptor._function<NewsletterSubscriptionUnsubscribeFunctionType>(NewsletterSubscriptionUnsubscribeFunction)
+        }  
     },
     bfvData: {
         gameInfo: FirebaseDescriptor._function<GameInfoGetFunctionType>(GameInfoGetFunction),

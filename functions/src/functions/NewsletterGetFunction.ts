@@ -30,8 +30,8 @@ export class NewsletterGetFunction implements IFirebaseFunction<NewsletterGetFun
         if (!snapshot.exists)
             return null;
         return {
-            id: this.parameters.id,
-            ...snapshot.value('decrypt')
+            ...snapshot.value('decrypt'),
+            id: this.parameters.id
         };
     }
 }

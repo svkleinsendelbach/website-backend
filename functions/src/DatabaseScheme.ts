@@ -24,6 +24,9 @@ export type DatabaseScheme = {
     newsletter: {
         [NewsletterId in string]: CryptedScheme<Omit<Newsletter.Flatten, 'id'>>;
     };
+    'newsletter-subscriptions': {
+        [SubscriberId in string]: CryptedScheme<string>;
+    };
     occupancies: {
         [OccupancyId in string]: CryptedScheme<Omit<Occupancy.Flatten, 'id'>>;
     };

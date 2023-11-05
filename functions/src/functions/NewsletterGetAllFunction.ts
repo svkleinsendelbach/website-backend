@@ -44,7 +44,6 @@ export type NewsletterGetAllFunctionType = IFunctionType<Record<string, never>, 
     date: string;
     title: string;
     description: string;
-    imageSrc: string;
     month: Newsletter.Month;
     year: number;
 }[]>;

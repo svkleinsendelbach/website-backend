@@ -15,7 +15,6 @@ describe('newsletterGetAll', () => {
             titlePage: {
                 title: 'title',
                 description: 'description',
-                imageSrc: 'image',
                 month: 'january',
                 year: 2023
             },

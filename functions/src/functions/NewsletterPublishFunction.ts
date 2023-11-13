@@ -5,7 +5,7 @@ import * as nodemailer from 'nodemailer';
 import { Newsletter } from '../types/Newsletter';
 import { checkUserRoles } from '../checkUserRoles';
 import { Discord } from '../Discord';
-import { discordKeys } from '../privateKeys';
+import { discordKeys, nodemailerPassword } from '../privateKeys';
 
 export class NewsletterPublishFunction implements IFirebaseFunction<NewsletterPublishFunctionType> {
     public readonly parameters: IFunctionType.Parameters<NewsletterPublishFunctionType> & { databaseType: DatabaseType };
@@ -16,7 +16,7 @@ export class NewsletterPublishFunction implements IFirebaseFunction<NewsletterPu
         secure: true,
         auth: {
             user: 'svkleinsendelbach.no.reply@gmail.com',
-            pass: 'frsa tolw nflf qamx'
+            pass: nodemailerPassword
         }
     });
 

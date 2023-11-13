@@ -16,7 +16,7 @@ describe('newsletterEdit', () => {
     function generateNewsletter(number: number = 0): Omit<Newsletter.Flatten, 'id'> {
         return {
             date: new UtcDate(2023, 11, 1, 12, 0).encoded,
-            discordMessageId: null,
+            alreadyPublished: false,
             titlePage: {
                 title: 'title',
                 description: 'description',

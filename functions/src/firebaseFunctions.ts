@@ -28,10 +28,11 @@ import { UserGetAllFunction, type UserGetAllFunctionType } from './functions/Use
 import { UserCheckRolesFunction, type UserCheckRolesFunctionType } from './functions/UserCheckRolesFunction';
 import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionType } from './functions/UserHandleAccessRequestFunction';
 import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
+
 import { NewsletterEditFunction, type NewsletterEditFunctionType } from './functions/NewsletterEditFunction';
 import { NewsletterGetAllFunction, type NewsletterGetAllFunctionType } from './functions/NewsletterGetAllFunction';
 import { NewsletterGetFunction, type NewsletterGetFunctionType } from './functions/NewsletterGetFunction';
-import { NewsletterSubscriptionGetAllFunction, type NewsletterSubscriptionGetAllFunctionType } from './functions/NewsletterSubscriptionGetAllFunction';
+import { NewsletterPublishFunction, type NewsletterPublishFunctionType } from './functions/NewsletterPublishFunction';
 import { NewsletterSubscriptionSubscribeFunction, type NewsletterSubscriptionSubscribeFunctionType } from './functions/NewsletterSubscriptionSubscribeFunction';
 import { NewsletterSubscriptionUnsubscribeFunction, type NewsletterSubscriptionUnsubscribeFunctionType } from './functions/NewsletterSubscriptionUnsubscribeFunction';
 
@@ -62,8 +63,8 @@ export const firebaseFunctions = {
         get: FirebaseDescriptor._function<NewsletterGetFunctionType>(NewsletterGetFunction),
         getAll: FirebaseDescriptor._function<NewsletterGetAllFunctionType>(NewsletterGetAllFunction),
         edit: FirebaseDescriptor._function<NewsletterEditFunctionType>(NewsletterEditFunction),
+        publish: FirebaseDescriptor._function<NewsletterPublishFunctionType>(NewsletterPublishFunction),
         subscription: {
-            getAll: FirebaseDescriptor._function<NewsletterSubscriptionGetAllFunctionType>(NewsletterSubscriptionGetAllFunction),
             subscribe: FirebaseDescriptor._function<NewsletterSubscriptionSubscribeFunctionType>(NewsletterSubscriptionSubscribeFunction),
             unsubscribe: FirebaseDescriptor._function<NewsletterSubscriptionUnsubscribeFunctionType>(NewsletterSubscriptionUnsubscribeFunction)
         }  

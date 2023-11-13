@@ -4,8 +4,6 @@ import { EditType } from '../types/EditType';
 import { Newsletter } from '../types/Newsletter';
 import { DatabaseScheme } from '../DatabaseScheme';
 import { checkUserRoles } from '../checkUserRoles';
-import { Discord } from '../Discord';
-import { discordKeys } from '../privateKeys';
 
 export class NewsletterEditFunction implements IFirebaseFunction<NewsletterEditFunctionType> {
     public readonly parameters: IFunctionType.Parameters<NewsletterEditFunctionType> & { databaseType: DatabaseType };
@@ -60,10 +58,7 @@ export class NewsletterEditFunction implements IFirebaseFunction<NewsletterEditF
         if (databaseNewsletter)
             throw HttpsError('invalid-argument', 'Couldn\'t add existing newsletter.', this.logger);
         const newsletter = this.parameters.newsletter;
-        const discordMessageId = await Discord.execute(this.parameters.databaseType, async discord => {
-            return await discord.add(discordKeys.channelIds.newsletter, { embeds: [Newsletter.discordEmbed(this.parameters.newsletterId, newsletter)] });
-        }, null);
-        await this.reference.set(Newsletter.flatten(Newsletter.addDiscordMessageId(newsletter, discordMessageId)), 'encrypt');
+        await this.reference.set(Newsletter.flatten(newsletter), 'encrypt');
     }
 
     private async changeNewsletter() {
@@ -72,20 +67,13 @@ export class NewsletterEditFunction implements IFirebaseFunction<NewsletterEditF
         const databaseNewsletter = await this.getDatabaseNewsletter();
         if (!databaseNewsletter)
             throw HttpsError('invalid-argument', 'Couldn\'t change not existing newsletter.', this.logger);
-        const newsletter = Newsletter.addDiscordMessageId(this.parameters.newsletter, databaseNewsletter.discordMessageId);
-        void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.change(discordKeys.channelIds.newsletter, newsletter.discordMessageId, { embeds: [Newsletter.discordEmbed(this.parameters.newsletterId, newsletter)] });
-        });
-        await this.reference.set(Newsletter.flatten(newsletter), 'encrypt');
+        await this.reference.set(Newsletter.flatten(this.parameters.newsletter), 'encrypt');
     }
 
     private async removeNewsletter() {
         const databaseEvent = await this.getDatabaseNewsletter();
         if (!databaseEvent)
             return;
-        void Discord.execute(this.parameters.databaseType, async discord => {
-            await discord.remove(discordKeys.channelIds.newsletter, databaseEvent.discordMessageId);
-        });
         await this.reference.remove();
     }
 }
@@ -93,9 +81,9 @@ export class NewsletterEditFunction implements IFirebaseFunction<NewsletterEditF
 export type NewsletterEditFunctionType = IFunctionType<{
     editType: EditType;
     newsletterId: string;
-    newsletter: Omit<Newsletter, 'id' | 'discordMessageId'> | null;
+    newsletter: Omit<Newsletter, 'id'> | null;
 }, void, {
     editType: EditType;
     newsletterId: string;
-    newsletter: Omit<Newsletter.Flatten, 'id' | 'discordMessageId'> | null;
+    newsletter: Omit<Newsletter.Flatten, 'id'> | null;
 }>;

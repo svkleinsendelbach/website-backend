@@ -11,7 +11,7 @@ describe('newsletterGet', () => {
     function generateNewsletter(number: number): Omit<Newsletter.Flatten, 'id'> {
         return {
             date: new UtcDate(2023, 11, 1, 12, 0).encoded,
-            discordMessageId: null,
+            alreadyPublished: false,
             titlePage: {
                 title: 'title',
                 description: 'description',
@@ -82,10 +82,7 @@ describe('newsletterGet', () => {
     async function addNewsletter(number: number): Promise<Newsletter.Flatten> {
         const newsletter = generateNewsletter(number);
         const newsletterId = Guid.newGuid();
-        await firebaseApp.database.child('newsletter').child(newsletterId.guidString).set({
-            ...newsletter, 
-            discordMessageId: null
-        }, 'encrypt');
+        await firebaseApp.database.child('newsletter').child(newsletterId.guidString).set(newsletter, 'encrypt');
         return {
             id: newsletterId.guidString,
             ...newsletter

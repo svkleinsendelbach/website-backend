@@ -38,4 +38,4 @@ export class NewsletterGetFunction implements IFirebaseFunction<NewsletterGetFun
 
 export type NewsletterGetFunctionType = IFunctionType<{
     id: string;
-}, Omit<Newsletter.Flatten, 'discordMessageId'> | null>;
+}, Newsletter.Flatten | null>;

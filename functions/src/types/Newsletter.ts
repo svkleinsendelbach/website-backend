@@ -1,12 +1,12 @@
 import { HttpsError, ILogger, UtcDate } from "firebase-function";
 import { EventGroupId } from "./Event";
-import { mapRecord } from "../utils/record-array";
-import { EmbedBuilder } from "discord.js";
+import { compactMap, mapRecord, recordEntries, recordValues } from "../utils/record-array";
+import { EmbedBuilder, MessageCreateOptions } from "discord.js";
 
 export type Newsletter = {
     id: string;
+    alreadyPublished: boolean;
     date: UtcDate;
-    discordMessageId: string | null;
     titlePage: {
         title: string;
         description: string;
@@ -29,11 +29,14 @@ export type Newsletter = {
 };
 
 export namespace Newsletter {
-    export function fromObject(value: object | null, logger: ILogger): Omit<Newsletter, 'id' | 'discordMessageId'> {
+    export function fromObject(value: object | null, logger: ILogger): Omit<Newsletter, 'id'> {
         logger.log('Newsletter.fromObject', { value: value });
 
         if (value === null)
             throw HttpsError('internal', 'Couldn\'t get newsletter from null.', logger);
+
+        if (!('alreadyPublished' in value) || typeof value.alreadyPublished !== 'boolean')
+            throw HttpsError('internal', 'Couldn\'t get already published for newsletter.', logger);
 
         if (!('date' in value) || typeof value.date !== 'string')
             throw HttpsError('internal', 'Couldn\'t get date for newsletter.', logger);
@@ -108,6 +111,7 @@ export namespace Newsletter {
         });
 
         return {
+            alreadyPublished: value.alreadyPublished,
             date: UtcDate.decode(value.date),
             titlePage: {
                 title: value.titlePage.title,
@@ -126,14 +130,41 @@ export namespace Newsletter {
         export function typeGuard(value: string): value is Month {
             return ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'].includes(value);
         }
+
+        export const title: Record<Month, string> = {
+            january: 'Januar',
+            february: 'Februar',
+            march: 'März',
+            april: 'April',
+            may: 'Mai',
+            june: 'Juni',
+            july: 'Juli',
+            august: 'August',
+            september: 'September',
+            october: 'Oktober',
+            november: 'November',
+            december: 'Dezember'
+        };
     }
 
     export type Department = 'football-adults/general' | 'football-adults/first-team' | 'football-adults/second-team' | 'football-youth/big-field' | 'football-youth/small-field' | 'gymnastics' | 'dancing';
 
+    export namespace Department {
+        export const title: Record<Department, string> = {
+            'football-adults/general': 'Herrenfußball',
+            'football-adults/first-team': 'Erste Mannschaft',
+            'football-adults/second-team': 'Zweite Mannschaft',
+            'football-youth/big-field': 'Großfeldjugend',
+            'football-youth/small-field': 'Kleinfeldjugend',
+            'gymnastics': 'Gymnastik',
+            'dancing': 'Tanzen'
+        };
+    }
+
     export type Flatten = {
         id: string;
+        alreadyPublished: boolean;
         date: string;
-        discordMessageId: string | null;
         titlePage: {
             title: string;
             description: string;
@@ -160,8 +191,8 @@ export namespace Newsletter {
     export function flatten(newsletter: Newsletter | Omit<Newsletter, 'id'>): Newsletter.Flatten | Omit<Newsletter.Flatten, 'id'> {
         return {
             ...'id' in newsletter ? { id: newsletter.id } : {},
+            alreadyPublished: newsletter.alreadyPublished,
             date: newsletter.date.encoded,
-            discordMessageId: newsletter.discordMessageId,
             titlePage: newsletter.titlePage,
             departments: newsletter.departments,
             events: mapRecord(newsletter.events, eventGroup => {
@@ -181,8 +212,8 @@ export namespace Newsletter {
     export function concrete(newsletter: Newsletter.Flatten | Omit<Newsletter.Flatten, 'id'>): Newsletter | Omit<Newsletter, 'id'> {
         return {
             ...'id' in newsletter ? { id: newsletter } : {},
+            alreadyPublished: newsletter.alreadyPublished,
             date: UtcDate.decode(newsletter.date),
-            discordMessageId: newsletter.discordMessageId,
             titlePage: newsletter.titlePage,
             departments: newsletter.departments,
             events: mapRecord(newsletter.events, eventGroup => {
@@ -197,19 +228,56 @@ export namespace Newsletter {
         };
     }
 
-    export function addDiscordMessageId(newsletter: Omit<Newsletter, 'discordMessageId'>, discordMessageId: string | null): Newsletter;
-    export function addDiscordMessageId(newsletter: Omit<Newsletter, 'id' | 'discordMessageId'>, discordMessageId: string | null): Omit<Newsletter, 'id'>;
-    export function addDiscordMessageId(newsletter: Omit<Newsletter, 'discordMessageId'> | Omit<Newsletter, 'id' | 'discordMessageId'>, discordMessageId: string | null): Newsletter | Omit<Newsletter, 'id'> {
-        return {
-            ...newsletter,
-            discordMessageId: discordMessageId
-        };
+    export function plainText(newsletter: Newsletter, subscriberId: string): string {
+        const existsDepartmentsContent = recordValues(newsletter.departments).some(department => department !== null);
+        const existsEventsContent = recordValues(newsletter.events).some(eventGroup => eventGroup !== null);
+        return `Dieser Newsletter konnte nicht richtig angezeigt werden, folgen Sie dem Link: https://svkleinsendelbach-website.web.app/newsletter/${newsletter.id}\n\n` + 
+            `SV Kleinsendelbach - ${Month.title[newsletter.titlePage.month]} ${newsletter.titlePage.year}\n` + 
+            `${newsletter.titlePage.title}\n\n` +
+            `${newsletter.titlePage.description}\n\n\n` +
+            (existsDepartmentsContent ? `Neues aus unseren Abteilungen:\n\n` : '') + 
+            compactMap(recordEntries(newsletter.departments), entry => {
+                if (entry.value === null)
+                    return null;
+                return `${Department.title[entry.key]}\n\n` +
+                    entry.value.map(content => `${content.title}\n${content.description}`).join('\n\n');
+            }).join('\n\n') + '\n\n\n' +
+            (existsEventsContent ? `Kommende Termine / Ankündigungen:\n\n` : '') +
+            compactMap(recordEntries(newsletter.events), entry => {
+                if (entry.value === null)
+                    return null;
+                return `${EventGroupId.title[entry.key]}\n\n` +
+                    entry.value.map(event => `${event.date.description('de-DE', 'Europe/Berlin')}\n${event.title}` + (event.subtitle === null ? '' : `\n${event.subtitle}`)).join('\n\n');
+            }).join('\n\n') + '\n\n\n' +
+            `Sie möchten unseren Newsletter abbestellen? Folgen Sie dem Link: https://svkleinsendelbach-website.web.app/newsletter/abmelden/${subscriberId}. Sie können sich jederzeit auf unserer Website wieder für den Newsletter anmelden.`;
     }
 
-    export function discordEmbed(id: string, newsletter: Omit<Newsletter, 'id' | 'discordMessageId'>): EmbedBuilder {
-        return new EmbedBuilder()
-            .setTitle(newsletter.titlePage.title)
-            .setDescription(newsletter.titlePage.description)
-            .setURL(`https://svkleinsendelbach-website.web.app/newsletter/${id}`);
+    export function discordMessage(newsletter: Newsletter): MessageCreateOptions {
+        return {
+            content: `Newsletter - SV Kleinsendelbach e.V. - ${Month.title[newsletter.titlePage.month]} ${newsletter.titlePage.year}\n\n` +
+                `${newsletter.titlePage.title}\n${newsletter.titlePage.description}\n`,
+            embeds: [
+                ...compactMap(recordEntries(newsletter.departments), entry => {
+                    if (entry.value === null)
+                        return null;
+                    return new EmbedBuilder()
+                        .setTitle(`Berichte ${Department.title[entry.key]}`)
+                        .setFields(entry.value.map(content => ({
+                            name: content.title,
+                            value: content.description
+                        })));
+                }),
+                ...compactMap(recordEntries(newsletter.events), entry => {
+                    if (entry.value === null)
+                        return null;
+                    return new EmbedBuilder()
+                        .setTitle(`Termine ${EventGroupId.title[entry.key]}`)
+                        .setFields(entry.value.map(event => ({
+                            name: event.date.description('de-DE', 'Europe/Berlin'),
+                            value: event.title + (event.subtitle === null ? '' : event.subtitle)
+                        })));
+                })
+            ]
+        };
     }
 }

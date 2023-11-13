@@ -30,6 +30,7 @@ export class NewsletterGetAllFunction implements IFirebaseFunction<NewsletterGet
             const newsletter = snapshot.value('decrypt');
             return {
                 id: snapshot.key,
+                alreadyPublished: newsletter.alreadyPublished,
                 date: newsletter.date,
                 ...newsletter.titlePage
             };
@@ -41,6 +42,7 @@ export class NewsletterGetAllFunction implements IFirebaseFunction<NewsletterGet
 
 export type NewsletterGetAllFunctionType = IFunctionType<Record<string, never>, {
     id: string;
+    alreadyPublished: boolean;
     date: string;
     title: string;
     description: string;

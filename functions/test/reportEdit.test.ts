@@ -193,7 +193,7 @@ describe('reportEdit', () => {
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
-            groupId: 'football-adults/first-team/game-report',
+            groupId: 'football-adults/first-team',
             previousGroupId: null,
             reportId: reportId.guidString,
             report: {
@@ -222,7 +222,7 @@ describe('reportEdit', () => {
         const date2 = date1.advanced({ minute: 60 });
         const result = await firebaseApp.functions.function('report').function('edit').call({
             editType: 'change',
-            groupId: 'football-adults/first-team/game-report',
+            groupId: 'football-adults/first-team',
             previousGroupId: 'general',
             reportId: reportId.guidString,
             report: {
@@ -234,7 +234,7 @@ describe('reportEdit', () => {
         });
         result.success;
         expect(await firebaseApp.database.child('reports').child('general').child(reportId.guidString).exists()).to.be.equal(false);
-        expect(await firebaseApp.database.child('reports').child('football-adults/first-team/game-report').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
+        expect(await firebaseApp.database.child('reports').child('football-adults/first-team').child(reportId.guidString).get('decrypt')).to.be.deep.equal({
             title: 'title-2',
             message: 'message-2',
             imageUrl: 'image-url-2',

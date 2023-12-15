@@ -3,7 +3,7 @@ import { UtcDate } from 'firebase-function';
 import { authenticateTestUser, cleanUpFirebase, firebaseApp } from './firebaseApp';
 import { Occupancy } from '../src/types/Occupancy';
 
-describe('occupancyGetAll', () => {
+describe('occupancyGet', () => {
     beforeEach(async () => {
         await authenticateTestUser();
     });
@@ -39,7 +39,7 @@ describe('occupancyGetAll', () => {
         const occupancy1 = await addOccupancy(1);
         const occupancy2 = await addOccupancy(2);
         const occupancy3 = await addOccupancy(3);
-        const result = await firebaseApp.functions.function('occupancy').function('getAll').call({});
+        const result = await firebaseApp.functions.function('occupancy').function('get').call({});
         result.success.unsorted([occupancy3, occupancy2, occupancy1]);
     });
 });

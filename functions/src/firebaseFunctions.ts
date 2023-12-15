@@ -8,15 +8,14 @@ import { EventGetFunction, type EventGetFunctionType } from './functions/EventGe
 import { EventEditFunction, type EventEditFunctionType } from './functions/EventEditFunction';
 
 import { ReportGetFunction, type ReportGetFunctionType } from './functions/ReportGetFunction';
-import { ReportGetAllFunction, type ReportGetAllFunctionType } from './functions/ReportGetAllFunction';
 import { ReportEditFunction, type ReportEditFunctionType } from './functions/ReportEditFunction';
 
 import { OccupancyDiscordSchedule } from './functions/OccupancyDiscordSchedule';
-import { OccupancyGetAllFunction, type OccupancyGetAllFunctionType } from './functions/OccupancyGetAllFunction';
+import { OccupancyGetFunction, type OccupancyGetFunctionType } from './functions/OccupancyGetFunction';
 import { OccupancyEditFunction, type OccupancyEditFunctionType } from './functions/OccupancyEditFunction';
 
-import { CriticismSuggestionGetAllFunction, type CriticismSuggestionGetAllFunctionType } from './functions/CriticismSuggestionGetAllFunction';
-import { CriticismSuggestionEditFunction, type CriticismSuggestionEditFunctionType } from './functions/CriticismSuggestionEditFunction';
+import { CriticismGetFunction, type CriticismGetFunctionType } from './functions/CriticismGetFunction';
+import { CriticismEditFunction, type CriticismEditFunctionType } from './functions/CriticismEditFunction';
 
 import { GameInfoGetFunction, type GameInfoGetFunctionType } from './functions/GameInfoGetFunction';
 import { TeamSquadGetFunction, type TeamSquadGetFunctionType } from './functions/TeamSquadGetFunction';
@@ -25,7 +24,7 @@ import { ContactFunction, type ContactFunctionType } from './functions/ContactFu
 
 import { UserRequestAccessFunction, type UserRequestAccessFunctionType } from './functions/UserRequestAccessFunction';
 import { UserGetAllFunction, type UserGetAllFunctionType } from './functions/UserGetAllFunction';
-import { UserCheckRolesFunction, type UserCheckRolesFunctionType } from './functions/UserCheckRolesFunction';
+import { UserGetRolesFunction, type UserGetRolesFunctionType } from './functions/UserGetRolesFunction';
 import { UserHandleAccessRequestFunction, type UserHandleAccessRequestFunctionType } from './functions/UserHandleAccessRequestFunction';
 import { UserEditRolesFunction, type UserEditRolesFunctionType } from './functions/UserEditRolesFunction';
 
@@ -47,17 +46,16 @@ export const firebaseFunctions = {
     },
     report: {
         get: FirebaseDescriptor._function<ReportGetFunctionType>(ReportGetFunction),
-        getAll: FirebaseDescriptor._function<ReportGetAllFunctionType>(ReportGetAllFunction),
         edit: FirebaseDescriptor._function<ReportEditFunctionType>(ReportEditFunction)
     },
     occupancy: {
-        getAll: FirebaseDescriptor._function<OccupancyGetAllFunctionType>(OccupancyGetAllFunction),
+        get: FirebaseDescriptor._function<OccupancyGetFunctionType>(OccupancyGetFunction),
         edit: FirebaseDescriptor._function<OccupancyEditFunctionType>(OccupancyEditFunction),
         discordSchedule: FirebaseDescriptor.schedule('0 9 * * MON', OccupancyDiscordSchedule)
     },
-    criticismSuggestion: {
-        getAll: FirebaseDescriptor._function<CriticismSuggestionGetAllFunctionType>(CriticismSuggestionGetAllFunction),
-        edit: FirebaseDescriptor._function<CriticismSuggestionEditFunctionType>(CriticismSuggestionEditFunction)
+    criticism: {
+        get: FirebaseDescriptor._function<CriticismGetFunctionType>(CriticismGetFunction),
+        edit: FirebaseDescriptor._function<CriticismEditFunctionType>(CriticismEditFunction)
     },
     newsletter: {
         get: FirebaseDescriptor._function<NewsletterGetFunctionType>(NewsletterGetFunction),
@@ -76,7 +74,7 @@ export const firebaseFunctions = {
     user: {
         requestAccess: FirebaseDescriptor._function<UserRequestAccessFunctionType>(UserRequestAccessFunction),
         getAll: FirebaseDescriptor._function<UserGetAllFunctionType>(UserGetAllFunction),
-        checkRoles: FirebaseDescriptor._function<UserCheckRolesFunctionType>(UserCheckRolesFunction),
+        getRoles: FirebaseDescriptor._function<UserGetRolesFunctionType>(UserGetRolesFunction),
         handleAccessRequest: FirebaseDescriptor._function<UserHandleAccessRequestFunctionType>(UserHandleAccessRequestFunction),
         editRoles: FirebaseDescriptor._function<UserEditRolesFunctionType>(UserEditRolesFunction)
     }

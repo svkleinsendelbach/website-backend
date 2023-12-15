@@ -4,32 +4,40 @@ import { EmbedBuilder } from 'discord.js';
 export type ReportGroupId =
     'general' |
     'football-adults/general' |
-    'football-adults/first-team/game-report' |
-    'football-adults/second-team/game-report' |
+    'football-adults/first-team' |
+    'football-adults/second-team' |
+    'football-adults/ah-team' |
     'football-youth/general' |
-    'football-youth/c-youth/game-report' |
-    'football-youth/e-youth/game-report' |
-    'football-youth/f-youth/game-report' |
-    'football-youth/g-youth/game-report' |
+    'football-youth/a-youth' |
+    'football-youth/b-youth' |
+    'football-youth/c-youth' |
+    'football-youth/d-youth' |
+    'football-youth/e-youth' |
+    'football-youth/f-youth' |
+    'football-youth/g-youth' |
     'gymnastics' |
     'dancing';
 
 export namespace ReportGroupId {
     export const all: ReportGroupId[] = [
-        'general', 'football-adults/general', 'football-adults/first-team/game-report', 'football-adults/second-team/game-report', 'football-youth/general',
-        'football-youth/c-youth/game-report', 'football-youth/e-youth/game-report', 'football-youth/f-youth/game-report', 'football-youth/g-youth/game-report',
+        'general', 'football-adults/general', 'football-adults/first-team', 'football-adults/second-team', 'football-adults/ah-team', 'football-youth/general',
+        'football-youth/a-youth', 'football-youth/b-youth', 'football-youth/c-youth', 'football-youth/d-youth', 'football-youth/e-youth', 'football-youth/f-youth', 'football-youth/g-youth',
         'gymnastics', 'dancing'
     ];
 
     export const title: Record<ReportGroupId, string> = {
         'dancing': 'Tanzen',
-        'football-adults/first-team/game-report': '1. Mannschaft',
+        'football-adults/first-team': '1. Mannschaft',
         'football-adults/general': 'Herrenfußball',
-        'football-adults/second-team/game-report': '2. Mannschaft',
-        'football-youth/c-youth/game-report': 'C-Jugend',
-        'football-youth/e-youth/game-report': 'E-Jugend',
-        'football-youth/f-youth/game-report': 'F-Jugend',
-        'football-youth/g-youth/game-report': 'G-Jugend',
+        'football-adults/second-team': '2. Mannschaft',
+        'football-adults/ah-team': 'Alte Herren',
+        'football-youth/a-youth': 'A-Jugend',
+        'football-youth/b-youth': 'B-Jugend',
+        'football-youth/c-youth': 'C-Jugend',
+        'football-youth/d-youth': 'D-Jugend',
+        'football-youth/e-youth': 'E-Jugend',
+        'football-youth/f-youth': 'F-Jugend',
+        'football-youth/g-youth': 'G-Jugend',
         'football-youth/general': 'Jugendfußball',
         'general': 'Allgemeines',
         'gymnastics': 'Gymnastik'
@@ -126,4 +134,16 @@ export namespace Report {
             .setDescription(report.message)
             .setThumbnail(report.imageUrl);
     }
+}
+
+export type ReportGroup = {
+    groupId: ReportGroupId;
+    reports: Omit<Event, 'discordMessageId'>[];
+};
+
+export namespace ReportGroup {
+    export type Flatten = {
+        groupId: ReportGroupId;
+        reports: Omit<Report.Flatten, 'discordMessageId'>[];
+    };
 }

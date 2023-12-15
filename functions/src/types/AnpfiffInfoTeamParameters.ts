@@ -1,5 +1,4 @@
-import { HttpsError, type ILogger, IDatabaseReference } from 'firebase-function';
-import { DatabaseScheme } from '../DatabaseScheme';
+import { HttpsError, ILogger } from "firebase-function";
 
 export type AnpfiffInfoTeamParameters = {
     ligaId: number;
@@ -11,20 +10,37 @@ export type AnpfiffInfoTeamParameters = {
 };
 
 export namespace AnpfiffInfoTeamParameters {
-    export type Type = 'first-team' | 'second-team';
+    export function fromObject(value: object | null, logger: ILogger): AnpfiffInfoTeamParameters {
+        logger.log('AnpfiffInfoTeamParameters.fromObject', { value: value });
 
-    export namespace Type {
-        export function typeGuard(value: string): value is Type {
-            return ['first-team', 'second-team'].includes(value);
-        }
-    }
+        if (value === null)
+            throw HttpsError('internal', 'Couldn\'t get parameters from null.', logger);
 
-    export async function fetchFromDatabase(type: AnpfiffInfoTeamParameters.Type, databaseReference: IDatabaseReference<DatabaseScheme>, logger: ILogger): Promise<AnpfiffInfoTeamParameters> {
-        logger.log('AnpfiffInfoTeamParameters.fetchFromDatabase', { type: type });
-        const reference = databaseReference.child('anpfiffInfoTeamParameters').child(type);
-        const snapshot = await reference.snapshot();
-        if (!snapshot.exists)
-            throw HttpsError('internal', 'Couldn\'t get anpfiff info team parameters.', logger);
-        return snapshot.value();
+        if (!('ligaId' in value) || typeof value.ligaId !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get ligaId for parameters.', logger);
+
+        if (!('men' in value) || typeof value.men !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get men for parameters.', logger);
+
+        if (!('saisonId' in value) || typeof value.saisonId !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get saisonId for parameters.', logger);
+
+        if (!('spielkreis' in value) || typeof value.spielkreis !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get spielkreis for parameters.', logger);
+
+        if (!('teamId' in value) || typeof value.teamId !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get teamId for parameters.', logger);
+
+        if (!('vereinId' in value) || typeof value.vereinId !== 'number')
+            throw HttpsError('internal', 'Couldn\'t get vereinId for parameters.', logger);
+
+        return {
+            ligaId: value.ligaId,
+            men: value.men,
+            saisonId: value.saisonId,
+            spielkreis: value.spielkreis,
+            teamId: value.teamId,
+            vereinId: value.vereinId
+        };
     }
 }

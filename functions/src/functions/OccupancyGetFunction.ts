@@ -4,8 +4,8 @@ import { Occupancy } from '../types/Occupancy';
 import { checkUserRoles } from '../checkUserRoles';
 import { DatabaseScheme } from '../DatabaseScheme';
 
-export class OccupancyGetAllFunction implements IFirebaseFunction<OccupancyGetAllFunctionType> {
-    public readonly parameters: IFunctionType.Parameters<OccupancyGetAllFunctionType> & { databaseType: DatabaseType };
+export class OccupancyGetFunction implements IFirebaseFunction<OccupancyGetFunctionType> {
+    public readonly parameters: IFunctionType.Parameters<OccupancyGetFunctionType> & { databaseType: DatabaseType };
 
     public constructor(
         parameterContainer: IParameterContainer, 
@@ -13,14 +13,14 @@ export class OccupancyGetAllFunction implements IFirebaseFunction<OccupancyGetAl
         private readonly databaseReference: IDatabaseReference<DatabaseScheme>, 
         private readonly logger: ILogger
     ) {
-        this.logger.log('OccupancyGetAllFunction.constructor', { auth: auth }, 'notice');
-        const parameterParser = new ParameterParser<IFunctionType.Parameters<OccupancyGetAllFunctionType>>({}, this.logger.nextIndent);
+        this.logger.log('OccupancyGetFunction.constructor', { auth: auth }, 'notice');
+        const parameterParser = new ParameterParser<IFunctionType.Parameters<OccupancyGetFunctionType>>({}, this.logger.nextIndent);
         parameterParser.parse(parameterContainer);
         this.parameters = parameterParser.parameters;
     }
 
-    public async execute(): Promise<IFunctionType.ReturnType<OccupancyGetAllFunctionType>> {
-        this.logger.log('OccupancyGetAllFunction.executeFunction', {}, 'info');
+    public async execute(): Promise<IFunctionType.ReturnType<OccupancyGetFunctionType>> {
+        this.logger.log('OccupancyGetFunction.executeFunction', {}, 'info');
         await checkUserRoles(this.auth, 'occupancyManager', this.databaseReference, this.logger.nextIndent);
         const reference = this.databaseReference.child('occupancies');
         const snapshot = await reference.snapshot();
@@ -40,4 +40,4 @@ export class OccupancyGetAllFunction implements IFirebaseFunction<OccupancyGetAl
     }
 }
 
-export type OccupancyGetAllFunctionType = IFunctionType<Record<string, never>, Array<Omit<Occupancy.Flatten, 'discordMessageId'>>>;
+export type OccupancyGetFunctionType = IFunctionType<Record<string, never>, Array<Omit<Occupancy.Flatten, 'discordMessageId'>>>;

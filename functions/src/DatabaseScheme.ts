@@ -1,16 +1,12 @@
 import { type CryptedScheme } from 'firebase-function';
-import { type AnpfiffInfoTeamParameters } from './types/AnpfiffInfoTeamParameters';
 import { type Event, type EventGroupId as EventGroupIds } from './types/Event';
 import { type Report, type ReportGroupId as ReportGroupIds } from './types/Report';
 import { User } from './types/User';
 import { Occupancy } from './types/Occupancy';
-import { CriticismSuggestion } from './types/CriticismSuggestion';
+import { Criticism } from './types/Criticism';
 import { Newsletter } from './types/Newsletter';
 
 export type DatabaseScheme = {
-    anpfiffInfoTeamParameters: {
-        [Type in AnpfiffInfoTeamParameters.Type]: AnpfiffInfoTeamParameters;
-    };
     events:{
         [EventGroupId in EventGroupIds]: {
             [EventId in string]: CryptedScheme<Omit<Event.Flatten, 'id'>>;
@@ -30,8 +26,8 @@ export type DatabaseScheme = {
     occupancies: {
         [OccupancyId in string]: CryptedScheme<Omit<Occupancy.Flatten, 'id'>>;
     };
-    criticismSuggestions: {
-        [CriticismSuggestionId in string]: CryptedScheme<Omit<CriticismSuggestion, 'id'>>;
+    criticisms: {
+        [CriticismId in string]: CryptedScheme<Omit<Criticism, 'id'>>;
     };
     users: {
         [HashedUserId in string]: CryptedScheme<Omit<User, 'hashedUserId'>>

@@ -9,7 +9,7 @@ describe('deleteAllData', () => {
     });
 
     it('data in database', async () => {
-        await firebaseApp.database.child('anpfiffInfoTeamParameters').child('first-team').child('spielkreis').set(0);
+        await firebaseApp.database.child('users').child('asdf').set({ firstName: '', lastName: '', roles: [] }, 'encrypt');
         expect(await firebaseApp.database.exists()).to.be.equal(true);
         const result = await firebaseApp.functions.function('deleteAllData').call({});
         result.success;

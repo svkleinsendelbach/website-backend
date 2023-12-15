@@ -1,7 +1,7 @@
-import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, UtcDate, type IFunctionType, IDatabaseReference, IParameterContainer, GuardParameterBuilder, NullableParameterBuilder, ValueParameterBuilder } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, UtcDate, type IFunctionType, IDatabaseReference, IParameterContainer, GuardParameterBuilder, ArrayParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { DatabaseScheme } from '../DatabaseScheme';
-import { ReportGroupId, type Report } from '../types/Report';
+import { ReportGroupId, type Report, ReportGroup } from '../types/Report';
 
 export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionType> {
     public readonly parameters: IFunctionType.Parameters<ReportGetFunctionType> & { databaseType: DatabaseType };
@@ -15,8 +15,7 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
         this.logger.log('ReportGetFunction.constructor', { auth: auth }, 'notice');
         const parameterParser = new ParameterParser<IFunctionType.Parameters<ReportGetFunctionType>>(
             {
-                groupId: new GuardParameterBuilder('string', ReportGroupId.typeGuard),
-                numberReports: new NullableParameterBuilder(new ValueParameterBuilder('number'))
+                groupIds: new ArrayParameterBuilder(new GuardParameterBuilder('string', ReportGroupId.typeGuard))
             },
             this.logger.nextIndent
         );
@@ -26,10 +25,14 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
 
     public async execute(): Promise<IFunctionType.ReturnType<ReportGetFunctionType>> {
         this.logger.log('ReportGetFunction.executeFunction', {}, 'info');
-        const reference = this.databaseReference.child('reports').child(this.parameters.groupId);
+        return (await Promise.all(this.parameters.groupIds.map(async id => await this.getReportGroup(id)))).flatMap(reportGroup => reportGroup ?? []);
+    }
+
+    public async getReportGroup(groupId: ReportGroupId): Promise<ReportGroup.Flatten | null> {
+        const reference = this.databaseReference.child('reports').child(groupId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
-            return { reports: [], hasMore: false };
+            return null;
         const reports = snapshot.compactMap<Omit<Report.Flatten, 'discordMessageId'>>(snapshot => {
             if (snapshot.key === null)
                 return null;
@@ -42,25 +45,13 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
             };
         });
         reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
-        if (this.parameters.numberReports === null)
-            return { reports: reports, hasMore: false };
-        const reportsToReturn: Omit<Report.Flatten, 'discordMessageId'>[] = [];
-        let hasMore = false;
-        for (const report of reports) {
-            if (reportsToReturn.length === this.parameters.numberReports) {
-                hasMore = true;
-                break;
-            }
-            reportsToReturn.push(report);
-        }
-        return { reports: reportsToReturn, hasMore: hasMore };
+        return {
+            groupId: groupId,
+            reports: reports
+        };
     }
 }
 
 export type ReportGetFunctionType = IFunctionType<{
-    groupId: ReportGroupId;
-    numberReports: number | null;
-}, {
-    reports: Omit<Report.Flatten, 'discordMessageId'>[];
-    hasMore: boolean;
-}>;
+    groupIds: ReportGroupId[];
+}, ReportGroup.Flatten[]>;

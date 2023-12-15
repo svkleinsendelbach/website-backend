@@ -74,7 +74,10 @@ describe('newsletterEdit', () => {
                         subtitle: `subtitle-${number}-3`
                     }
                 ],
+                'football-youth/a-youth': null,
+                'football-youth/b-youth': null,
                 'football-youth/c-youth': null,
+                'football-youth/d-youth': null,
                 'football-youth/e-youth': null,
                 'football-youth/f-youth': null,
                 'football-youth/g-youth': null,

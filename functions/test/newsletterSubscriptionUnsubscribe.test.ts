@@ -63,7 +63,10 @@ describe('newsletterSubsribptionUnsubscribe', () => {
             id: 'not-existing',
             email: null
         });
-        result.success;        
+        result.failure.equal({
+            code: 'not-found',
+            message: 'Subscription could\'t be found.'
+        });        
     });
 
     it('unsubscribe not existing with email', async () => {
@@ -71,6 +74,9 @@ describe('newsletterSubsribptionUnsubscribe', () => {
             id: null,
             email: 'not-existing'
         });
-        result.success;           
+        result.failure.equal({
+            code: 'not-found',
+            message: 'Subscription could\'t be found.'
+        }); 
     });
 });

@@ -1,4 +1,4 @@
-import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, UtcDate, type IFunctionType, IDatabaseReference, IParameterContainer, GuardParameterBuilder, ArrayParameterBuilder } from 'firebase-function';
+import { type DatabaseType, type IFirebaseFunction, type ILogger, ParameterParser, UtcDate, type IFunctionType, IDatabaseReference, IParameterContainer, GuardParameterBuilder, ArrayParameterBuilder, NullableParameterBuilder, ValueParameterBuilder } from 'firebase-function';
 import { type AuthData } from 'firebase-functions/lib/common/providers/tasks';
 import { DatabaseScheme } from '../DatabaseScheme';
 import { ReportGroupId, type Report, ReportGroup } from '../types/Report';
@@ -15,7 +15,8 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
         this.logger.log('ReportGetFunction.constructor', { auth: auth }, 'notice');
         const parameterParser = new ParameterParser<IFunctionType.Parameters<ReportGetFunctionType>>(
             {
-                groupIds: new ArrayParameterBuilder(new GuardParameterBuilder('string', ReportGroupId.typeGuard))
+                groupIds: new ArrayParameterBuilder(new GuardParameterBuilder('string', ReportGroupId.typeGuard)),
+                count: new NullableParameterBuilder(new ValueParameterBuilder('number'))
             },
             this.logger.nextIndent
         );
@@ -33,7 +34,7 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
         const snapshot = await reference.snapshot();
         if (!snapshot.exists || !snapshot.hasChildren)
             return null;
-        const reports = snapshot.compactMap<Omit<Report.Flatten, 'discordMessageId'>>(snapshot => {
+        let reports = snapshot.compactMap<Omit<Report.Flatten, 'discordMessageId'>>(snapshot => {
             if (snapshot.key === null)
                 return null;
             const report = snapshot.value('decrypt') as Omit<Report.Flatten, 'id' | 'discordMessageId'>;
@@ -45,6 +46,8 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
             };
         });
         reports.sort((a, b) => UtcDate.decode(a.createDate).compare(UtcDate.decode(b.createDate)) === 'greater' ? -1 : 1);
+        if (this.parameters.count !== null)
+            reports = reports.slice(0, this.parameters.count);
         return {
             groupId: groupId,
             reports: reports
@@ -54,4 +57,5 @@ export class ReportGetFunction implements IFirebaseFunction<ReportGetFunctionTyp
 
 export type ReportGetFunctionType = IFunctionType<{
     groupIds: ReportGroupId[];
+    count: number | null;
 }, ReportGroup.Flatten[]>;

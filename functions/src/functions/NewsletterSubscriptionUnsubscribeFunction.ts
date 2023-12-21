@@ -31,7 +31,7 @@ export class NewsletterSubscriptionUnsubscribeFunction implements IFirebaseFunct
         const reference = this.databaseReference.child('newsletter-subscriptions').child(subscriberId);
         const snapshot = await reference.snapshot();
         if (!snapshot.exists)
-            return;
+            throw HttpsError('not-found', 'Subscription could\'t be found.', this.logger);
         await reference.remove();
     }
 }

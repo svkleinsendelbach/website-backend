@@ -35,10 +35,11 @@ describe('reportGet', () => {
             imageUrl: null,
             discordMessageId: null
         }, 'encrypt');
-        const result = await firebaseApp.functions.function('report').function('get').call({
-            groupIds: ['general', 'football-adults/first-team']
+        const result1 = await firebaseApp.functions.function('report').function('get').call({
+            groupIds: ['general', 'football-adults/first-team'],
+            count: null
         });
-        result.success.equal([
+        result1.success.equal([
             {
                 groupId: 'general',
                 reports: [
@@ -53,6 +54,36 @@ describe('reportGet', () => {
                         id: reportId2.guidString,
                         createDate: date2.encoded,
                         title: 'report-2',
+                        message: 'report-message',
+                        imageUrl: null
+                    }
+                ]
+            },
+            {
+                groupId: 'football-adults/first-team',
+                reports: [
+                    {
+                        id: reportId3.guidString,
+                        createDate: date3.encoded,
+                        title: 'report-3',
+                        message: 'report-message',
+                        imageUrl: null
+                    }
+                ]
+            }
+        ]);
+        const result2 = await firebaseApp.functions.function('report').function('get').call({
+            groupIds: ['general', 'football-adults/first-team'],
+            count: 1
+        });
+        result2.success.equal([
+            {
+                groupId: 'general',
+                reports: [
+                    {
+                        id: reportId1.guidString,
+                        createDate: date1.encoded,
+                        title: 'report-1',
                         message: 'report-message',
                         imageUrl: null
                     }
